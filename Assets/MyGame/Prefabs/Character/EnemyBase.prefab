@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 7959531648435098246}
   m_Layer: 0
   m_Name: EnemyBase
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -328,7 +328,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a0b676d9b4f1b142873010cc2fbc226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  rotation: {fileID: 1502901371180628314}
+  serchDetector: {fileID: 1689700841741937286}
   walkSpeed: 1
   dashSpeed: 2
 --- !u!1 &6666721215165170035
@@ -341,8 +342,9 @@ GameObject:
   m_Component:
   - component: {fileID: 928560885289654196}
   - component: {fileID: 7246588970209112304}
+  - component: {fileID: 1689700841741937286}
   m_Layer: 0
-  m_Name: SearchArea
+  m_Name: Search
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -414,3 +416,25 @@ PolygonCollider2D:
       - {x: -2.5, y: -4.25}
       - {x: -4.25, y: -2.5}
   m_UseDelaunayMesh: 0
+--- !u!114 &1689700841741937286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6666721215165170035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d93bcea82d2715847b4f052c4f891b1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tagName: Player
+  onTriggerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerStay:
+    m_PersistentCalls:
+      m_Calls: []
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls: []

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75d64c4919f427141aab327f6bb9d9f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Player>k__BackingField: {fileID: 0}
 --- !u!114 &9070994155713668495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,6 +73,6 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 520550fb-ba6c-4284-b8ac-33bcf74e0b1a
+  m_DefaultActionMap: a37f12dc-170c-457b-9223-b0d4362f131c
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}

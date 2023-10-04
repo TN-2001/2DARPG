@@ -1021,8 +1021,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897791636}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.3470373, y: 0.17689095, z: -1.8866804}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4431,6 +4431,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 8131106236155826579, guid: 5c4e67beb7feb2443a672ccd2f5fec35, type: 3}
+      propertyPath: <Player>k__BackingField
+      value: 
+      objectReference: {fileID: 350779167}
     - target: {fileID: 9070994155713668495, guid: 5c4e67beb7feb2443a672ccd2f5fec35, type: 3}
       propertyPath: m_DefaultActionMap
       value: a37f12dc-170c-457b-9223-b0d4362f131c
@@ -4465,7 +4469,7 @@ Transform:
   m_GameObject: {fileID: 1965031496}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3470373, y: -0.17689095, z: 1.8866804}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4896,15 +4900,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6717164581560437495, guid: 26ee115d562451f4f93db7eed0f379fb, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6717164581560437495, guid: 26ee115d562451f4f93db7eed0f379fb, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6717164581560437495, guid: 26ee115d562451f4f93db7eed0f379fb, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6717164581560437495, guid: 26ee115d562451f4f93db7eed0f379fb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
