@@ -31,11 +31,11 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if (GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
-            {
-                m.ChangeState(new PlayerController.AttackState(m));
-                return;
-            }
+            // if (GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
+            // {
+            //     m.ChangeState(new PlayerController.AttackState(m));
+            //     return;
+            // }
 
             Vector2 move = GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
             

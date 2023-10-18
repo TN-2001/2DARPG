@@ -108,14 +108,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6249765459665801653}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 928560885289654196}
   m_Father: {fileID: 507352648241431902}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!1 &6466186056011621651
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,8 +330,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotation: {fileID: 1502901371180628314}
   serchDetector: {fileID: 1689700841741937286}
+  chaseDistance: 6
+  attackDistance: 1.5
   walkSpeed: 1
   dashSpeed: 2
+  idleTime: 3
+  walkTime: 3
 --- !u!1 &6666721215165170035
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,13 +362,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6666721215165170035}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -1, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1502901371180628314}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
 --- !u!60 &7246588970209112304
 PolygonCollider2D:
   m_ObjectHideFlags: 0
