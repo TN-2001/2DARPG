@@ -5,29 +5,64 @@ using UnityEngine.AI;
 
 public class EnemyController : StateMachine<EnemyController>
 {
-    private NavMeshAgent agent = null;
-    private Animator anim = null;
-
-    [SerializeField]
+    [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
-    [SerializeField]
+    [SerializeField] // 索敵判定
     private CollisionDetector serchDetector = null;
-    [SerializeField]
-    private float chaseDistance = 0;
-    [SerializeField]
-    private float attackDistance = 0;
-    [SerializeField]
+    [SerializeField] // 攻撃判定
+    private CollisionDetector attackDetector = null;
+    [SerializeField] // 歩きスピード
     private float walkSpeed = 0;
-    [SerializeField]
+    [SerializeField] // ダッシュスピード
     private float dashSpeed = 0;
-    [SerializeField]
+    [SerializeField] // 追いかけ距離
+    private float chaseDistance = 0;
+    [SerializeField] // 攻撃距離
+    private float attackDistance = 0;
+    [SerializeField] // 立ち時間
     private float idleTime = 0; 
-    [SerializeField]
+    [SerializeField] // 歩き時間
     private float walkTime = 0;
+    [SerializeField] // hp
+    private int hp = 0;
 
+    // AIコンポーネント
+    private NavMeshAgent agent = null;
+    // アニメーションコンポーネント
+    private Animator anim = null;
+    // 向き
     private Vector2 dir = Vector2.zero;
+    // 敵
     private GameObject target = null;
+    // 敵との距離
     private float distance = 0;
+    // 攻撃終了フラグ
+    private bool attackEndFlag = false;
+
+    // Updateのタイプ
+    protected override Type type => Type.FixedUpdate;
+
+
+    private void OnEncount(Collider2D other)
+    {
+        target = other.gameObject;
+    }
+
+    private void OnAttackHit(Collider2D other)
+    {
+        other.GetComponent<PlayerController>().OnDamage(1);
+    }
+
+    private void OnAttackEnd()
+    {
+        attackEndFlag = true;
+    }
+
+    public void OnDamage(int damage)
+    {
+        hp -= damage;
+    }
+
 
     private void Start()
     {
@@ -37,92 +72,71 @@ public class EnemyController : StateMachine<EnemyController>
         agent.updateRotation = false;
         agent.updateUpAxis = false;
 
-        ChangeState(new MoveState(this));
+        serchDetector.onTriggerEnter.AddListener(OnEncount);
+        attackDetector.onTriggerEnter.AddListener(OnAttackHit);
+
+        ChangeState(new IdleState(this));
     }
 
-    private void FixedUpdate()
+    private class IdleState : State<EnemyController>
     {
-        OnUpdate();
-    }
+        public IdleState(EnemyController _m) : base(_m){}
 
-    private class MoveState : State<EnemyController>
-    {
-        public MoveState(EnemyController _m) : base(_m){}
+        private float countTime = 0;
 
-        private enum State
+        public override void OnUpdate()
         {
-            Idle,
-            Walk
+            if(m.target)
+            {
+                m.ChangeState(new ChaseState(m));
+                return;
+            }
+            else if(countTime >= m.idleTime)
+            {
+                m.ChangeState(new WalkState(m));
+                return;
+            }
+
+            countTime += Time.fixedDeltaTime;
         }
-        private State state = State.Idle;
-        private bool isEnter = false;
+    }
+
+    private class WalkState : State<EnemyController>
+    {
+        public WalkState(EnemyController _m) : base(_m){}
+
         private float countTime = 0;
 
         public override void OnEnter()
         {
-            m.target = null;
-            m.distance = 0;
+            m.dir = Random.insideUnitCircle.normalized;
+            m.anim.SetFloat("speed", 0.5f);
         }
 
         public override void OnUpdate()
         {
-            if(m.serchDetector.isCollision)
+            if(m.target)
             {
                 m.ChangeState(new ChaseState(m));
+                return;
             }
-
-            switch(state)
+            else if(countTime >= m.walkTime)
             {
-                case State.Idle:
-                {
-                    if(!isEnter)
-                    {
-                        isEnter = true;
-                        countTime = 0;
-                        m.anim.SetFloat("speed", 0);
-                    }
-
-                    if(countTime >= m.idleTime)
-                    {
-                        state = State.Walk;
-                        isEnter = false;
-                    }
-
-                    countTime += Time.fixedDeltaTime;
-
-                    break;
-                }
-                case State.Walk:
-                {
-                    if(!isEnter)
-                    {
-                        isEnter = true;
-                        countTime = 0;
-                        m.dir = Random.insideUnitCircle.normalized;
-                        m.anim.SetFloat("speed", 0.5f);
-                    }
-
-                    if(countTime >= m.walkTime)
-                    {
-                        state = State.Idle;
-                        isEnter = false;
-                    }
-
-                    m.transform.position += 
-                        m.transform.TransformDirection(m.dir) * Time.fixedDeltaTime * m.walkSpeed;
-                    m.anim.SetFloat("x", m.dir.normalized.x);
-                    m.anim.SetFloat("y", m.dir.normalized.y);
-                    m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
-
-                    countTime += Time.fixedDeltaTime;
-
-                    break;
-                }
+                m.ChangeState(new IdleState(m));
+                return;
             }
+
+            m.transform.position += m.transform.TransformDirection(m.dir) * Time.fixedDeltaTime * m.walkSpeed;
+            m.anim.SetFloat("x", m.dir.normalized.x);
+            m.anim.SetFloat("y", m.dir.normalized.y);
+            m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
+
+            countTime += Time.fixedDeltaTime;
         }
 
         public override void OnExit()
         {
+            m.anim.SetFloat("speed", 0);
         }
     }
 
@@ -135,10 +149,6 @@ public class EnemyController : StateMachine<EnemyController>
         public override void OnEnter()
         {
             m.agent.isStopped = false;
-            if(!m.target)
-            {
-                m.target = m.serchDetector.collisionObject;
-            }
             prePos = m.transform.position;
         }
 
@@ -148,11 +158,14 @@ public class EnemyController : StateMachine<EnemyController>
 
             if(m.chaseDistance < m.distance)
             {
-                m.ChangeState(new MoveState(m));
+                m.ChangeState(new IdleState(m));
+                m.target = null;
+                return;
             }
             else if(m.attackDistance > m.distance)
             {
-                m.ChangeState(new WaitState(m));
+                m.ChangeState(new AttackState(m));
+                return;
             }
 
             m.agent.speed = m.dashSpeed;
@@ -176,18 +189,33 @@ public class EnemyController : StateMachine<EnemyController>
         }
     }
 
-    private class WaitState : State<EnemyController>
+    private class AttackState : State<EnemyController>
     {
-        public WaitState(EnemyController _m) : base(_m){}
+        public AttackState(EnemyController _m) : base(_m){}
+
+        public override void OnEnter()
+        {
+            m.anim.SetFloat("attackNumber", 1);
+            m.anim.SetTrigger("isAttack");
+            m.attackDetector.gameObject.SetActive(true);
+        }
 
         public override void OnUpdate()
         {
             m.distance = Vector3.Distance(m.target.transform.position, m.transform.position);
 
-            if(m.attackDistance + 0.1 < m.distance)
+            if(m.attackEndFlag)
             {
                 m.ChangeState(new ChaseState(m));
+                return;
             }
+        }
+
+        public override void OnExit()
+        {
+            m.attackEndFlag = false;
+            m.anim.SetFloat("attackNumber", 0);
+            m.attackDetector.gameObject.SetActive(false);
         }
     }
 }

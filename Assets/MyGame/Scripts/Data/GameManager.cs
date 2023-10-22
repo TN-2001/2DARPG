@@ -5,16 +5,14 @@ using UnityEngine.InputSystem;
 
 public class GameManager : Singleton<GameManager>
 {
-    // コンポーネント
+    // 入力コンポーネント
     public PlayerInput Input { get; private set; } = null;
-    [field:SerializeField]
-    public GameObject Player { get; private set; } = null;
 
-    protected override void Awake ()
+    // シングルトンのタイプ
+    protected override Type type => Type.Destroy;
+
+    protected override void OnAwake ()
     {
-        I = this;
-
-        // コンポーネントの入手
         Input = GetComponent<PlayerInput>();
     }
 }

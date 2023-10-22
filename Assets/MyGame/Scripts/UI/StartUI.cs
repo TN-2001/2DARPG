@@ -11,11 +11,6 @@ public class StartUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI startText;
 
-    private void Start()
-    {
-        GameManager.I.Input.actions.FindActionMap("Start").Enable();
-    }
-
     private void Update()
     {
         if(GameManager.I.Input.actions["Start"].WasPerformedThisFrame())
@@ -23,7 +18,6 @@ public class StartUI : MonoBehaviour
             loadPanel.SetActive(true);
             startText.text = "読み込み中";
             SceneManager.LoadSceneAsync("Main");
-            GameManager.I.Input.actions.FindActionMap("Start").Disable();
         }
     }
 }

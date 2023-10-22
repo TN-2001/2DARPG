@@ -9,11 +9,6 @@ public class CollisionDetector : MonoBehaviour
     [SerializeField]
     private string tagName = null;
 
-    // フラグ
-    public bool isCollision { get; private set; } = false;
-    // 衝突中のオブジェクト
-    public GameObject collisionObject { get; private set; } = null;
-
     // 引数にColliderを持ったUnityEvent
     public UnityEvent<Collider2D> onTriggerEnter = null;
     public UnityEvent<Collider2D> onTriggerStay = null;
@@ -23,8 +18,6 @@ public class CollisionDetector : MonoBehaviour
     {       
         if(other.gameObject.tag == tagName)
         {
-            isCollision = true;
-            collisionObject = other.gameObject;
             onTriggerEnter?.Invoke(other);        
         }
     }
@@ -41,8 +34,6 @@ public class CollisionDetector : MonoBehaviour
     {
         if(other.gameObject.tag == tagName)
         {
-            isCollision = false;
-            collisionObject = null;
             onTriggerExit?.Invoke(other);
         }
     }
