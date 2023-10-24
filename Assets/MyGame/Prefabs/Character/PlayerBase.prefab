@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: tagName
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 4453719627990113203, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: tagName
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 4783028036859343443, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
       propertyPath: dashSpeed
       value: 4

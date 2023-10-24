@@ -6,21 +6,27 @@ public class PlayerController : StateMachine<PlayerController>
 {
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
+    [SerializeField] // エリア判定
+    private CollisionDetector areaDetector = null;
     [SerializeField] // 攻撃判定
-    private CollisionDetector attackDetector = null;
+    private CollisionDetector[] attackDetectors = null;
     [SerializeField] // 歩きスピード
     private float walkSpeed = 0;
     [SerializeField] // ダッシュスピード
     private float dashSpeed = 0;
-    [SerializeField] // hp
-    private int hp = 0;
 
     // 物理コンポーネント
     private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
+    [SerializeField] // キャラクター
+    private Character character = null;
     // 向き
     private Vector2 dir = Vector2.zero;
+    [SerializeField] // エリア内のターゲット
+    private List<GameObject> targets = new List<GameObject>();
+    // 攻撃番号
+    private int attackNumber = 0;
     // 攻撃終了フラグ
     private bool attackEndFlag = false;
 
@@ -28,9 +34,19 @@ public class PlayerController : StateMachine<PlayerController>
     protected override Type type => Type.FixedUpdate;
 
 
+    private void OnEnterArea(Collider2D other)
+    {
+        targets.Add(other.gameObject);
+    }
+
+    private void OnExitArea(Collider2D other)
+    {
+        targets.Remove(other.gameObject);
+    }
+
     private void OnAttackHit(Collider2D other)
     {
-        other.GetComponent<EnemyController>().OnDamage(1);
+        other.GetComponent<EnemyController>().OnDamage(character.GetAttack(attackNumber));
     }
 
     private void OnAttackEnd()
@@ -40,7 +56,7 @@ public class PlayerController : StateMachine<PlayerController>
 
     public void OnDamage(int damage)
     {
-        hp -= damage;
+        character.OnDamage(damage);
     }
 
 
@@ -49,7 +65,10 @@ public class PlayerController : StateMachine<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        attackDetector.onTriggerEnter.AddListener(OnAttackHit);
+        character = new Character(GameManager.I.DataBase.CharacterDatas[0]);
+
+        areaDetector.onTriggerEnter.AddListener(OnEnterArea);
+        areaDetector.onTriggerExit.AddListener(OnExitArea);
 
         ChangeState(new IdleState(this));
     }
@@ -165,11 +184,30 @@ public class PlayerController : StateMachine<PlayerController>
     {
         public AttackState(PlayerController _m) : base(_m){}
 
+        private GameObject target = null;
+
         public override void OnEnter()
         {
-            m.anim.SetFloat("attackNumber", 1);
+            if(m.targets.Count > 0)
+            {
+                float dis = 100;
+                for(int i = 0; i < m.targets.Count; i++)
+                {
+                    if(Vector3.Distance(m.targets[i].transform.position, m.transform.position) < dis)
+                    {
+                        target = m.targets[i];
+                        dis = Vector3.Distance(m.targets[i].transform.position, m.transform.position);
+                    }
+                }
+                m.dir = (target.transform.position - m.transform.position).normalized;
+                m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
+                m.anim.SetFloat("x", m.dir.normalized.x);
+                m.anim.SetFloat("y", m.dir.normalized.y);
+            }
+            m.attackDetectors[m.attackNumber].onTriggerEnter.AddListener(m.OnAttackHit);
+            m.attackDetectors[m.attackNumber].gameObject.SetActive(true);
+            m.anim.SetFloat("attackNumber", m.attackNumber + 1);
             m.anim.SetTrigger("isAttack");
-            m.attackDetector.gameObject.SetActive(true);
         }
 
         public override void OnUpdate()
@@ -185,7 +223,8 @@ public class PlayerController : StateMachine<PlayerController>
         {
             m.attackEndFlag = false;
             m.anim.SetFloat("attackNumber", 0);
-            m.attackDetector.gameObject.SetActive(false);
+            m.attackDetectors[m.attackNumber].gameObject.SetActive(false);
+            m.attackDetectors[m.attackNumber].onTriggerEnter.RemoveAllListeners();
         }
     }
 }
