@@ -12,12 +12,17 @@ public class EnemyController : StateMachine<EnemyController>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     [SerializeField] // 攻撃
     private AttackController[] attackControllers = null;
 =======
     [SerializeField] // 攻撃判定
     private CollisionDetector attackDetector = null;
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+=======
+    [SerializeField] // 攻撃判定
+    private CollisionDetector[] attackDetectors = null;
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
     [SerializeField] // 攻撃判定
     private CollisionDetector[] attackDetectors = null;
@@ -54,7 +59,11 @@ public class EnemyController : StateMachine<EnemyController>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     [SerializeField] // 攻撃番号
+=======
+    // 攻撃番号
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
     // 攻撃番号
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
@@ -79,6 +88,7 @@ public class EnemyController : StateMachine<EnemyController>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     private void OnAttackHit(Collider2D other)
     {
@@ -89,12 +99,17 @@ public class EnemyController : StateMachine<EnemyController>
 =======
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
+=======
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
     private void OnAttackHit(Collider2D other)
     {
         other.GetComponent<PlayerController>().OnDamage(character.GetAttack(attackNumber));
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
+=======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
@@ -273,6 +288,7 @@ public class EnemyController : StateMachine<EnemyController>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
             {
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
@@ -280,6 +296,10 @@ public class EnemyController : StateMachine<EnemyController>
 =======
             m.attackDetector.gameObject.SetActive(false);
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+=======
+            m.attackDetectors[m.attackNumber].gameObject.SetActive(false);
+            m.attackDetectors[m.attackNumber].onTriggerEnter.RemoveAllListeners();
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
             m.attackDetectors[m.attackNumber].gameObject.SetActive(false);
             m.attackDetectors[m.attackNumber].onTriggerEnter.RemoveAllListeners();

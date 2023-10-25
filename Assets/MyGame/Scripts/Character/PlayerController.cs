@@ -11,12 +11,17 @@ public class PlayerController : StateMachine<PlayerController>
     private CollisionDetector areaDetector = null;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     [SerializeField] // 攻撃
     private AttackController[] attackControllers = null;
 =======
     [SerializeField] // 攻撃判定
     private CollisionDetector attackDetector = null;
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+=======
+    [SerializeField] // 攻撃判定
+    private CollisionDetector[] attackDetectors = null;
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
     [SerializeField] // 攻撃判定
     private CollisionDetector[] attackDetectors = null;
@@ -66,6 +71,11 @@ public class PlayerController : StateMachine<PlayerController>
     {
         other.GetComponent<EnemyController>().OnDamage(1);
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+    }
+
+    private void OnAttackHit(Collider2D other)
+    {
+        other.GetComponent<EnemyController>().OnDamage(character.GetAttack(attackNumber));
     }
 
     private void OnAttackHit(Collider2D other)
@@ -255,6 +265,7 @@ public class PlayerController : StateMachine<PlayerController>
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
             {
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
@@ -262,6 +273,10 @@ public class PlayerController : StateMachine<PlayerController>
 =======
             m.attackDetector.gameObject.SetActive(false);
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+=======
+            m.attackDetectors[m.attackNumber].gameObject.SetActive(false);
+            m.attackDetectors[m.attackNumber].onTriggerEnter.RemoveAllListeners();
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
             m.attackDetectors[m.attackNumber].gameObject.SetActive(false);
             m.attackDetectors[m.attackNumber].onTriggerEnter.RemoveAllListeners();
