@@ -19,7 +19,11 @@ MonoBehaviour:
     attackDatas:
     - type: 0
       area: 1
+      speed: 0
+      survivalTime: 0
       damage: 100
     - type: 2
       area: 3.5
+      speed: 5
+      survivalTime: 2
       damage: 120

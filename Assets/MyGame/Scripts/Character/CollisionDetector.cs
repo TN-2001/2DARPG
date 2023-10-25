@@ -14,11 +14,15 @@ public class CollisionDetector : MonoBehaviour
     public UnityEvent<Collider2D> onTriggerStay = null;
     public UnityEvent<Collider2D> onTriggerExit = null;
 
+    [SerializeField] // 判定フラグ
+    private bool isCollosion = false;
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {       
         if(other.gameObject.tag == tagName)
         {
-            onTriggerEnter?.Invoke(other);        
+            onTriggerEnter?.Invoke(other);
         }
     }
 
@@ -27,6 +31,7 @@ public class CollisionDetector : MonoBehaviour
         if(other.gameObject.tag == tagName)
         {
             onTriggerStay?.Invoke(other);
+            isCollosion = true;
         }
     }
 
@@ -35,6 +40,7 @@ public class CollisionDetector : MonoBehaviour
         if(other.gameObject.tag == tagName)
         {
             onTriggerExit?.Invoke(other);
+            isCollosion = false;
         }
     }
 }
