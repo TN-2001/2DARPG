@@ -485,7 +485,6 @@ MonoBehaviour:
     currentHp: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   targets: []
   attackNumber: 0
 =======
@@ -494,8 +493,6 @@ MonoBehaviour:
   dashSpeed: 2
   hp: 10
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
@@ -517,7 +514,6 @@ MonoBehaviour:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   attackControllers:
   - {fileID: 2923941635581320627}
   - {fileID: 2097107903406951722}
@@ -525,10 +521,6 @@ MonoBehaviour:
 =======
   attackDetector: {fileID: 4329171255032401640}
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
-  attackDetectors:
-  - {fileID: 4329171255032401640}
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
   attackDetectors:
   - {fileID: 4329171255032401640}
@@ -553,15 +545,12 @@ MonoBehaviour:
     currentHp: 0
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   targets: []
   target: {fileID: 0}
   attackNumber: 0
 =======
   hp: 10
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
@@ -675,10 +664,7 @@ MonoBehaviour:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   isCollosion: 0
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
@@ -773,7 +759,6 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   isCollosion: 0
@@ -1010,8 +995,6 @@ Transform:
   m_PrefabAsset: {fileID: 0}
 =======
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
