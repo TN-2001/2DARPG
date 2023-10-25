@@ -8,8 +8,8 @@ public class PlayerController : StateMachine<PlayerController>
     private Transform rotation = null;
     [SerializeField] // エリア判定
     private CollisionDetector areaDetector = null;
-    [SerializeField] // 攻撃判定
-    private CollisionDetector[] attackDetectors = null;
+    [SerializeField] // 攻撃
+    private AttackController[] attackControllers = null;
     [SerializeField] // 歩きスピード
     private float walkSpeed = 0;
     [SerializeField] // ダッシュスピード
@@ -25,7 +25,7 @@ public class PlayerController : StateMachine<PlayerController>
     private Vector2 dir = Vector2.zero;
     [SerializeField] // エリア内のターゲット
     private List<GameObject> targets = new List<GameObject>();
-    // 攻撃番号
+    [SerializeField] // 攻撃番号
     private int attackNumber = 0;
     // 攻撃終了フラグ
     private bool attackEndFlag = false;
@@ -42,11 +42,6 @@ public class PlayerController : StateMachine<PlayerController>
     private void OnExitArea(Collider2D other)
     {
         targets.Remove(other.gameObject);
-    }
-
-    private void OnAttackHit(Collider2D other)
-    {
-        other.GetComponent<EnemyController>().OnDamage(character.GetAttack(attackNumber));
     }
 
     private void OnAttackEnd()
@@ -204,8 +199,22 @@ public class PlayerController : StateMachine<PlayerController>
                 m.anim.SetFloat("x", m.dir.normalized.x);
                 m.anim.SetFloat("y", m.dir.normalized.y);
             }
-            m.attackDetectors[m.attackNumber].onTriggerEnter.AddListener(m.OnAttackHit);
-            m.attackDetectors[m.attackNumber].gameObject.SetActive(true);
+
+            AttackController attackController = m.attackControllers[m.attackNumber];
+            AttackData attackData = m.character.AttackDatas[m.attackNumber];
+            if(attackData._Type == AttackData.Type.Throw)
+            {
+                attackController = Instantiate(attackController.gameObject, 
+                    attackController.transform.position, attackController.transform.rotation)
+                    .GetComponent<AttackController>();
+                attackController.transform.SetParent(m.transform.parent);
+                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
+            }
+            else
+            {
+                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
+            }
+
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
             m.anim.SetTrigger("isAttack");
         }
@@ -223,8 +232,10 @@ public class PlayerController : StateMachine<PlayerController>
         {
             m.attackEndFlag = false;
             m.anim.SetFloat("attackNumber", 0);
-            m.attackDetectors[m.attackNumber].gameObject.SetActive(false);
-            m.attackDetectors[m.attackNumber].onTriggerEnter.RemoveAllListeners();
+            if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
+            {
+                m.attackControllers[m.attackNumber].gameObject.SetActive(false);
+            }
         }
     }
 }
