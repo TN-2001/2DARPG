@@ -484,7 +484,6 @@ MonoBehaviour:
       attackDatas: []
     currentHp: 0
 <<<<<<< HEAD
-<<<<<<< HEAD
   targets: []
   attackNumber: 0
 =======
@@ -493,8 +492,6 @@ MonoBehaviour:
   dashSpeed: 2
   hp: 10
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 --- !u!114 &7959531648435098246
@@ -513,7 +510,6 @@ MonoBehaviour:
   serchDetector: {fileID: 1689700841741937286}
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   attackControllers:
   - {fileID: 2923941635581320627}
   - {fileID: 2097107903406951722}
@@ -521,10 +517,6 @@ MonoBehaviour:
 =======
   attackDetector: {fileID: 4329171255032401640}
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
-  attackDetectors:
-  - {fileID: 4329171255032401640}
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
   attackDetectors:
   - {fileID: 4329171255032401640}
@@ -544,15 +536,12 @@ MonoBehaviour:
       attackDatas: []
     currentHp: 0
 <<<<<<< HEAD
-<<<<<<< HEAD
   targets: []
   target: {fileID: 0}
   attackNumber: 0
 =======
   hp: 10
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 --- !u!1 &6666721215165170035
@@ -663,10 +652,7 @@ MonoBehaviour:
       m_Calls: []
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
   isCollosion: 0
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 --- !u!1 &8180086765987268427
@@ -759,7 +745,6 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
 <<<<<<< HEAD
   isCollosion: 0
 --- !u!1001 &3389488095811068904
@@ -995,7 +980,5 @@ Transform:
   m_PrefabAsset: {fileID: 0}
 =======
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
-=======
->>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
 =======
 >>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
