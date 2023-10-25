@@ -6,27 +6,35 @@ public class PlayerController : StateMachine<PlayerController>
 {
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
+<<<<<<< HEAD
     [SerializeField] // エリア判定
     private CollisionDetector areaDetector = null;
     [SerializeField] // 攻撃
     private AttackController[] attackControllers = null;
+=======
+    [SerializeField] // 攻撃判定
+    private CollisionDetector attackDetector = null;
+>>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
     [SerializeField] // 歩きスピード
     private float walkSpeed = 0;
     [SerializeField] // ダッシュスピード
     private float dashSpeed = 0;
+    [SerializeField] // hp
+    private int hp = 0;
 
     // 物理コンポーネント
     private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
-    [SerializeField] // キャラクター
-    private Character character = null;
     // 向き
     private Vector2 dir = Vector2.zero;
+<<<<<<< HEAD
     [SerializeField] // エリア内のターゲット
     private List<GameObject> targets = new List<GameObject>();
     [SerializeField] // 攻撃番号
     private int attackNumber = 0;
+=======
+>>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
     // 攻撃終了フラグ
     private bool attackEndFlag = false;
 
@@ -34,6 +42,7 @@ public class PlayerController : StateMachine<PlayerController>
     protected override Type type => Type.FixedUpdate;
 
 
+<<<<<<< HEAD
     private void OnEnterArea(Collider2D other)
     {
         targets.Add(other.gameObject);
@@ -42,6 +51,11 @@ public class PlayerController : StateMachine<PlayerController>
     private void OnExitArea(Collider2D other)
     {
         targets.Remove(other.gameObject);
+=======
+    private void OnAttackHit(Collider2D other)
+    {
+        other.GetComponent<EnemyController>().OnDamage(1);
+>>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
     }
 
     private void OnAttackEnd()
@@ -51,7 +65,7 @@ public class PlayerController : StateMachine<PlayerController>
 
     public void OnDamage(int damage)
     {
-        character.OnDamage(damage);
+        hp -= damage;
     }
 
 
@@ -60,10 +74,7 @@ public class PlayerController : StateMachine<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        character = new Character(GameManager.I.DataBase.CharacterDatas[0]);
-
-        areaDetector.onTriggerEnter.AddListener(OnEnterArea);
-        areaDetector.onTriggerExit.AddListener(OnExitArea);
+        attackDetector.onTriggerEnter.AddListener(OnAttackHit);
 
         ChangeState(new IdleState(this));
     }
@@ -179,10 +190,9 @@ public class PlayerController : StateMachine<PlayerController>
     {
         public AttackState(PlayerController _m) : base(_m){}
 
-        private GameObject target = null;
-
         public override void OnEnter()
         {
+<<<<<<< HEAD
             if(m.targets.Count > 0)
             {
                 float dis = 100;
@@ -216,7 +226,11 @@ public class PlayerController : StateMachine<PlayerController>
             }
 
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
+=======
+            m.anim.SetFloat("attackNumber", 1);
+>>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
             m.anim.SetTrigger("isAttack");
+            m.attackDetector.gameObject.SetActive(true);
         }
 
         public override void OnUpdate()
@@ -232,10 +246,14 @@ public class PlayerController : StateMachine<PlayerController>
         {
             m.attackEndFlag = false;
             m.anim.SetFloat("attackNumber", 0);
+<<<<<<< HEAD
             if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
             {
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
             }
+=======
+            m.attackDetector.gameObject.SetActive(false);
+>>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
         }
     }
 }
