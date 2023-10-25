@@ -45,8 +45,10 @@ public class AttackData
     public int Damage => damage;
 }
 
+[System.Serializable]
 public class Character
 {
+    [SerializeField]
     private CharacterData data = null;
 
     public string Name => data.Name;
@@ -54,12 +56,14 @@ public class Character
     public int Atk => data.Atk; 
     public AttackData[] AttackDatas => data.AttackDatas;
 
+    [SerializeField]
     private int currentHp = 0;
     public int CurrentHp => currentHp;
 
     public Character(CharacterData _data)
     {
         data = _data;
+        currentHp = Hp;
     }
 
     public void OnRecovery(int recovery)

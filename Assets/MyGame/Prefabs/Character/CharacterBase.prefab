@@ -113,6 +113,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2524810567586291554}
   - {fileID: 928560885289654196}
   - {fileID: 829014149764922004}
   - {fileID: 4470031614221642253}
@@ -328,8 +329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9beb8cc6091044745b9bf7bae5ebab17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 
   rotation: {fileID: 1502901371180628314}
-<<<<<<< HEAD
   areaDetector: {fileID: 4453719627990113203}
   attackControllers:
   - {fileID: 2923941635581320627}
@@ -346,12 +347,6 @@ MonoBehaviour:
     currentHp: 0
   targets: []
   attackNumber: 0
-=======
-  attackDetector: {fileID: 4329171255032401640}
-  walkSpeed: 1
-  dashSpeed: 2
-  hp: 10
->>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
 --- !u!114 &7959531648435098246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,23 +359,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a0b676d9b4f1b142873010cc2fbc226, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 
   rotation: {fileID: 1502901371180628314}
+  areaDetector: {fileID: 4453719627990113203}
   serchDetector: {fileID: 1689700841741937286}
-<<<<<<< HEAD
   attackControllers:
   - {fileID: 2923941635581320627}
   - {fileID: 2097107903406951722}
   - {fileID: 5456918630353620286}
-=======
-  attackDetector: {fileID: 4329171255032401640}
->>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
   walkSpeed: 1
   dashSpeed: 2
-  chaseDistance: 6
   attackDistance: 1.5
   idleTime: 3
   walkTime: 3
-<<<<<<< HEAD
   character:
     data:
       name: 
@@ -391,9 +382,6 @@ MonoBehaviour:
   targets: []
   target: {fileID: 0}
   attackNumber: 0
-=======
-  hp: 10
->>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
 --- !u!1 &6666721215165170035
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,7 +488,6 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
-<<<<<<< HEAD
   isCollosion: 0
 --- !u!1 &8180086765987268427
 GameObject:
@@ -824,5 +811,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5161667734727395825, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
   m_PrefabInstance: {fileID: 8766629842465055740}
   m_PrefabAsset: {fileID: 0}
-=======
->>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
