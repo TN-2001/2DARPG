@@ -9,12 +9,17 @@ public class PlayerController : StateMachine<PlayerController>
 <<<<<<< HEAD
     [SerializeField] // エリア判定
     private CollisionDetector areaDetector = null;
+<<<<<<< HEAD
     [SerializeField] // 攻撃
     private AttackController[] attackControllers = null;
 =======
     [SerializeField] // 攻撃判定
     private CollisionDetector attackDetector = null;
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+=======
+    [SerializeField] // 攻撃判定
+    private CollisionDetector[] attackDetectors = null;
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
     [SerializeField] // 歩きスピード
     private float walkSpeed = 0;
     [SerializeField] // ダッシュスピード
@@ -31,7 +36,7 @@ public class PlayerController : StateMachine<PlayerController>
 <<<<<<< HEAD
     [SerializeField] // エリア内のターゲット
     private List<GameObject> targets = new List<GameObject>();
-    [SerializeField] // 攻撃番号
+    // 攻撃番号
     private int attackNumber = 0;
 =======
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
@@ -56,6 +61,11 @@ public class PlayerController : StateMachine<PlayerController>
     {
         other.GetComponent<EnemyController>().OnDamage(1);
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+    }
+
+    private void OnAttackHit(Collider2D other)
+    {
+        other.GetComponent<EnemyController>().OnDamage(character.GetAttack(attackNumber));
     }
 
     private void OnAttackEnd()
@@ -209,22 +219,8 @@ public class PlayerController : StateMachine<PlayerController>
                 m.anim.SetFloat("x", m.dir.normalized.x);
                 m.anim.SetFloat("y", m.dir.normalized.y);
             }
-
-            AttackController attackController = m.attackControllers[m.attackNumber];
-            AttackData attackData = m.character.AttackDatas[m.attackNumber];
-            if(attackData._Type == AttackData.Type.Throw)
-            {
-                attackController = Instantiate(attackController.gameObject, 
-                    attackController.transform.position, attackController.transform.rotation)
-                    .GetComponent<AttackController>();
-                attackController.transform.SetParent(m.transform.parent);
-                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
-            }
-            else
-            {
-                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
-            }
-
+            m.attackDetectors[m.attackNumber].onTriggerEnter.AddListener(m.OnAttackHit);
+            m.attackDetectors[m.attackNumber].gameObject.SetActive(true);
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
 =======
             m.anim.SetFloat("attackNumber", 1);
@@ -247,6 +243,7 @@ public class PlayerController : StateMachine<PlayerController>
             m.attackEndFlag = false;
             m.anim.SetFloat("attackNumber", 0);
 <<<<<<< HEAD
+<<<<<<< HEAD
             if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
             {
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
@@ -254,6 +251,10 @@ public class PlayerController : StateMachine<PlayerController>
 =======
             m.attackDetector.gameObject.SetActive(false);
 >>>>>>> parent of 5a5e18f (データベースからキャラクターのデータを使用可能に、攻撃時に敵の方を向けるように)
+=======
+            m.attackDetectors[m.attackNumber].gameObject.SetActive(false);
+            m.attackDetectors[m.attackNumber].onTriggerEnter.RemoveAllListeners();
+>>>>>>> parent of 838f5c7 (AttackControllerの作成、遠距離攻撃を可能に)
         }
     }
 }

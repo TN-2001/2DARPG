@@ -34,12 +34,6 @@ public class AttackData
     [SerializeField] // 攻撃可能距離
     private float area = 0;
     public float Area => area;
-    [SerializeField] // 移動速度
-    private float speed = 0;
-    public float Speed => speed;
-    [SerializeField] // 生存時間
-    private float survivalTime = 0;
-    public float SurvivalTime => survivalTime;
     [SerializeField] // ダメージ%
     private int damage = 0;
     public int Damage => damage;
