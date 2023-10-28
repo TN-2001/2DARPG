@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : StateMachine<PlayerController>
 {
+    [SerializeField] // ナンバー
+    private int number = 0;
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // エリア判定
@@ -19,16 +21,18 @@ public class PlayerController : StateMachine<PlayerController>
     private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
-    [SerializeField] // キャラクター
+    [SerializeField, ReadOnly] // キャラクター
     private Character character = null;
     // 向き
     private Vector2 dir = Vector2.zero;
-    [SerializeField] // エリア内のターゲット
+    [SerializeField, ReadOnly] // エリア内のターゲット
     private List<GameObject> targets = new List<GameObject>();
-    [SerializeField] // 攻撃番号
+    [SerializeField, ReadOnly] // 攻撃番号
     private int attackNumber = 0;
     // 攻撃終了フラグ
-    private bool attackEndFlag = false;
+    private bool isAttackEnd = false;
+    // ガードフラグ
+    private bool isGuard = false;
 
     // Updateのタイプ
     protected override Type type => Type.FixedUpdate;
@@ -46,12 +50,15 @@ public class PlayerController : StateMachine<PlayerController>
 
     private void OnAttackEnd()
     {
-        attackEndFlag = true;
+        isAttackEnd = true;
     }
 
     public void OnDamage(int damage)
     {
-        character.OnDamage(damage);
+        if(!isGuard)
+        {
+            character.OnDamage(damage);
+        }
     }
 
 
@@ -60,7 +67,7 @@ public class PlayerController : StateMachine<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        character = new Character(GameManager.I.DataBase.CharacterDatas[0]);
+        character = new Character(GameManager.I.DataBase.CharacterDatas[number]);
 
         areaDetector.onTriggerEnter.AddListener(OnEnterArea);
         areaDetector.onTriggerExit.AddListener(OnExitArea);
@@ -74,9 +81,21 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
+            if(GameManager.I.Input.actions["Attack"].IsPressed())
             {
+                m.attackNumber = 0;
                 m.ChangeState(new AttackState(m));
+                return;
+            }
+            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            {
+                m.attackNumber = 1;
+                m.ChangeState(new AttackState(m));
+                return;
+            }
+            else if(GameManager.I.Input.actions["Guard"].IsPressed())
+            {
+                m.ChangeState(new GuardState(m));
                 return;
             }
             else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
@@ -103,9 +122,21 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
+            if(GameManager.I.Input.actions["Attack"].IsPressed())
             {
+                m.attackNumber = 0;
                 m.ChangeState(new AttackState(m));
+                return;
+            }
+            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            {
+                m.attackNumber = 1;
+                m.ChangeState(new AttackState(m));
+                return;
+            }
+            else if(GameManager.I.Input.actions["Guard"].IsPressed())
+            {
+                m.ChangeState(new GuardState(m));
                 return;
             }
             else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
@@ -144,9 +175,21 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].WasPerformedThisFrame())
+            if(GameManager.I.Input.actions["Attack"].IsPressed())
             {
+                m.attackNumber = 0;
                 m.ChangeState(new AttackState(m));
+                return;
+            }
+            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            {
+                m.attackNumber = 1;
+                m.ChangeState(new AttackState(m));
+                return;
+            }
+            else if(GameManager.I.Input.actions["Guard"].IsPressed())
+            {
+                m.ChangeState(new GuardState(m));
                 return;
             }
             else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
@@ -221,7 +264,7 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(m.attackEndFlag)
+            if(m.isAttackEnd)
             {
                 m.ChangeState(new IdleState(m));
                 return;
@@ -230,12 +273,38 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnExit()
         {
-            m.attackEndFlag = false;
+            m.isAttackEnd = false;
             m.anim.SetFloat("attackNumber", 0);
             if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
             {
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
             }
+        }
+    }
+
+    private class GuardState : State<PlayerController>
+    {
+        public GuardState(PlayerController _m) : base(_m){}
+
+        public override void OnEnter()
+        {
+            m.anim.SetBool("isGuard", true);
+            m.isGuard = true;
+        }
+
+        public override void OnUpdate()
+        {
+            if(!GameManager.I.Input.actions["Guard"].IsPressed())
+            {
+                m.ChangeState(new IdleState(m));
+                return;
+            }
+        }
+
+        public override void OnExit()
+        {
+            m.anim.SetBool("isGuard", false);
+            m.isGuard = false;
         }
     }
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class AttackController : CollisionDetector
 {
-    [SerializeField] // 攻撃力
+    [SerializeField, ReadOnly] // 攻撃力
     private int atk = 0;
-    [SerializeField] // 攻撃データ
+    [SerializeField, ReadOnly] // 攻撃データ
     private AttackData data = null;
     // 経過時間
     private float countTime = 0;

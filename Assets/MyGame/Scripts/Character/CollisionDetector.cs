@@ -14,8 +14,9 @@ public class CollisionDetector : MonoBehaviour
     public UnityEvent<Collider2D> onTriggerStay = null;
     public UnityEvent<Collider2D> onTriggerExit = null;
 
-    [SerializeField] // 判定フラグ
+    [SerializeField, ReadOnly] // 判定フラグ
     private bool isCollosion = false;
+    public bool IsCollosion => isCollosion;
 
 
     private void OnTriggerEnter2D(Collider2D other)

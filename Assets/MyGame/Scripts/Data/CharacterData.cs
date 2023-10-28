@@ -55,6 +55,22 @@ public class Character
     public int Hp => data.Hp;
     public int Atk => data.Atk; 
     public AttackData[] AttackDatas => data.AttackDatas;
+    // プレイヤーに接近し停止する距離
+    public float CloseDistance
+    {
+        get
+        {
+            float closeDistance = 10;
+            for(int i = 0; i < data.AttackDatas.Length; i++)
+            {
+                if(closeDistance > data.AttackDatas[i].Area)
+                {
+                    closeDistance = data.AttackDatas[i].Area;
+                }
+            }
+            return closeDistance;
+        }
+    }
 
     [SerializeField]
     private int currentHp = 0;
@@ -64,6 +80,11 @@ public class Character
     {
         data = _data;
         currentHp = Hp;
+    }
+
+    public int GetAttack(int number)
+    {
+        return Atk * AttackDatas[number].Damage / 100;
     }
 
     public void OnRecovery(int recovery)
@@ -82,10 +103,5 @@ public class Character
         {
             currentHp = 0;
         }
-    }
-
-    public int GetAttack(int number)
-    {
-        return Atk * AttackDatas[number].Damage / 100;
     }
 }

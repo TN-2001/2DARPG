@@ -72,6 +72,14 @@ PrefabInstance:
       propertyPath: walkSpeed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4783028036859343443, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: attackControllers.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4783028036859343443, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: attackControllers.Array.data[1]
+      value: 
+      objectReference: {fileID: 5660947838522921296}
     - target: {fileID: 5456918630353620286, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
       propertyPath: tagName
       value: Enemy
@@ -101,6 +109,18 @@ PrefabInstance:
     - {fileID: 7924566981876642158, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6666721215165170035, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+    - {fileID: 1604619305863529935, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+--- !u!114 &5660947838522921296 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5456918630353620286, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+  m_PrefabInstance: {fileID: 375316670599453806}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc9bf6df3c55854d8106db6420d5bed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
