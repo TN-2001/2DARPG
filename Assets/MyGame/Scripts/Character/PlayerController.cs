@@ -71,6 +71,10 @@ public class PlayerController : StateMachine<PlayerController>
 
         areaDetector.onTriggerEnter.AddListener(OnEnterArea);
         areaDetector.onTriggerExit.AddListener(OnExitArea);
+        for(int i = 0; i < attackControllers.Length; i++)
+        {
+            attackControllers[i].Initialize(character.Atk);
+        }
 
         ChangeState(new IdleState(this));
     }
@@ -243,19 +247,17 @@ public class PlayerController : StateMachine<PlayerController>
                 m.anim.SetFloat("y", m.dir.normalized.y);
             }
 
-            AttackController attackController = m.attackControllers[m.attackNumber];
-            AttackData attackData = m.character.AttackDatas[m.attackNumber];
-            if(attackData._Type == AttackData.Type.Throw)
+            if(m.attackControllers[m.attackNumber].IsThrow)
             {
-                attackController = Instantiate(attackController.gameObject, 
-                    attackController.transform.position, attackController.transform.rotation)
-                    .GetComponent<AttackController>();
-                attackController.transform.SetParent(m.transform.parent);
-                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
+                GameObject obj = Instantiate(m.attackControllers[m.attackNumber].gameObject, 
+                    m.attackControllers[m.attackNumber].transform.position,
+                    m.attackControllers[m.attackNumber].transform.rotation);
+                obj.transform.SetParent(m.transform.parent);
+                obj.SetActive(true);
             }
             else
             {
-                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
+                m.attackControllers[m.attackNumber].gameObject.SetActive(true);
             }
 
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
@@ -275,7 +277,7 @@ public class PlayerController : StateMachine<PlayerController>
         {
             m.isAttackEnd = false;
             m.anim.SetFloat("attackNumber", 0);
-            if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
+            if(!m.attackControllers[m.attackNumber].IsThrow)
             {
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
             }

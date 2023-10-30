@@ -4,44 +4,52 @@ using UnityEngine;
 
 public class AttackController : CollisionDetector
 {
+    [SerializeField] // 攻撃％
+    private int atkPercent = 100;
+    [SerializeField] // 攻撃可能距離
+    private float area = 0;
+    public float Area => area;
+    [SerializeField] // 投げる攻撃
+    private bool isThrow = false;
+    public bool IsThrow => isThrow;
+    [SerializeField] // 移動速度
+    private float speed = 0;
+    [SerializeField] // 生存時間
+    private float survivalTime = 0;
+
     [SerializeField, ReadOnly] // 攻撃力
     private int atk = 0;
-    [SerializeField, ReadOnly] // 攻撃データ
-    private AttackData data = null;
     // 経過時間
     private float countTime = 0;
 
-    public void Initialize(int _atk, AttackData _data)
+    public void Initialize(int _atk)
     {
         atk = _atk;
-        data = _data;
         countTime = 0;
-        onTriggerEnter.RemoveAllListeners();
         onTriggerEnter.AddListener(OnHit);
-        gameObject.SetActive(true);
     }
 
     private void OnHit(Collider2D other)
     {
         if(other.gameObject.tag == "Player")
         {
-            other.GetComponent<PlayerController>().OnDamage(atk);
+            other.GetComponent<PlayerController>().OnDamage(atk * atkPercent / 100);
         }
         else if(other.gameObject.tag == "Enemy")
         {
-            other.GetComponent<EnemyController>().OnDamage(atk);
+            other.GetComponent<EnemyController>().OnDamage(atk * atkPercent / 100);
         }
     }
 
     private void FixedUpdate()
     {
-        if(data._Type == AttackData.Type.Throw)
+        if(isThrow)
         {
-            if(countTime > data.SurvivalTime)
+            if(countTime > survivalTime)
             {
                 Destroy(gameObject);
             }
-            transform.position += transform.up * data.Speed * Time.fixedDeltaTime;
+            transform.position += transform.up * speed * Time.fixedDeltaTime;
             countTime += Time.fixedDeltaTime;
         }
     }

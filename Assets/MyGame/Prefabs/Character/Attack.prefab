@@ -143,10 +143,10 @@ MonoBehaviour:
   onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
+  isCollosion: 0
+  atkPercent: 100
+  area: 0
+  isThrow: 0
+  speed: 0
+  survivalTime: 0
   atk: 0
-  data:
-    type: 0
-    area: 0
-    speed: 0
-    survivalTime: 0
-    damage: 0

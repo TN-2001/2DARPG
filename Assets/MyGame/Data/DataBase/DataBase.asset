@@ -13,17 +13,7 @@ MonoBehaviour:
   m_Name: DataBase
   m_EditorClassIdentifier: 
   characterDatas:
-  - name: "\u30D7\u30EC\u30A4\u30E4\u30FC"
+  - number: 1
+    name: "\u30D7\u30EC\u30A4\u30E4\u30FC"
     hp: 1000
     atk: 10
-    attackDatas:
-    - type: 0
-      area: 1.5
-      speed: 0
-      survivalTime: 0
-      damage: 100
-    - type: 2
-      area: 3.5
-      speed: 5
-      survivalTime: 2
-      damage: 120

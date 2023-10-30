@@ -25,6 +25,8 @@ public class EnemyController : StateMachine<EnemyController>
     private float walkTime = 0;
     [SerializeField] // クールタイム
     private float coolTime = 0;
+    [SerializeField] // 接敵距離
+    private float closeDistance = 0;
 
     // AIコンポーネント
     private NavMeshAgent agent = null;
@@ -130,6 +132,10 @@ public class EnemyController : StateMachine<EnemyController>
         areaDetector.onTriggerEnter.AddListener(OnEnterArea);
         areaDetector.onTriggerExit.AddListener(OnExitArea);
         serchDetector.onTriggerEnter.AddListener(OnEncount);
+        for(int i = 0; i < attackControllers.Length; i++)
+        {
+            attackControllers[i].Initialize(character.Atk);
+        }
 
         ChangeState(new IdleState(this));
     }
@@ -210,9 +216,9 @@ public class EnemyController : StateMachine<EnemyController>
             {
                 m.distance = Vector3.Distance(m.target.transform.position, m.transform.position);
                 m.numbers.Clear();
-                for(int i = 0; i < m.character.AttackDatas.Length; i++)
+                for(int i = 0; i < m.attackControllers.Length; i++)
                 {
-                    if(m.distance <= m.character.AttackDatas[i].Area)
+                    if(m.distance <= m.attackControllers[i].Area)
                     {
                         m.numbers.Add(i);
                     }
@@ -224,7 +230,7 @@ public class EnemyController : StateMachine<EnemyController>
                 m.ChangeState(new IdleState(m));
                 return;
             }
-            else if(m.countCoolTime <= m.coolTime & m.distance > m.character.CloseDistance)
+            else if(m.countCoolTime <= m.coolTime & m.distance > m.closeDistance)
             {
                 m.ChangeState(new ChaseState(m));
                 return;
@@ -265,9 +271,9 @@ public class EnemyController : StateMachine<EnemyController>
             {
                 m.distance = Vector3.Distance(m.target.transform.position, m.transform.position);
                 m.numbers.Clear();
-                for(int i = 0; i < m.character.AttackDatas.Length; i++)
+                for(int i = 0; i < m.attackControllers.Length; i++)
                 {
-                    if(m.distance <= m.character.AttackDatas[i].Area)
+                    if(m.distance <= m.attackControllers[i].Area)
                     {
                         m.numbers.Add(i);
                     }
@@ -279,7 +285,7 @@ public class EnemyController : StateMachine<EnemyController>
                 m.ChangeState(new IdleState(m));
                 return;
             }
-            else if(m.countCoolTime <= m.coolTime & m.distance <= m.character.CloseDistance)
+            else if(m.countCoolTime <= m.coolTime & m.distance <= m.closeDistance)
             {
                 m.ChangeState(new ReadyState(m));
                 return;
@@ -322,19 +328,17 @@ public class EnemyController : StateMachine<EnemyController>
             m.anim.SetFloat("x", m.dir.normalized.x);
             m.anim.SetFloat("y", m.dir.normalized.y);
 
-            AttackController attackController = m.attackControllers[m.attackNumber];
-            AttackData attackData = m.character.AttackDatas[m.attackNumber];
-            if(attackData._Type == AttackData.Type.Throw)
+            if(m.attackControllers[m.attackNumber].IsThrow)
             {
-                attackController = Instantiate(attackController.gameObject, 
-                    attackController.transform.position, attackController.transform.rotation)
-                    .GetComponent<AttackController>();
-                attackController.transform.SetParent(m.transform.parent);
-                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
+                GameObject obj = Instantiate(m.attackControllers[m.attackNumber].gameObject, 
+                    m.attackControllers[m.attackNumber].transform.position,
+                    m.attackControllers[m.attackNumber].transform.rotation);
+                obj.transform.SetParent(m.transform.parent);
+                obj.SetActive(true);
             }
             else
             {
-                attackController.Initialize(m.character.GetAttack(m.attackNumber), attackData);
+                m.attackControllers[m.attackNumber].gameObject.SetActive(true);
             }
 
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
@@ -354,7 +358,7 @@ public class EnemyController : StateMachine<EnemyController>
         {
             m.isAttackEnd = false;
             m.anim.SetFloat("attackNumber", 0);
-            if(m.character.AttackDatas[m.attackNumber]._Type != AttackData.Type.Throw)
+            if(!m.attackControllers[m.attackNumber].IsThrow)
             {
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
             }

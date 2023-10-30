@@ -330,6 +330,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 
+  number: 0
   rotation: {fileID: 1502901371180628314}
   areaDetector: {fileID: 4453719627990113203}
   attackControllers:
@@ -340,10 +341,10 @@ MonoBehaviour:
   dashSpeed: 2
   character:
     data:
+      number: 0
       name: 
       hp: 0
       atk: 0
-      attackDatas: []
     currentHp: 0
   targets: []
   attackNumber: 0
@@ -360,6 +361,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 
+  number: 0
   rotation: {fileID: 1502901371180628314}
   areaDetector: {fileID: 4453719627990113203}
   serchDetector: {fileID: 1689700841741937286}
@@ -372,12 +374,13 @@ MonoBehaviour:
   idleTime: 3
   walkTime: 3
   coolTime: 2
+  closeDistance: 1.25
   character:
     data:
+      number: 0
       name: 
       hp: 0
       atk: 0
-      attackDatas: []
     currentHp: 0
   targets: []
   target: {fileID: 0}
@@ -628,6 +631,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7256213664842886870, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
+      propertyPath: area
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256213664842886870, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
+      propertyPath: speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256213664842886870, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
+      propertyPath: isThrow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256213664842886870, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
+      propertyPath: survivalTime
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8065264845253846579, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
       propertyPath: m_Name
       value: Attack_Throw
@@ -705,6 +724,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7256213664842886870, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
+      propertyPath: area
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 8065264845253846579, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
       propertyPath: m_Name
       value: Attack_Direct
@@ -781,6 +804,10 @@ PrefabInstance:
     - target: {fileID: 5161667734727395825, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256213664842886870, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
+      propertyPath: area
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8065264845253846579, guid: 561dd7431109e7e4c835cec6b5a40853, type: 3}
       propertyPath: m_Name
