@@ -158,7 +158,10 @@ public class PlayerController : StateMachine<PlayerController>
             m.rb.velocity = m.dir * m.walkSpeed;
             m.anim.SetFloat("x", m.dir.x);
             m.anim.SetFloat("y", m.dir.y);
-            m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
+            Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, m.dir);
+            Vector3 vector3 = quaternion.eulerAngles;
+            vector3.y = 0;
+            m.rotation.rotation = Quaternion.Euler(vector3);
         }
 
         public override void OnExit()
@@ -212,7 +215,10 @@ public class PlayerController : StateMachine<PlayerController>
             m.rb.velocity = m.dir * m.dashSpeed;
             m.anim.SetFloat("x", m.dir.x);
             m.anim.SetFloat("y", m.dir.y);
-            m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
+            Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, m.dir);
+            Vector3 vector3 = quaternion.eulerAngles;
+            vector3.y = 0;
+            m.rotation.rotation = Quaternion.Euler(vector3);
         }
 
         public override void OnExit()
@@ -242,7 +248,10 @@ public class PlayerController : StateMachine<PlayerController>
                     }
                 }
                 m.dir = (target.transform.position - m.transform.position).normalized;
-                m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
+                Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, m.dir);
+                Vector3 vector3 = quaternion.eulerAngles;
+                vector3.y = 0;
+                m.rotation.rotation = Quaternion.Euler(vector3);
                 m.anim.SetFloat("x", m.dir.normalized.x);
                 m.anim.SetFloat("y", m.dir.normalized.y);
             }
@@ -254,10 +263,6 @@ public class PlayerController : StateMachine<PlayerController>
                     m.attackControllers[m.attackNumber].transform.rotation);
                 obj.transform.SetParent(m.transform.parent);
                 obj.SetActive(true);
-            }
-            else
-            {
-                m.attackControllers[m.attackNumber].gameObject.SetActive(true);
             }
 
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
@@ -277,10 +282,6 @@ public class PlayerController : StateMachine<PlayerController>
         {
             m.isAttackEnd = false;
             m.anim.SetFloat("attackNumber", 0);
-            if(!m.attackControllers[m.attackNumber].IsThrow)
-            {
-                m.attackControllers[m.attackNumber].gameObject.SetActive(false);
-            }
         }
     }
 
