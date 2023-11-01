@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackController : CollisionDetector
+public class AttackController : MonoBehaviour
 {
     [SerializeField] // 攻撃％
     private int atkPercent = 100;
@@ -24,20 +24,21 @@ public class AttackController : CollisionDetector
 
     public void Initialize(int _atk)
     {
-        atk = _atk;
+        atk = _atk * atkPercent / 100;
         countTime = 0;
-        onTriggerEnter.AddListener(OnHit);
     }
 
-    private void OnHit(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+
         if(other.gameObject.tag == "Player")
         {
-            other.GetComponent<PlayerController>().OnDamage(atk * atkPercent / 100);
+            other.GetComponent<PlayerController>().OnDamage(atk);
         }
         else if(other.gameObject.tag == "Enemy")
         {
-            other.GetComponent<EnemyController>().OnDamage(atk * atkPercent / 100);
+            other.GetComponent<EnemyController>().OnDamage(atk);
+            GameUI.I.InitializeDamageText(atk, transform);
         }
     }
 
