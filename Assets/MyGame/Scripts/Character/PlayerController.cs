@@ -58,6 +58,7 @@ public class PlayerController : StateMachine<PlayerController>
         if(!isGuard)
         {
             character.OnDamage(damage);
+            GameUI.I.UpdateHpSlider(character.CurrentHp);
         }
     }
 
@@ -76,6 +77,8 @@ public class PlayerController : StateMachine<PlayerController>
             attackControllers[i].Initialize(character.Atk);
         }
 
+        GameUI.I.InitializeHpSlider(character.Hp);
+
         ChangeState(new IdleState(this));
     }
 
@@ -85,29 +88,29 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].IsPressed())
+            if(UIManager.I.Input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
                 m.ChangeState(new AttackState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            else if(UIManager.I.Input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
                 m.ChangeState(new AttackState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Guard"].IsPressed())
+            else if(UIManager.I.Input.actions["Guard"].IsPressed())
             {
                 m.ChangeState(new GuardState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
-                & GameManager.I.Input.actions["Dash"].IsPressed())
+            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
+                & UIManager.I.Input.actions["Dash"].IsPressed())
             {
                 m.ChangeState(new DashState(m));
             }
-            else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
+            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
             {
                 m.ChangeState(new WalkState(m));
                 return;
@@ -126,35 +129,35 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].IsPressed())
+            if(UIManager.I.Input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
                 m.ChangeState(new AttackState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            else if(UIManager.I.Input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
                 m.ChangeState(new AttackState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Guard"].IsPressed())
+            else if(UIManager.I.Input.actions["Guard"].IsPressed())
             {
                 m.ChangeState(new GuardState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
+            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
             {
                 m.ChangeState(new IdleState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
-                & GameManager.I.Input.actions["Dash"].IsPressed())
+            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
+                & UIManager.I.Input.actions["Dash"].IsPressed())
             {
                 m.ChangeState(new DashState(m));
             }
 
-            m.dir = GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
+            m.dir = UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
             m.rb.velocity = m.dir * m.walkSpeed;
             m.anim.SetFloat("x", m.dir.x);
             m.anim.SetFloat("y", m.dir.y);
@@ -182,36 +185,36 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].IsPressed())
+            if(UIManager.I.Input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
                 m.ChangeState(new AttackState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            else if(UIManager.I.Input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
                 m.ChangeState(new AttackState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Guard"].IsPressed())
+            else if(UIManager.I.Input.actions["Guard"].IsPressed())
             {
                 m.ChangeState(new GuardState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
+            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
             {
                 m.ChangeState(new IdleState(m));
                 return;
             }
-            else if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
-                & !GameManager.I.Input.actions["Dash"].IsPressed())
+            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
+                & !UIManager.I.Input.actions["Dash"].IsPressed())
             {
                 m.ChangeState(new WalkState(m));
                 return;
             }
 
-            m.dir = GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
+            m.dir = UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
             m.rb.velocity = m.dir * m.dashSpeed;
             m.anim.SetFloat("x", m.dir.x);
             m.anim.SetFloat("y", m.dir.y);
@@ -297,7 +300,7 @@ public class PlayerController : StateMachine<PlayerController>
 
         public override void OnUpdate()
         {
-            if(!GameManager.I.Input.actions["Guard"].IsPressed())
+            if(!UIManager.I.Input.actions["Guard"].IsPressed())
             {
                 m.ChangeState(new IdleState(m));
                 return;

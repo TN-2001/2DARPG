@@ -49,12 +49,14 @@ public class Character
         }
     }
 
-    public void OnDamage(int damage)
+    public int OnDamage(int damage)
     {
         currentHp -= damage;
         if(currentHp < 0)
         {
             currentHp = 0;
         }
+
+        return damage;
     }
 }

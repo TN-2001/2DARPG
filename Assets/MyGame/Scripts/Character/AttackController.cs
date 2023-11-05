@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AttackController : MonoBehaviour
 {
+    [SerializeField] // 当たり判定の対象のタグ
+    private string tagName = null;
     [SerializeField] // 攻撃％
     private int atkPercent = 100;
     [SerializeField] // 攻撃可能距離
@@ -22,6 +24,7 @@ public class AttackController : MonoBehaviour
     // 経過時間
     private float countTime = 0;
 
+
     public void Initialize(int _atk)
     {
         atk = _atk * atkPercent / 100;
@@ -30,15 +33,10 @@ public class AttackController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.tag == tagName)
         {
-            other.GetComponent<PlayerController>().OnDamage(atk);
-        }
-        else if(other.gameObject.tag == "Enemy")
-        {
-            other.GetComponent<EnemyController>().OnDamage(atk);
-            GameUI.I.InitializeDamageText(atk, transform);
+            other.GetComponent<PlayerController>()?.OnDamage(atk);
+            other.GetComponent<EnemyController>()?.OnDamage(atk);
         }
     }
 

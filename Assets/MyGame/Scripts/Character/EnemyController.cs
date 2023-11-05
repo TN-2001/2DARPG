@@ -99,7 +99,8 @@ public class EnemyController : StateMachine<EnemyController>
 
     public void OnDamage(int damage)
     {
-        character.OnDamage(damage);
+        int dam = character.OnDamage(damage);
+        GameUI.I.InitializeDamageText(dam, transform);
 
         if(!target)
         {

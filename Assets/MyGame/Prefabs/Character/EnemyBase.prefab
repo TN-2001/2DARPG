@@ -48,10 +48,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2097107903406951722, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: tagName
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2923941635581320627, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: tagName
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5456918630353620286, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: tagName
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 6621475913854441307, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
       propertyPath: m_Name
       value: EnemyBase
       objectReference: {fileID: 0}
+    - target: {fileID: 6664407092329418155, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 693ec298768d04a4cb08e295d33d84b7, type: 2}
     m_RemovedComponents:
     - {fileID: 4783028036859343443, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
     m_RemovedGameObjects: []

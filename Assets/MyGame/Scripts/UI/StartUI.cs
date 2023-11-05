@@ -1,23 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
 public class StartUI : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject loadPanel;
-    [SerializeField]
-    private TextMeshProUGUI startText;
+    [SerializeField] // スタートボタン
+    private Button startButton = null;
+    [SerializeField] // スタートテキスト
+    private TextMeshProUGUI startText = null;
 
-    private void Update()
+    private void Start()
     {
-        if(GameManager.I.Input.actions["Start"].WasPerformedThisFrame())
-        {
-            loadPanel.SetActive(true);
-            startText.text = "読み込み中";
-            SceneManager.LoadSceneAsync("Main");
-        }
+        startButton.onClick.AddListener(OnStartButton);
+    }
+
+    private void OnStartButton()
+    {
+        startButton.interactable = false;
+        startText.text = "読み込み中";
+        SceneManager.LoadSceneAsync("Main");
     }
 }

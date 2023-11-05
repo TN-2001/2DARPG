@@ -449,6 +449,10 @@ PrefabInstance:
       propertyPath: tagName
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 2923941635581320627, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: atkPercent
+      value: 150
+      objectReference: {fileID: 0}
     - target: {fileID: 4329171255032401640, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
       propertyPath: tagName
       value: Enemy
@@ -460,6 +464,10 @@ PrefabInstance:
     - target: {fileID: 4453719627990113203, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
       propertyPath: tagName
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4675988560090154459, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
+      propertyPath: m_Name
+      value: BowAttack
       objectReference: {fileID: 0}
     - target: {fileID: 4675988560090154459, guid: 46938a8fe30141d47a8bf14af5e31180, type: 3}
       propertyPath: m_IsActive
