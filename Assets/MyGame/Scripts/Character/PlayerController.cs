@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerController : StateMachine<PlayerController>
 {
-    [SerializeField] // ナンバー
-    private int number = 0;
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // エリア判定
@@ -22,7 +20,7 @@ public class PlayerController : StateMachine<PlayerController>
     // アニメーションコンポーネント
     private Animator anim = null;
     [SerializeField, ReadOnly] // キャラクター
-    private Character character = null;
+    private Player player = null;
     // 向き
     private Vector2 dir = Vector2.zero;
     [SerializeField, ReadOnly] // エリア内のターゲット
@@ -57,8 +55,8 @@ public class PlayerController : StateMachine<PlayerController>
     {
         if(!isGuard)
         {
-            character.OnDamage(damage);
-            GameUI.I.UpdateHpSlider(character.CurrentHp);
+            player.OnDamage(damage);
+            GameUI.I.UpdateHpSlider(player.CurrentHp);
         }
     }
 
@@ -68,16 +66,16 @@ public class PlayerController : StateMachine<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        character = new Character(GameManager.I.DataBase.CharacterDatas[number]);
+        player = new Player(GameManager.I.DataBase.PlayerData);
 
         areaDetector.onTriggerEnter.AddListener(OnEnterArea);
         areaDetector.onTriggerExit.AddListener(OnExitArea);
         for(int i = 0; i < attackControllers.Length; i++)
         {
-            attackControllers[i].Initialize(character.Atk);
+            attackControllers[i].Initialize(player.Atk);
         }
 
-        GameUI.I.InitializeHpSlider(character.Hp);
+        GameUI.I.InitializeHpSlider(player.Hp);
 
         ChangeState(new IdleState(this));
     }

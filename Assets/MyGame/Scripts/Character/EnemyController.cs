@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class EnemyController : StateMachine<EnemyController>
 {
-    [SerializeField] // ナンバー
-    private int number = 0;
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // エリア判定
@@ -29,11 +26,11 @@ public class EnemyController : StateMachine<EnemyController>
     private float closeDistance = 0;
 
     // AIコンポーネント
-    private NavMeshAgent agent = null;
+    // private NavMeshAgent agent = null;
     // アニメーションコンポーネント
     private Animator anim = null;
     [SerializeField, ReadOnly] // キャラクター
-    private Character character = null;
+    private Enemy enemy = null;
     // 向き
     private Vector2 dir = Vector2.zero;
     [SerializeField, ReadOnly] // エリア内のターゲット
@@ -99,7 +96,7 @@ public class EnemyController : StateMachine<EnemyController>
 
     public void OnDamage(int damage)
     {
-        int dam = character.OnDamage(damage);
+        int dam = enemy.OnDamage(damage);
         GameUI.I.InitializeDamageText(dam, transform);
 
         if(!target)
@@ -122,20 +119,20 @@ public class EnemyController : StateMachine<EnemyController>
 
     private void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        // agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
-        agent.updateRotation = false;
-        agent.updateUpAxis = false;
+        // agent.updateRotation = false;
+        // agent.updateUpAxis = false;
 
-        character = new Character(GameManager.I.DataBase.CharacterDatas[number]);
+        enemy = new Enemy(GameManager.I.DataBase.EnemyDataList[0]);
 
         areaDetector.onTriggerEnter.AddListener(OnEnterArea);
         areaDetector.onTriggerExit.AddListener(OnExitArea);
         serchDetector.onTriggerEnter.AddListener(OnEncount);
         for(int i = 0; i < attackControllers.Length; i++)
         {
-            attackControllers[i].Initialize(character.Atk);
+            attackControllers[i].Initialize(enemy.Atk);
         }
 
         ChangeState(new IdleState(this));
@@ -262,7 +259,7 @@ public class EnemyController : StateMachine<EnemyController>
             prePos = m.transform.position;
 
             m.anim.SetFloat("speed", 1);
-            m.agent.isStopped = false;
+            // m.agent.isStopped = false;
         }
 
         public override void OnUpdate()
@@ -298,8 +295,8 @@ public class EnemyController : StateMachine<EnemyController>
                 return;
             }
 
-            m.agent.speed = m.dashSpeed;
-            m.agent.SetDestination(m.target.transform.position);
+            // m.agent.speed = m.dashSpeed;
+            // m.agent.SetDestination(m.target.transform.position);
             if(prePos.x != m.transform.position.x | prePos.y != m.transform.position.y)
             {
                 m.dir = new Vector2(m.transform.position.x - prePos.x, m.transform.position.y - prePos.y).normalized;
@@ -314,7 +311,7 @@ public class EnemyController : StateMachine<EnemyController>
         public override void OnExit()
         {
             m.anim.SetFloat("speed", 0);
-            m.agent.isStopped = true;
+            // m.agent.isStopped = true;
         }
     }
 
