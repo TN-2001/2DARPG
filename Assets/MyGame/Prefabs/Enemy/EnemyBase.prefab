@@ -546,14 +546,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4907625741774120285}
-  m_BodyType: 1
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -564,7 +564,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 7
+  m_Constraints: 4
 --- !u!114 &5669609990201484505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -580,12 +580,12 @@ MonoBehaviour:
   state: 
   rotation: {fileID: 3284068514987083591}
   areaDetector: {fileID: 7374388864010907493}
-  serchDetector: {fileID: 1334611459609716767}
   attackControllers:
   - {fileID: 6853171758446350142}
   - {fileID: 5484986905204738540}
   walkSpeed: 1
   dashSpeed: 2
+  serchDetector: {fileID: 1334611459609716767}
   idleTime: 3
   walkTime: 3
   coolTime: 2
@@ -594,8 +594,8 @@ MonoBehaviour:
     data: {fileID: 0}
     currentHp: 0
   targets: []
-  target: {fileID: 0}
   attackNumber: 0
+  target: {fileID: 0}
 --- !u!1 &5562259308327513354
 GameObject:
   m_ObjectHideFlags: 0

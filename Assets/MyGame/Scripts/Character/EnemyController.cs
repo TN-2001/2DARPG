@@ -2,20 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : StateMachine<EnemyController>
+public class EnemyController : StateMachine<EnemyController>, IBattlerController
 {
+    protected override Type type => Type.FixedUpdate;
+
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // エリア判定
     private CollisionDetector areaDetector = null;
-    [SerializeField] // 索敵判定
-    private CollisionDetector serchDetector = null;
     [SerializeField] // 攻撃
     private AttackController[] attackControllers = null;
     [SerializeField] // 歩きスピード
     private float walkSpeed = 0;
     [SerializeField] // ダッシュスピード
     private float dashSpeed = 0;
+    [SerializeField] // 索敵判定
+    private CollisionDetector serchDetector = null;
     [SerializeField] // 立ち時間
     private float idleTime = 0; 
     [SerializeField] // 歩き時間
@@ -25,8 +27,8 @@ public class EnemyController : StateMachine<EnemyController>
     [SerializeField] // 接敵距離
     private float closeDistance = 0;
 
-    // AIコンポーネント
-    // private NavMeshAgent agent = null;
+    // 物理コンポーネント
+    private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
     [SerializeField, ReadOnly] // キャラクター
@@ -35,6 +37,12 @@ public class EnemyController : StateMachine<EnemyController>
     private Vector2 dir = Vector2.zero;
     [SerializeField, ReadOnly] // エリア内のターゲット
     private List<GameObject> targets = new List<GameObject>();
+    [SerializeField, ReadOnly] // 攻撃番号
+    private int attackNumber = 0;
+    // 攻撃終了フラグ
+    private bool isAttackEnd = false;
+    // ガードフラグ
+    private bool isGuard = false;
     [SerializeField, ReadOnly] // ターゲット
     private GameObject target = null;
     // ターゲットとの距離
@@ -45,13 +53,6 @@ public class EnemyController : StateMachine<EnemyController>
     private float countCoolTime = 0;
     // 可能な攻撃番号
     private List<int> numbers = new List<int>();
-    [SerializeField, ReadOnly] // 攻撃番号
-    private int attackNumber = 0;
-    // 攻撃終了フラグ
-    private bool isAttackEnd = false;
-
-    // Updateのタイプ
-    protected override Type type => Type.FixedUpdate;
 
 
     private void OnEnterArea(Collider2D other)
@@ -88,8 +89,8 @@ public class EnemyController : StateMachine<EnemyController>
     {
         target = other.gameObject;
     }
-
-    private void OnAttackEnd()
+    
+    public void OnAttackEnd()
     {
         isAttackEnd = true;
     }
@@ -119,9 +120,10 @@ public class EnemyController : StateMachine<EnemyController>
 
     private void Start()
     {
-        // agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
+        // agent = GetComponent<NavMeshAgent>();
         // agent.updateRotation = false;
         // agent.updateUpAxis = false;
 
@@ -140,7 +142,13 @@ public class EnemyController : StateMachine<EnemyController>
 
     private class IdleState : State<EnemyController>
     {
-        public IdleState(EnemyController _m) : base(_m){}
+        public IdleState(EnemyController m) : base(m){}
+
+        // public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
+        // {
+        //     (m.target, new ReadyState(m)),
+        //     (m.countCoolTime > m.idleTime, new WalkState(m))
+        // };
 
         public override void OnEnter()
         {
@@ -166,11 +174,12 @@ public class EnemyController : StateMachine<EnemyController>
 
     private class WalkState : State<EnemyController>
     {
-        public WalkState(EnemyController _m) : base(_m){}
+        public WalkState(EnemyController m) : base(m){}
 
         public override void OnEnter()
         {
             m.dir = Random.insideUnitCircle.normalized;
+            m.rb.bodyType = RigidbodyType2D.Dynamic;
             m.anim.SetFloat("speed", 0.5f);
 
             m.countTime = 0;
@@ -191,7 +200,7 @@ public class EnemyController : StateMachine<EnemyController>
                 return;
             }
 
-            m.transform.position += m.transform.TransformDirection(m.dir) * Time.fixedDeltaTime * m.walkSpeed;
+            m.rb.velocity = m.dir * m.walkSpeed;
             m.anim.SetFloat("x", m.dir.normalized.x);
             m.anim.SetFloat("y", m.dir.normalized.y);
             m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
@@ -199,13 +208,14 @@ public class EnemyController : StateMachine<EnemyController>
 
         public override void OnExit()
         {
+            m.rb.bodyType = RigidbodyType2D.Static;
             m.anim.SetFloat("speed", 0);
         }
     }
 
     private class ReadyState : State<EnemyController>
     {
-        public ReadyState(EnemyController _m) : base(_m){}
+        public ReadyState(EnemyController m) : base(m){}
 
         public override void OnUpdate()
         {
@@ -249,7 +259,7 @@ public class EnemyController : StateMachine<EnemyController>
 
     private class ChaseState : State<EnemyController>
     {
-        public ChaseState(EnemyController _m) : base(_m){}
+        public ChaseState(EnemyController m) : base(m){}
 
         // 前の位置
         private Vector2 prePos = Vector2.zero;
@@ -317,7 +327,7 @@ public class EnemyController : StateMachine<EnemyController>
 
     private class AttackState : State<EnemyController>
     {
-        public AttackState(EnemyController _m) : base(_m){}
+        public AttackState(EnemyController m) : base(m){}
 
         public override void OnEnter()
         {

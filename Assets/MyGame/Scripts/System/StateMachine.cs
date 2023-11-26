@@ -33,6 +33,18 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>
         // Stateを実行
         currentState?.OnUpdate();
 
+        // Stete繊維
+        if(currentState != null)
+        {
+            for(int i = 0; i < currentState.StateList.Count; i++)
+            {
+                if(currentState.StateList[i].Item1)
+                {
+                    ChangeState(currentState.StateList[i].Item2);
+                }
+            }
+        }
+
         if(nextState != null)
         {
             currentState?.OnExit();
@@ -64,11 +76,13 @@ public abstract class State<T> where T : StateMachine<T>
 {
     // TはStateMachineの方
     protected T m = null;
+    // 条件分岐とステート
+    public virtual List<(bool, State<T>)> StateList => new List<(bool, State<T>)>();
 
     // 初期化
-    public State(T _m) 
+    public State(T m) 
     { 
-        m = _m; 
+        this.m = m; 
     }
 
     // 実行される関数

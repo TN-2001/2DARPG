@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : StateMachine<PlayerController>
+public class PlayerController : StateMachine<PlayerController>, IBattlerController
 {
+    protected override Type type => Type.FixedUpdate;
+
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // エリア判定
@@ -32,9 +34,6 @@ public class PlayerController : StateMachine<PlayerController>
     // ガードフラグ
     private bool isGuard = false;
 
-    // Updateのタイプ
-    protected override Type type => Type.FixedUpdate;
-
 
     private void OnEnterArea(Collider2D other)
     {
@@ -46,7 +45,7 @@ public class PlayerController : StateMachine<PlayerController>
         targets.Remove(other.gameObject);
     }
 
-    private void OnAttackEnd()
+    public void OnAttackEnd()
     {
         isAttackEnd = true;
     }
@@ -233,6 +232,11 @@ public class PlayerController : StateMachine<PlayerController>
     {
         public AttackState(PlayerController _m) : base(_m){}
 
+        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
+        {
+            (m.isAttackEnd, new IdleState(m))
+        };
+
         private GameObject target = null;
 
         public override void OnEnter()
@@ -268,15 +272,6 @@ public class PlayerController : StateMachine<PlayerController>
 
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
             m.anim.SetTrigger("isAttack");
-        }
-
-        public override void OnUpdate()
-        {
-            if(m.isAttackEnd)
-            {
-                m.ChangeState(new IdleState(m));
-                return;
-            }
         }
 
         public override void OnExit()

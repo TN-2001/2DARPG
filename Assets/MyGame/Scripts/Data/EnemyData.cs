@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/EnemyData")]
-public class EnemyData : ScriptableObject
+public class EnemyData : ScriptableObject, IBattlerData
 {
     [SerializeField] // 名前
     private new string name = null;
@@ -20,32 +20,27 @@ public class EnemyData : ScriptableObject
 }
 
 [System.Serializable]
-public class Enemy
+public class Enemy : IBattler
 {
     [SerializeField]
     private EnemyData data = null;
 
+    // 名前
     public string Name => data.Name;
+    // hp
     public int Hp => data.Hp;
-    public int Atk => data.Atk; 
+    // 攻撃力
+    public int Atk => data.Atk;
 
-    [SerializeField]
+    [SerializeField] // 現在のhp
     private int currentHp = 0;
     public int CurrentHp => currentHp;
 
-    public Enemy(EnemyData _data)
-    {
-        data = _data;
-        currentHp = Hp;
-    }
 
-    public void OnRecovery(int recovery)
+    public Enemy(EnemyData data)
     {
-        currentHp += recovery;
-        if(currentHp > Hp)
-        {
-            currentHp = Hp;
-        }
+        this.data = data;
+        currentHp = Hp;
     }
 
     public int OnDamage(int damage)
