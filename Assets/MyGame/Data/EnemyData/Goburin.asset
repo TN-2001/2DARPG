@@ -15,4 +15,4 @@ MonoBehaviour:
   name: "\u30B4\u30D6\u30EA\u30F3"
   hp: 30
   atk: 5
-  prefab: {fileID: 6832332025027201845, guid: d5c039f7381caf04e93bd41251ca6fab, type: 3}
+  prefab: {fileID: 4907625741774120285, guid: 36c7dae797b82ba4186972a8302c5e5b, type: 3}

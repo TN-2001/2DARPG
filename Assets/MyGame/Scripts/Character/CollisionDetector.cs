@@ -19,6 +19,11 @@ public class CollisionDetector : MonoBehaviour
     public bool IsCollosion => isCollosion;
 
 
+    public void Initialize(string tagName)
+    {
+        this.tagName = tagName;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {       
         if(other.gameObject.tag == tagName)

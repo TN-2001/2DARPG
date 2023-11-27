@@ -25,10 +25,15 @@ public class AttackController : MonoBehaviour
     private float countTime = 0;
 
 
-    public void Initialize(int _atk)
+    public void Initialize(int atk, string tagName)
     {
-        atk = _atk * atkPercent / 100;
+        this.atk = atk * atkPercent / 100;
+        this.tagName = tagName;
         countTime = 0;
+    }
+    public void Initialize(int atk)
+    {
+        Initialize(atk, tagName);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -36,6 +41,11 @@ public class AttackController : MonoBehaviour
         if(other.gameObject.tag == tagName)
         {
             other.GetComponent<IBattlerController>().OnDamage(atk);
+
+            if(isThrow)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

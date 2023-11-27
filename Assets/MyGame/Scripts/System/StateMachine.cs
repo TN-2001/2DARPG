@@ -41,6 +41,7 @@ public abstract class StateMachine<T> : MonoBehaviour where T : StateMachine<T>
                 if(currentState.StateList[i].Item1)
                 {
                     ChangeState(currentState.StateList[i].Item2);
+                    break;
                 }
             }
         }

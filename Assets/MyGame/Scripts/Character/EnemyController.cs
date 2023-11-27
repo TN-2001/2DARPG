@@ -47,8 +47,6 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     private GameObject target = null;
     // ターゲットとの距離
     private float distance = 0;
-    // 時間カウント
-    private float countTime = 0;
     // クール時間カウント
     private float countCoolTime = 0;
     // 可能な攻撃番号
@@ -144,31 +142,18 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     {
         public IdleState(EnemyController m) : base(m){}
 
-        // public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
-        // {
-        //     (m.target, new ReadyState(m)),
-        //     (m.countCoolTime > m.idleTime, new WalkState(m))
-        // };
-
-        public override void OnEnter()
+        public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
         {
-            m.countTime = 0;
-        }
+            (m.target, new ReadyState(m)),
+            (countTime > m.idleTime, new WalkState(m))
+        };
+
+        // 時間カウント
+        private float countTime = 0;
 
         public override void OnUpdate()
         {
-            m.countTime += Time.fixedDeltaTime;
-
-            if(m.target)
-            {
-                m.ChangeState(new ReadyState(m));
-                return;
-            }
-            else if(m.countTime > m.idleTime)
-            {
-                m.ChangeState(new WalkState(m));
-                return;
-            }
+            countTime += Time.fixedDeltaTime;
         }
     }
 
@@ -176,29 +161,27 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     {
         public WalkState(EnemyController m) : base(m){}
 
+        public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
+        {
+            (m.target, new ReadyState(m)),
+            (countTime > m.walkTime, new IdleState(m))
+        };
+
+        // 時間カウント
+        private float countTime = 0;
+
         public override void OnEnter()
         {
-            m.dir = Random.insideUnitCircle.normalized;
+            // 初期化
             m.rb.bodyType = RigidbodyType2D.Dynamic;
             m.anim.SetFloat("speed", 0.5f);
-
-            m.countTime = 0;
+            // 向き決め
+            m.dir = Random.insideUnitCircle.normalized;
         }
 
         public override void OnUpdate()
         {
-            m.countTime += Time.fixedDeltaTime;
-
-            if(m.target)
-            {
-                m.ChangeState(new ReadyState(m));
-                return;
-            }
-            else if(m.countTime >= m.walkTime)
-            {
-                m.ChangeState(new IdleState(m));
-                return;
-            }
+            countTime += Time.fixedDeltaTime;
 
             m.rb.velocity = m.dir * m.walkSpeed;
             m.anim.SetFloat("x", m.dir.normalized.x);
@@ -217,9 +200,17 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     {
         public ReadyState(EnemyController m) : base(m){}
 
+        public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
+        {
+            (!m.target, new IdleState(m)),
+            (m.countCoolTime <= m.coolTime & m.distance > m.closeDistance, new ChaseState(m)),
+            (m.countCoolTime > m.coolTime & m.numbers.Count > 0, new AttackState(m))
+        };
+
         public override void OnUpdate()
         {
             m.countCoolTime += Time.fixedDeltaTime;
+
             if(m.target)
             {
                 m.distance = Vector3.Distance(m.target.transform.position, m.transform.position);
@@ -231,29 +222,19 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
                         m.numbers.Add(i);
                     }
                 }
+                if(m.numbers.Count > 0)
+                {
+                    m.attackNumber = m.numbers[Random.Range(0, m.numbers.Count)];
+                }
             }
 
-            if(!m.target)
+            if(m.target)
             {
-                m.ChangeState(new IdleState(m));
-                return;
+                m.dir = (m.target.transform.position - m.transform.position).normalized;
             }
-            else if(m.countCoolTime <= m.coolTime & m.distance > m.closeDistance)
-            {
-                m.ChangeState(new ChaseState(m));
-                return;
-            }
-            else if(m.countCoolTime > m.coolTime & m.numbers.Count > 0)
-            {
-                m.attackNumber = m.numbers[Random.Range(0, m.numbers.Count)];
-                m.ChangeState(new AttackState(m));
-                return;
-            }
-
-            m.dir = (m.target.transform.position - m.transform.position).normalized;
-            m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
             m.anim.SetFloat("x", m.dir.normalized.x);
             m.anim.SetFloat("y", m.dir.normalized.y);
+            m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
         }
     }
 
@@ -261,20 +242,23 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     {
         public ChaseState(EnemyController m) : base(m){}
 
-        // 前の位置
-        private Vector2 prePos = Vector2.zero;
+        public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
+        {
+            (!m.target, new IdleState(m)),
+            (m.countCoolTime <= m.coolTime & m.distance <= m.closeDistance, new ReadyState(m)),
+            (m.countCoolTime > m.coolTime & m.numbers.Count > 0, new AttackState(m))
+        };
 
         public override void OnEnter()
         {
-            prePos = m.transform.position;
-
+            m.rb.bodyType = RigidbodyType2D.Dynamic;
             m.anim.SetFloat("speed", 1);
-            // m.agent.isStopped = false;
         }
 
         public override void OnUpdate()
         {
             m.countCoolTime += Time.fixedDeltaTime;
+
             if(m.target)
             {
                 m.distance = Vector3.Distance(m.target.transform.position, m.transform.position);
@@ -286,48 +270,37 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
                         m.numbers.Add(i);
                     }
                 }
+                if(m.numbers.Count > 0)
+                {
+                    m.attackNumber = m.numbers[Random.Range(0, m.numbers.Count)];
+                }
             }
 
-            if(!m.target)
+            if(m.target)
             {
-                m.ChangeState(new IdleState(m));
-                return;
+                m.dir = (m.target.transform.position - m.transform.position).normalized;
             }
-            else if(m.countCoolTime <= m.coolTime & m.distance <= m.closeDistance)
-            {
-                m.ChangeState(new ReadyState(m));
-                return;
-            }
-            else if(m.countCoolTime > m.coolTime & m.numbers.Count > 0)
-            {
-                m.attackNumber = m.numbers[Random.Range(0, m.numbers.Count)];
-                m.ChangeState(new AttackState(m));
-                return;
-            }
-
-            // m.agent.speed = m.dashSpeed;
-            // m.agent.SetDestination(m.target.transform.position);
-            if(prePos.x != m.transform.position.x | prePos.y != m.transform.position.y)
-            {
-                m.dir = new Vector2(m.transform.position.x - prePos.x, m.transform.position.y - prePos.y).normalized;
-            }
+            m.rb.velocity = m.dir * m.dashSpeed;
             m.anim.SetFloat("x", m.dir.normalized.x);
             m.anim.SetFloat("y", m.dir.normalized.y);
             m.rotation.rotation = Quaternion.FromToRotation(Vector3.up, m.dir);
-
-            prePos = m.transform.position;
         }
 
         public override void OnExit()
         {
+            m.rb.bodyType = RigidbodyType2D.Static;
             m.anim.SetFloat("speed", 0);
-            // m.agent.isStopped = true;
         }
     }
 
     private class AttackState : State<EnemyController>
     {
         public AttackState(EnemyController m) : base(m){}
+
+        public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
+        {
+            (m.isAttackEnd, new ReadyState(m))
+        };
 
         public override void OnEnter()
         {
@@ -351,15 +324,6 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
             m.anim.SetFloat("attackNumber", m.attackNumber + 1);
             m.anim.SetTrigger("isAttack");
-        }
-
-        public override void OnUpdate()
-        {
-            if(m.isAttackEnd)
-            {
-                m.ChangeState(new ReadyState(m));
-                return;
-            }
         }
 
         public override void OnExit()

@@ -83,136 +83,65 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
     {
         public IdleState(PlayerController _m) : base(_m){}
 
+        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
+        {
+            (UIManager.I.Input.actions["Attack"].IsPressed() || UIManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
+            (UIManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
+            (UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0, new MoveState(m))
+        };
+
         public override void OnUpdate()
         {
             if(UIManager.I.Input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
-                m.ChangeState(new AttackState(m));
-                return;
             }
             else if(UIManager.I.Input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
-                m.ChangeState(new AttackState(m));
-                return;
-            }
-            else if(UIManager.I.Input.actions["Guard"].IsPressed())
-            {
-                m.ChangeState(new GuardState(m));
-                return;
-            }
-            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
-                & UIManager.I.Input.actions["Dash"].IsPressed())
-            {
-                m.ChangeState(new DashState(m));
-            }
-            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
-            {
-                m.ChangeState(new WalkState(m));
-                return;
             }
         }
     }
 
-    private class WalkState : State<PlayerController>
+    private class MoveState : State<PlayerController>
     {
-        public WalkState(PlayerController _m) : base(_m){}
+        public MoveState(PlayerController _m) : base(_m){}
 
-        public override void OnEnter()
+        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
-            m.anim.SetFloat("speed", 0.5f);
-        }
+            (UIManager.I.Input.actions["Attack"].IsPressed() || UIManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
+            (UIManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
+            (UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0, new IdleState(m))
+        };
 
         public override void OnUpdate()
         {
             if(UIManager.I.Input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
-                m.ChangeState(new AttackState(m));
-                return;
             }
             else if(UIManager.I.Input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
-                m.ChangeState(new AttackState(m));
-                return;
-            }
-            else if(UIManager.I.Input.actions["Guard"].IsPressed())
-            {
-                m.ChangeState(new GuardState(m));
-                return;
-            }
-            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
-            {
-                m.ChangeState(new IdleState(m));
-                return;
-            }
-            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
-                & UIManager.I.Input.actions["Dash"].IsPressed())
-            {
-                m.ChangeState(new DashState(m));
             }
 
-            m.dir = UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
-            m.rb.velocity = m.dir * m.walkSpeed;
-            m.anim.SetFloat("x", m.dir.x);
-            m.anim.SetFloat("y", m.dir.y);
-            Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, m.dir);
-            Vector3 vector3 = quaternion.eulerAngles;
-            vector3.y = 0;
-            m.rotation.rotation = Quaternion.Euler(vector3);
-        }
-
-        public override void OnExit()
-        {
-            m.rb.velocity = Vector2.zero;
-            m.anim.SetFloat("speed", 0);
-        }
-    }
-
-    private class DashState : State<PlayerController>
-    {
-        public DashState(PlayerController _m) : base(_m){}
-
-        public override void OnEnter()
-        {
-            m.anim.SetFloat("speed", 1);
-        }
-
-        public override void OnUpdate()
-        {
-            if(UIManager.I.Input.actions["Attack"].IsPressed())
+            // 向き取得
+            if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
             {
-                m.attackNumber = 0;
-                m.ChangeState(new AttackState(m));
-                return;
+                m.dir = UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
             }
-            else if(UIManager.I.Input.actions["Skill"].IsPressed())
+            // 移動
+            if(UIManager.I.Input.actions["Dash"].IsPressed())
             {
-                m.attackNumber = 1;
-                m.ChangeState(new AttackState(m));
-                return;
+                m.rb.velocity = m.dir * m.dashSpeed;
+                m.anim.SetFloat("speed", 1f);
             }
-            else if(UIManager.I.Input.actions["Guard"].IsPressed())
+            else
             {
-                m.ChangeState(new GuardState(m));
-                return;
+                m.rb.velocity = m.dir * m.walkSpeed;
+                m.anim.SetFloat("speed", 0.5f);
             }
-            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
-            {
-                m.ChangeState(new IdleState(m));
-                return;
-            }
-            else if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0
-                & !UIManager.I.Input.actions["Dash"].IsPressed())
-            {
-                m.ChangeState(new WalkState(m));
-                return;
-            }
-
-            m.dir = UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
-            m.rb.velocity = m.dir * m.dashSpeed;
+            // 向き
             m.anim.SetFloat("x", m.dir.x);
             m.anim.SetFloat("y", m.dir.y);
             Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, m.dir);
@@ -285,19 +214,15 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
     {
         public GuardState(PlayerController _m) : base(_m){}
 
+        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
+        {
+            (!UIManager.I.Input.actions["Guard"].IsPressed(), new IdleState(m))
+        };
+
         public override void OnEnter()
         {
             m.anim.SetBool("isGuard", true);
             m.isGuard = true;
-        }
-
-        public override void OnUpdate()
-        {
-            if(!UIManager.I.Input.actions["Guard"].IsPressed())
-            {
-                m.ChangeState(new IdleState(m));
-                return;
-            }
         }
 
         public override void OnExit()

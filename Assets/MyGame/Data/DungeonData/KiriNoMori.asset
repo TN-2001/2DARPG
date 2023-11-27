@@ -15,3 +15,5 @@ MonoBehaviour:
   name: "\u9727\u306E\u68EE"
   enemyDataList:
   - {fileID: 11400000, guid: 6a12418fc60f9854ebe45b569dc1e26f, type: 2}
+  groundTile: {fileID: 11400000, guid: 436031f6862f55d4abbe71e748edb6ce, type: 2}
+  wallTile: {fileID: 11400000, guid: 0706fcefddf5e6c47a668731c36d1506, type: 2}
