@@ -9,6 +9,8 @@ public class CreateStage : MonoBehaviour
     private Transform playerParent = null;
     [SerializeField] // 敵の親
     private Transform enemyParent = null;
+    [SerializeField] // 階段
+    private CollisionDetector stairDetector = null;
     [SerializeField] // 地面タイルマップ
     private Tilemap groundMap = null;
     [SerializeField] // 壁タイルマップ
@@ -24,8 +26,8 @@ public class CreateStage : MonoBehaviour
     [SerializeField] // 道幅
     private int roadWidth = 0;
 
-    [SerializeField, Button("Start")]
-    private bool start;
+    [SerializeField, Button("Initialize")]
+    private bool initialize;
 
     [SerializeField] // ダンジョンデータ
     private DungeonData dungeonData = null;
@@ -33,9 +35,31 @@ public class CreateStage : MonoBehaviour
     private GameObject playerPrefab = null;
     [SerializeField, ReadOnly] // ステージ情報
     private CreateStageData stageData = null;
+    // ダンジョン階数
+    private int floorNumber = 0;
+    // 時間カウント
+    private float countTime = 0;
 
 
-    public void Start()
+    private void Start()
+    {
+        stairDetector.GetComponent<SpriteRenderer>().sprite = dungeonData.StairSprite;
+
+        Initialize();
+    }
+
+    private void Update()
+    {
+        if(stairDetector.IsCollosion & GameManager.I.Input.actions["Attack"].WasPressedThisFrame() & countTime > 5)
+        {
+            Initialize();
+            countTime = 0;
+        }
+        
+        countTime += Time.deltaTime;
+    }
+
+    public void Initialize()
     {
         if(GameManager.I)
         {
@@ -97,5 +121,15 @@ public class CreateStage : MonoBehaviour
                 }
             }
         }
+
+        // 階段配置
+        CreateStageData.Rect.Room sRoom = stageData.RectList[Random.Range(0, stageData.RectList.Count)]._Room;
+        int xPos = Random.Range(sRoom.Left, sRoom.Right + 1);
+        int yPos = Random.Range(sRoom.Down, sRoom.Up + 1);
+        stairDetector.transform.position = new Vector2(xPos + 0.5f, yPos + 0.5f);
+
+        // UI
+        floorNumber ++;
+        GameUI.I?.UpdateDungeonText(dungeonData.Name, floorNumber);
     }
 }

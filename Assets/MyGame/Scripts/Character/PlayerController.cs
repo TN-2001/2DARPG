@@ -86,18 +86,18 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
             (m.player.CurrentHp == 0, new DieState(m)),
-            (UIManager.I.Input.actions["Attack"].IsPressed() || UIManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
-            (UIManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
-            (UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0, new MoveState(m))
+            (GameManager.I.Input.actions["Attack"].IsPressed() || GameManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
+            (GameManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
+            (GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0, new MoveState(m))
         };
 
         public override void OnUpdate()
         {
-            if(UIManager.I.Input.actions["Attack"].IsPressed())
+            if(GameManager.I.Input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
             }
-            else if(UIManager.I.Input.actions["Skill"].IsPressed())
+            else if(GameManager.I.Input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
             }
@@ -111,29 +111,29 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
             (m.player.CurrentHp == 0, new DieState(m)),
-            (UIManager.I.Input.actions["Attack"].IsPressed() || UIManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
-            (UIManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
-            (UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0, new IdleState(m))
+            (GameManager.I.Input.actions["Attack"].IsPressed() || GameManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
+            (GameManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
+            (GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0, new IdleState(m))
         };
 
         public override void OnUpdate()
         {
-            if(UIManager.I.Input.actions["Attack"].IsPressed())
+            if(GameManager.I.Input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
             }
-            else if(UIManager.I.Input.actions["Skill"].IsPressed())
+            else if(GameManager.I.Input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
             }
 
             // 向き取得
-            if(UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
+            if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
             {
-                m.dir = UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
+                m.dir = GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
             }
             // 移動
-            if(UIManager.I.Input.actions["Dash"].IsPressed())
+            if(GameManager.I.Input.actions["Dash"].IsPressed())
             {
                 m.rb.velocity = m.dir * m.dashSpeed;
                 m.anim.SetFloat("speed", 1f);
@@ -220,7 +220,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
             (m.player.CurrentHp == 0, new DieState(m)),
-            (!UIManager.I.Input.actions["Guard"].IsPressed(), new IdleState(m))
+            (!GameManager.I.Input.actions["Guard"].IsPressed(), new IdleState(m))
         };
 
         public override void OnEnter()

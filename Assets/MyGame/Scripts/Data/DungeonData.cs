@@ -15,6 +15,9 @@ public class DungeonData : ScriptableObject
     [SerializeField] // 敵
     private List<EnemyData> enemyDataList = new List<EnemyData>();
     public List<EnemyData> EnemyDataList => enemyDataList;
+    [SerializeField] // 階段画像
+    private Sprite stairSprite = null;
+    public Sprite StairSprite => stairSprite;
     [SerializeField] // 地面タイル
     private Tile groundTile = null;
     public Tile GroundTile => groundTile;

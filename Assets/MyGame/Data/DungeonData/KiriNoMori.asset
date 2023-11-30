@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: KiriNoMori
   m_EditorClassIdentifier: 
   name: "\u9727\u306E\u68EE"
+  floorNumber: 3
   enemyDataList:
   - {fileID: 11400000, guid: 6a12418fc60f9854ebe45b569dc1e26f, type: 2}
+  stairSprite: {fileID: -1898692504, guid: 96567f8744123294e99fa64bcb3dc3b2, type: 3}
   groundTile: {fileID: 11400000, guid: 436031f6862f55d4abbe71e748edb6ce, type: 2}
   wallTile: {fileID: 11400000, guid: 0706fcefddf5e6c47a668731c36d1506, type: 2}

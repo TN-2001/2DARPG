@@ -21,6 +21,6 @@ public class StartUI : MonoBehaviour
     {
         startButton.interactable = false;
         startText.text = "読み込み中";
-        SceneManager.LoadSceneAsync("Main");
+        SceneManager.LoadSceneAsync("Home");
     }
 }

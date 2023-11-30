@@ -12,6 +12,8 @@ public class GameUI : Singleton<GameUI>
     private Slider hpSlider = null;
     [SerializeField] // hpテキスト
     private TextMeshProUGUI hpText = null;
+    [SerializeField] // ダンジョン情報テキスト
+    private TextMeshProUGUI dungeonText = null;
 
     // シングルトンのタイプ
     protected override Type type => Type.Destroy;
@@ -34,5 +36,10 @@ public class GameUI : Singleton<GameUI>
     {
         hpSlider.value = currentHp;
         hpText.text = $"{currentHp}/{hpSlider.maxValue}";
+    }
+
+    public void UpdateDungeonText(string name, int number)
+    {
+        dungeonText.text = $"{name} {number}F";
     }
 }
