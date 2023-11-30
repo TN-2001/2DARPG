@@ -85,6 +85,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
+            (m.player.CurrentHp == 0, new DieState(m)),
             (UIManager.I.Input.actions["Attack"].IsPressed() || UIManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
             (UIManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
             (UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0, new MoveState(m))
@@ -109,6 +110,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
+            (m.player.CurrentHp == 0, new DieState(m)),
             (UIManager.I.Input.actions["Attack"].IsPressed() || UIManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
             (UIManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
             (UIManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0, new IdleState(m))
@@ -163,6 +165,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
+            (m.player.CurrentHp == 0, new DieState(m)),
             (m.isAttackEnd, new IdleState(m))
         };
 
@@ -216,6 +219,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
+            (m.player.CurrentHp == 0, new DieState(m)),
             (!UIManager.I.Input.actions["Guard"].IsPressed(), new IdleState(m))
         };
 
@@ -230,5 +234,10 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
             m.anim.SetBool("isGuard", false);
             m.isGuard = false;
         }
+    }
+
+    private class DieState : State<PlayerController>
+    {
+        public DieState(PlayerController _m) : base(_m){}
     }
 }

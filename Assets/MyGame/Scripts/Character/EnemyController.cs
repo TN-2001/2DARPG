@@ -144,6 +144,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
         {
+            (m.enemy.CurrentHp == 0, new DieState(m)),
             (m.target, new ReadyState(m)),
             (countTime > m.idleTime, new WalkState(m))
         };
@@ -163,6 +164,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
         {
+            (m.enemy.CurrentHp == 0, new DieState(m)),
             (m.target, new ReadyState(m)),
             (countTime > m.walkTime, new IdleState(m))
         };
@@ -173,7 +175,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
         public override void OnEnter()
         {
             // 初期化
-            m.rb.bodyType = RigidbodyType2D.Dynamic;
+            m.rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
             m.anim.SetFloat("speed", 0.5f);
             // 向き決め
             m.dir = Random.insideUnitCircle.normalized;
@@ -191,7 +193,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override void OnExit()
         {
-            m.rb.bodyType = RigidbodyType2D.Static;
+            m.rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
             m.anim.SetFloat("speed", 0);
         }
     }
@@ -202,6 +204,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
         {
+            (m.enemy.CurrentHp == 0, new DieState(m)),
             (!m.target, new IdleState(m)),
             (m.countCoolTime <= m.coolTime & m.distance > m.closeDistance, new ChaseState(m)),
             (m.countCoolTime > m.coolTime & m.numbers.Count > 0, new AttackState(m))
@@ -244,6 +247,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
         {
+            (m.enemy.CurrentHp == 0, new DieState(m)),
             (!m.target, new IdleState(m)),
             (m.countCoolTime <= m.coolTime & m.distance <= m.closeDistance, new ReadyState(m)),
             (m.countCoolTime > m.coolTime & m.numbers.Count > 0, new AttackState(m))
@@ -251,7 +255,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override void OnEnter()
         {
-            m.rb.bodyType = RigidbodyType2D.Dynamic;
+            m.rb.constraints = RigidbodyConstraints2D.None | RigidbodyConstraints2D.FreezeRotation;
             m.anim.SetFloat("speed", 1);
         }
 
@@ -288,7 +292,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override void OnExit()
         {
-            m.rb.bodyType = RigidbodyType2D.Static;
+            m.rb.constraints = RigidbodyConstraints2D.FreezePosition | RigidbodyConstraints2D.FreezeRotation;
             m.anim.SetFloat("speed", 0);
         }
     }
@@ -299,6 +303,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
         public override List<(bool, State<EnemyController>)> StateList => new List<(bool, State<EnemyController>)>()
         {
+            (m.enemy.CurrentHp == 0, new DieState(m)),
             (m.isAttackEnd, new ReadyState(m))
         };
 
@@ -335,6 +340,16 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
                 m.attackControllers[m.attackNumber].gameObject.SetActive(false);
             }
             m.countCoolTime = 0;
+        }
+    }
+
+    private class DieState : State<EnemyController>
+    {
+        public DieState(EnemyController m) : base(m){}
+
+        public override void OnEnter()
+        {
+            Destroy(m.gameObject);
         }
     }
 }

@@ -9,6 +9,9 @@ public class DungeonData : ScriptableObject
     [SerializeField] // 名前
     private new string name = null;
     public string Name => name;
+    [SerializeField] // 階数
+    private int floorNumber = 0;
+    public int FloorNumber => floorNumber;
     [SerializeField] // 敵
     private List<EnemyData> enemyDataList = new List<EnemyData>();
     public List<EnemyData> EnemyDataList => enemyDataList;

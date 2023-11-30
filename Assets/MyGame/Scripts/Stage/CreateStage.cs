@@ -63,14 +63,13 @@ public class CreateStage : MonoBehaviour
         }
 
         // キャラクター配置
-        foreach(Transform child in playerParent)
+        while(playerParent.childCount > 0)
         {
-            GameObject.DestroyImmediate(child.gameObject);
+            GameObject.DestroyImmediate(playerParent.GetChild(0).gameObject);
         }
-        Debug.Log(enemyParent.childCount);
-        for(int i = 0; i < enemyParent.childCount; i++)
+        while(enemyParent.childCount > 0)
         {
-            GameObject.DestroyImmediate(enemyParent.GetChild(enemyParent.childCount - i - 1).gameObject);
+            GameObject.DestroyImmediate(enemyParent.GetChild(0).gameObject);
         }
         int playerRoomNumber = Random.Range(0, stageData.RectList.Count);
         for(int i = 0; i < stageData.RectList.Count; i++)
