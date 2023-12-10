@@ -36,7 +36,7 @@ public class FollowTransform : MonoBehaviour
         {
             if(target)
             {
-                transform.position = Camera.main.WorldToScreenPoint(target.position);;
+                transform.position = Camera.main.WorldToScreenPoint(target.position);
             }
             else
             {
@@ -45,7 +45,7 @@ public class FollowTransform : MonoBehaviour
         }
         else
         {
-            transform.position = Camera.main.WorldToScreenPoint(firstPosition);;
+            transform.position = Camera.main.WorldToScreenPoint(firstPosition);
         }
     }
 }

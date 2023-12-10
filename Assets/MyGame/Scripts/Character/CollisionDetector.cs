@@ -8,6 +8,7 @@ public class CollisionDetector : MonoBehaviour
     // 当たり判定の対象のタグ
     [SerializeField]
     private string tagName = null;
+    protected virtual string TagName => tagName;
 
     // 引数にColliderを持ったUnityEvent
     public UnityEvent<Collider2D> onTriggerEnter = null;
@@ -26,27 +27,33 @@ public class CollisionDetector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {       
-        if(other.gameObject.tag == tagName)
+        if(other.gameObject.tag == TagName)
         {
             onTriggerEnter?.Invoke(other);
-        }
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if(other.gameObject.tag == tagName)
-        {
-            onTriggerStay?.Invoke(other);
+            OnEnter(other);
             isCollosion = true;
         }
     }
+    protected virtual void OnEnter(Collider2D other){}
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if(other.gameObject.tag == TagName)
+        {
+            onTriggerStay?.Invoke(other);
+            OnStay(other);
+        }
+    }
+    protected virtual void OnStay(Collider2D other){}
 
     private void OnTriggerExit2D(Collider2D other) 
     {
-        if(other.gameObject.tag == tagName)
+        if(other.gameObject.tag == TagName)
         {
             onTriggerExit?.Invoke(other);
+            OnExit(other);
             isCollosion = false;
         }
     }
+    protected virtual void OnExit(Collider2D other){}
 }

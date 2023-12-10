@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class CreateStage : MonoBehaviour
 {
-    [SerializeField] // プレイヤーの親
-    private Transform playerParent = null;
+    [SerializeField] // プレイヤーオブジェクト
+    private Transform playerTra = null;
     [SerializeField] // 敵の親
     private Transform enemyParent = null;
     [SerializeField] // 階段
@@ -31,14 +31,10 @@ public class CreateStage : MonoBehaviour
 
     [SerializeField] // ダンジョンデータ
     private DungeonData dungeonData = null;
-    [SerializeField] // プレイヤープレハブ
-    private GameObject playerPrefab = null;
     [SerializeField, ReadOnly] // ステージ情報
     private CreateStageData stageData = null;
     // ダンジョン階数
     private int floorNumber = 0;
-    // 時間カウント
-    private float countTime = 0;
 
 
     private void Start()
@@ -50,21 +46,18 @@ public class CreateStage : MonoBehaviour
 
     private void Update()
     {
-        if(stairDetector.IsCollosion & GameManager.I.Input.actions["Attack"].WasPressedThisFrame() & countTime > 5)
+        if(stairDetector.IsCollosion & GameManager.I.Input.actions["Attack"].WasPressedThisFrame())
         {
             Initialize();
-            countTime = 0;
+            GameManager.I.Fade();
         }
-        
-        countTime += Time.deltaTime;
     }
 
     public void Initialize()
     {
         if(GameManager.I)
         {
-            dungeonData = GameManager.I.DataBase.DungeonDataList[0];
-            playerPrefab = GameManager.I.DataBase.PlayerData.Prefab;
+            dungeonData = GameManager.I.CurrentDungeon;
         }
         stageData = new CreateStageData(mapSize, miniSize, maxSize, wallWidth, roadWidth);
 
@@ -87,10 +80,6 @@ public class CreateStage : MonoBehaviour
         }
 
         // キャラクター配置
-        while(playerParent.childCount > 0)
-        {
-            GameObject.DestroyImmediate(playerParent.GetChild(0).gameObject);
-        }
         while(enemyParent.childCount > 0)
         {
             GameObject.DestroyImmediate(enemyParent.GetChild(0).gameObject);
@@ -101,11 +90,9 @@ public class CreateStage : MonoBehaviour
             CreateStageData.Rect.Room room = stageData.RectList[i]._Room;
             if(i == playerRoomNumber)
             {
-                GameObject obj = Instantiate(playerPrefab);
-                obj.transform.SetParent(playerParent);
                 int x = Random.Range(room.Left, room.Right + 1);
                 int y = Random.Range(room.Down, room.Up + 1);
-                obj.transform.position = new Vector2(x + 0.5f, y + 0.5f);
+                playerTra.position = new Vector2(x + 0.5f, y + 0.5f);
             }
             else
             {
@@ -130,6 +117,6 @@ public class CreateStage : MonoBehaviour
 
         // UI
         floorNumber ++;
-        GameUI.I?.UpdateDungeonText(dungeonData.Name, floorNumber);
+        DungeonUI.I?.UpdateDungeonText(dungeonData.Name, floorNumber);
     }
 }

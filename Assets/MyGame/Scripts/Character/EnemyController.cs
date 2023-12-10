@@ -41,8 +41,6 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     private int attackNumber = 0;
     // 攻撃終了フラグ
     private bool isAttackEnd = false;
-    // ガードフラグ
-    private bool isGuard = false;
     [SerializeField, ReadOnly] // ターゲット
     private GameObject target = null;
     // ターゲットとの距離
@@ -96,7 +94,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     public void OnDamage(int damage)
     {
         int dam = enemy.OnDamage(damage);
-        GameUI.I.InitializeDamageText(dam, transform);
+        DungeonUI.I.InitializeDamageText(dam, transform);
 
         if(!target)
         {

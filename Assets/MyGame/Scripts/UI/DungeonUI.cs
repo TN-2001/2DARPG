@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameUI : Singleton<GameUI>
+public class DungeonUI : Singleton<DungeonUI>
 {
+    // シングルトンのタイプ
+    protected override Type type => Type.Destroy;
+
     [SerializeField] // ダメージテキスト
     private GameObject damageText = null;
     [SerializeField] // hpスライダー
@@ -15,15 +18,19 @@ public class GameUI : Singleton<GameUI>
     [SerializeField] // ダンジョン情報テキスト
     private TextMeshProUGUI dungeonText = null;
 
-    // シングルトンのタイプ
-    protected override Type type => Type.Destroy;
 
+    private void Start()
+    {
+        GameManager.I.Input.SwitchCurrentActionMap("Battle");
+    }
 
     public void InitializeDamageText(int damage, Transform target)
     {
-        GameObject obj = Instantiate(damageText.gameObject, damageText.transform.parent);
+        GameObject obj = Instantiate(
+            damageText.gameObject, damageText.transform.position, Quaternion.identity, damageText.transform.parent);
         obj.GetComponent<TextMeshProUGUI>().text = damage.ToString();
         obj.GetComponent<FollowTransform>().Initialize(target);
+        obj.SetActive(true);
     }
 
     public void InitializeHpSlider(int hp)

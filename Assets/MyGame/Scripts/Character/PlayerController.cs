@@ -55,7 +55,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
         if(!isGuard)
         {
             player.OnDamage(damage);
-            GameUI.I.UpdateHpSlider(player.CurrentHp);
+            DungeonUI.I.UpdateHpSlider(player.CurrentHp);
         }
     }
 
@@ -74,7 +74,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
             attackControllers[i].Initialize(player.Atk);
         }
 
-        GameUI.I.InitializeHpSlider(player.Hp);
+        DungeonUI.I?.InitializeHpSlider(player.Hp);
 
         ChangeState(new IdleState(this));
     }
