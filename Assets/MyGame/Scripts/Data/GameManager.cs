@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -15,6 +15,9 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] // データベース
     private DataBase dataBase = null;
     public DataBase DataBase => dataBase;
+    [SerializeField] // カメラコントローラー
+    private CameraController cameraController = null;
+    public CameraController CameraController => cameraController;
 
     [SerializeField] // フェード画像
     private Image fadeImage = null;
@@ -34,40 +37,64 @@ public class GameManager : Singleton<GameManager>
         currentDungeon = dataBase.DungeonDataList[number];
     }
 
-    public void ChangeScene(string name)
+    public void Fade(UnityAction action, bool isStop, string inputMapName)
     {
-        StartCoroutine(Fade(name));
+        StartCoroutine(EFade(action, isStop, inputMapName));
     }
-    public void Fade()
+    private IEnumerator EFade(UnityAction action, bool isStop, string inputMapName)
     {
-        StartCoroutine(Fade(""));
-    }
-    private IEnumerator Fade(string name)
-    {
-        float alpha = 0;
+        // 時間停止
+        if(isStop)
+        {
+            Time.timeScale = 0f;
+        }
+        
+        // アクションマップ関係
+        string newxtMapName = Input.currentActionMap.name;
+        if(inputMapName != null)
+        {
+            newxtMapName = inputMapName;
+        }
+        Input.SwitchCurrentActionMap("Null");
 
         fadeImage.enabled = true;
 
+        float alpha = 0;
+        float preTime = 0;
         while(alpha < 1)
         {
-            alpha += 1f / 100f;
-            fadeImage.color = new Color(0,0,0,alpha);
+            preTime = Time.realtimeSinceStartup;
             yield return null;
+            alpha += Time.realtimeSinceStartup - preTime;
+            fadeImage.color = new Color(0,0,0,alpha);
         }
 
-        if(name != "")
+        // 関数実行
+        if(action != null)
         {
-            yield return SceneManager.LoadSceneAsync(name);
+            action();
         }
 
+        alpha = 1f;
         while(alpha > 0)
         {
-            alpha -= 1f / 100f;
-            fadeImage.color = new Color(0,0,0,alpha);
+            preTime = Time.realtimeSinceStartup;
             yield return null;
+            alpha -= Time.realtimeSinceStartup - preTime;
+            fadeImage.color = new Color(0,0,0,alpha);
         }
 
         fadeImage.enabled = false;
-        yield return null;
+
+        // アクションマップ関係
+        Input.SwitchCurrentActionMap(newxtMapName);
+
+        // 時間再開
+        if(isStop)
+        {
+            Time.timeScale = 1f;
+        }
+
+        yield break;
     }
 }

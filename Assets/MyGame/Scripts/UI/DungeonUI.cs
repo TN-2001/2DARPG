@@ -19,11 +19,6 @@ public class DungeonUI : Singleton<DungeonUI>
     private TextMeshProUGUI dungeonText = null;
 
 
-    private void Start()
-    {
-        GameManager.I.Input.SwitchCurrentActionMap("Battle");
-    }
-
     public void InitializeDamageText(int damage, Transform target)
     {
         GameObject obj = Instantiate(

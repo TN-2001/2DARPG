@@ -76,6 +76,8 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
         DungeonUI.I?.InitializeHpSlider(player.Hp);
 
+        GameManager.I.CameraController.Initialize(transform);
+
         ChangeState(new IdleState(this));
     }
 

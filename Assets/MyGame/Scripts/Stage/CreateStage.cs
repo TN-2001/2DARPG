@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 public class CreateStage : MonoBehaviour
 {
@@ -48,8 +49,14 @@ public class CreateStage : MonoBehaviour
     {
         if(stairDetector.IsCollosion & GameManager.I.Input.actions["Attack"].WasPressedThisFrame())
         {
-            Initialize();
-            GameManager.I.Fade();
+            if(floorNumber < dungeonData.FloorNumber)
+            {
+                GameManager.I.Fade(Initialize, true, null);
+            }
+            else
+            {
+                GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, true, "Normal");
+            }
         }
     }
 

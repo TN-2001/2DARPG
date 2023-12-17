@@ -868,6 +868,12 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Null",
+            "id": "0fde81cd-8b88-4b18-9778-cdff534383b0",
+            "actions": [],
+            "bindings": []
         }
     ],
     "controlSchemes": [

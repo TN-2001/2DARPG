@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class HomeUI : Singleton<HomeUI>
@@ -28,12 +29,6 @@ public class HomeUI : Singleton<HomeUI>
 
     [SerializeField, ReadOnly] // 番号
     private int number = 0;
-
-
-    private void Start()
-    {
-        GameManager.I.Input.SwitchCurrentActionMap("Normal");
-    }
 
 
     public void OnShopView()
@@ -94,7 +89,7 @@ public class HomeUI : Singleton<HomeUI>
     private void GoDungeon()
     {
         GameManager.I.InitializeDungeon(number);
-        GameManager.I.ChangeScene("Dungeon");
+        GameManager.I.Fade(delegate{SceneManager.LoadScene("Dungeon");}, false, "Battle");
     }
     private void OffDungeonView()
     {

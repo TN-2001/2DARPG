@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class StartUI : MonoBehaviour
@@ -16,14 +17,12 @@ public class StartUI : MonoBehaviour
     {
         startButton.onClick.RemoveAllListeners();
         startButton.onClick.AddListener(OnStartButton);
-
-        GameManager.I.Input.SwitchCurrentActionMap("UI");
     }
 
     private void OnStartButton()
     {
         startButton.interactable = false;
         startText.text = "読み込み中";
-        GameManager.I.ChangeScene("Home");
+        GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, false, "Normal");
     }
 }
