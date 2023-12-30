@@ -16,6 +16,7 @@ MonoBehaviour:
   floorNumber: 3
   enemyDataList:
   - {fileID: 11400000, guid: 6a12418fc60f9854ebe45b569dc1e26f, type: 2}
-  stairSprite: {fileID: -1898692504, guid: 96567f8744123294e99fa64bcb3dc3b2, type: 3}
-  groundTile: {fileID: 11400000, guid: 436031f6862f55d4abbe71e748edb6ce, type: 2}
-  wallTile: {fileID: 11400000, guid: 0706fcefddf5e6c47a668731c36d1506, type: 2}
+  stairSprite: {fileID: -867712473, guid: 2f0f6e0e184ac05479cf6cbc155f96bc, type: 3}
+  groundTile: {fileID: 8290651865168205405, guid: ab42277c95a90af478cffdd53a267c71, type: 2}
+  wallTile: {fileID: 11400000, guid: 2cba3b611925acd49a4aa701898d39d8, type: 2}
+  wallUpTile: {fileID: 11400000, guid: 33d97994cc820844f8fc912309689dd5, type: 2}
