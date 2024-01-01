@@ -30,9 +30,9 @@ public partial class CreateStage : MonoBehaviour
 
     private void Start()
     {
-        stairDetector.GetComponent<SpriteRenderer>().sprite = dungeonData.StairSprite;
-
         Initialize();
+
+        stairDetector.GetComponent<SpriteRenderer>().sprite = dungeonData.StairSprite;
     }
 
     private void Update()
@@ -78,18 +78,37 @@ public partial class CreateStage : MonoBehaviour
                             wallMap.SetTile(new Vector3Int(x, y, 0), null);
                         }
 
-                        if(data[x,y-1] == 0 | data[x,y-2] == 0 | data[x,y-3] == 0)
+                        if(dungeonData.WallUpTile.m_TilingRules.Count == 9)
                         {
-                            wallUpMap.SetTile(new Vector3Int(x, y, 0), dungeonData.WallUpTile);
-                            if(data[x-1,y] == 1)
+                            if(data[x,y-1] == 0 | data[x,y-2] == 0 | data[x,y-3] == 0)
                             {
-                                wallUpMap.SetTile(new Vector3Int(x-1, y, 0), dungeonData.WallUpTile);
-                            }
-                            if(data[x+1,y] == 1)
-                            {
-                                wallUpMap.SetTile(new Vector3Int(x+1, y, 0), dungeonData.WallUpTile);
+                                wallUpMap.SetTile(new Vector3Int(x, y, 0), dungeonData.WallUpTile);
+                                if(data[x-1,y] == 1)
+                                {
+                                    wallUpMap.SetTile(new Vector3Int(x-1, y, 0), dungeonData.WallUpTile);
+                                }
+                                if(data[x+1,y] == 1)
+                                {
+                                    wallUpMap.SetTile(new Vector3Int(x+1, y, 0), dungeonData.WallUpTile);
+                                }
                             }
                         }
+                        else if(dungeonData.WallUpTile.m_TilingRules.Count == 6)
+                        {
+                            if(data[x,y-1] == 0 | data[x,y-2] == 0)
+                            {
+                                wallUpMap.SetTile(new Vector3Int(x, y, 0), dungeonData.WallUpTile);
+                                if(data[x-1,y] == 1)
+                                {
+                                    wallUpMap.SetTile(new Vector3Int(x-1, y, 0), dungeonData.WallUpTile);
+                                }
+                                if(data[x+1,y] == 1)
+                                {
+                                    wallUpMap.SetTile(new Vector3Int(x+1, y, 0), dungeonData.WallUpTile);
+                                }
+                            }
+                        }
+
                     }
                 }
             }

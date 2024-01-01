@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20d6ca0e07341b74aa11291d21d8f898, type: 3}
-  m_Name: KirinoMori
+  m_Name: Tutikurenoana
   m_EditorClassIdentifier: 
-  name: "\u9727\u306E\u68EE"
-  floorNumber: 3
+  name: "\u571F\u584A\u306E\u7A74"
+  floorNumber: 2
   enemyDataList:
   - {fileID: 11400000, guid: 6a12418fc60f9854ebe45b569dc1e26f, type: 2}
-  stairSprite: {fileID: 2143457867, guid: 2f0f6e0e184ac05479cf6cbc155f96bc, type: 3}
-  groundTile: {fileID: 11400000, guid: 0320ab76659e643489c48d9a6d622977, type: 2}
-  wallTile: {fileID: 11400000, guid: 2cba3b611925acd49a4aa701898d39d8, type: 2}
-  wallUpTile: {fileID: 11400000, guid: 33d97994cc820844f8fc912309689dd5, type: 2}
+  stairSprite: {fileID: 1226243381, guid: 2f0f6e0e184ac05479cf6cbc155f96bc, type: 3}
+  groundTile: {fileID: 11400000, guid: 256406f485d3cc2409123eba6ffae5eb, type: 2}
+  wallTile: {fileID: 8290651865168205405, guid: 1f89c10bc16b05e408a0fc8a6521c426, type: 2}
+  wallUpTile: {fileID: 11400000, guid: 1802f265a0617eb47bed7c9bb7e73f01, type: 2}

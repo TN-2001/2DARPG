@@ -20,4 +20,5 @@ MonoBehaviour:
   eventDataList: []
   dungeonDataList:
   - {fileID: 11400000, guid: 482cb2e59ba9bae4391ff9d2dc15e075, type: 2}
-  - {fileID: 11400000, guid: 482cb2e59ba9bae4391ff9d2dc15e075, type: 2}
+  - {fileID: 11400000, guid: 215886aba1d10cb49897990ec7f10bda, type: 2}
+  - {fileID: 11400000, guid: b1db3c5a18d712546ac8000f84da9c50, type: 2}

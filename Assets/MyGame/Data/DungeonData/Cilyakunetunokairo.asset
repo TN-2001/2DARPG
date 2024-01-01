@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20d6ca0e07341b74aa11291d21d8f898, type: 3}
-  m_Name: KirinoMori
+  m_Name: Cilyakunetunokairo
   m_EditorClassIdentifier: 
-  name: "\u9727\u306E\u68EE"
-  floorNumber: 3
+  name: "\u707C\u71B1\u306E\u56DE\u8DEF"
+  floorNumber: 4
   enemyDataList:
   - {fileID: 11400000, guid: 6a12418fc60f9854ebe45b569dc1e26f, type: 2}
-  stairSprite: {fileID: 2143457867, guid: 2f0f6e0e184ac05479cf6cbc155f96bc, type: 3}
-  groundTile: {fileID: 11400000, guid: 0320ab76659e643489c48d9a6d622977, type: 2}
-  wallTile: {fileID: 11400000, guid: 2cba3b611925acd49a4aa701898d39d8, type: 2}
-  wallUpTile: {fileID: 11400000, guid: 33d97994cc820844f8fc912309689dd5, type: 2}
+  stairSprite: {fileID: -223277370, guid: 2f0f6e0e184ac05479cf6cbc155f96bc, type: 3}
+  groundTile: {fileID: 11400000, guid: 6cf98b9cc6c628149b8684c8d62a57d7, type: 2}
+  wallTile: {fileID: 8290651865168205405, guid: e3b491d5e86438d4ab5595ffb1e25ace, type: 2}
+  wallUpTile: {fileID: 7790711090036191189, guid: 627f066658ac54949a0ed37caa69c188, type: 2}

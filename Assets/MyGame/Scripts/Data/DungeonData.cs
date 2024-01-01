@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "ScriptableObject/DungeonData")]
 public class DungeonData : ScriptableObject
@@ -18,8 +19,8 @@ public class DungeonData : ScriptableObject
     private Sprite stairSprite = null;
     public Sprite StairSprite => stairSprite;
     [SerializeField] // 地面タイル
-    private RuleTile groundTile = null;
-    public RuleTile GroundTile => groundTile;
+    private Tile groundTile = null;
+    public Tile GroundTile => groundTile;
     [SerializeField] // 壁タイル
     private RuleTile wallTile = null;
     public RuleTile WallTile => wallTile;

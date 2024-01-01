@@ -17,6 +17,8 @@ public class StartUI : MonoBehaviour
     {
         startButton.onClick.RemoveAllListeners();
         startButton.onClick.AddListener(OnStartButton);
+
+        GetComponent<Canvas>().worldCamera = Camera.main;
     }
 
     private void OnStartButton()

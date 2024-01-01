@@ -473,7 +473,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 20
-  m_Sprite: {fileID: 835390869, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+  m_Sprite: {fileID: -1240484709, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -494,7 +494,7 @@ Animator:
   m_GameObject: {fileID: 4907625741774120285}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 693ec298768d04a4cb08e295d33d84b7, type: 2}
+  m_Controller: {fileID: 9100000, guid: c646183c7b7aab34386aaf00dcf8aa37, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -616,49 +616,49 @@ MonoBehaviour:
     m_CategoryList:
     - m_Name: Entry
       m_Hash: 0
-      m_Sprite: {fileID: -1861751683, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: -1533590810, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_0
       m_Hash: 0
-      m_Sprite: {fileID: 835390869, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: -1240484709, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_1
       m_Hash: 0
-      m_Sprite: {fileID: -1495909578, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: 1539747363, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
   - m_Name: Walk_Up
     m_Hash: 0
     m_CategoryList:
     - m_Name: Entry
       m_Hash: 0
-      m_Sprite: {fileID: -1716084183, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: -914003460, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_0
       m_Hash: 0
-      m_Sprite: {fileID: -1517153635, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: 1021680610, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_1
       m_Hash: 0
-      m_Sprite: {fileID: 1564022723, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: 302099956, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
   - m_Name: Walk_Left
     m_Hash: 0
     m_CategoryList:
     - m_Name: Entry
       m_Hash: 0
-      m_Sprite: {fileID: -1515379149, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: -271276680, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_0
       m_Hash: 0
-      m_Sprite: {fileID: 1593920402, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: -102669317, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_1
       m_Hash: 0
-      m_Sprite: {fileID: 1328849528, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: 1793271108, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
   - m_Name: Walk_Right
     m_Hash: 0
     m_CategoryList:
     - m_Name: Entry
       m_Hash: 0
-      m_Sprite: {fileID: 199288366, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: 1721954252, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_0
       m_Hash: 0
-      m_Sprite: {fileID: 2124380567, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: 349416613, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
     - m_Name: Entry_1
       m_Hash: 0
-      m_Sprite: {fileID: -1484193834, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
+      m_Sprite: {fileID: -1847136785, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
   m_SpriteLibraryAsset: {fileID: 0}
 --- !u!114 &3513462267963387574
 MonoBehaviour:
@@ -672,8 +672,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CategoryHash: 0
-  m_labelHash: 0
+  m_CategoryHash: 2.5842803e-16
+  m_labelHash: 0.0000001489224
   m_SpriteKey: 0
   m_SpriteHash: 194978854
 --- !u!1 &5562259308327513354
