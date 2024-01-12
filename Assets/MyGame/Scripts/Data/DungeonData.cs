@@ -15,6 +15,9 @@ public class DungeonData : ScriptableObject
     [SerializeField] // 敵
     private List<EnemyData> enemyDataList = new List<EnemyData>();
     public List<EnemyData> EnemyDataList => enemyDataList;
+    [SerializeField] // ボス敵
+    private EnemyData bossEnemyData = null;
+    public EnemyData BossEnemyData => bossEnemyData;
     [SerializeField] // 階段画像
     private Sprite stairSprite = null;
     public Sprite StairSprite => stairSprite;
@@ -27,4 +30,7 @@ public class DungeonData : ScriptableObject
     [SerializeField] // 壁上タイル
     private RuleTile wallUpTile = null;
     public RuleTile WallUpTile => wallUpTile;
+    [SerializeField] // ボスマップ
+    private GameObject bossMap = null;
+    public GameObject BossMap => bossMap;
 }

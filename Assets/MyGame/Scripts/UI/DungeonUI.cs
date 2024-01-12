@@ -40,8 +40,8 @@ public class DungeonUI : Singleton<DungeonUI>
         hpText.text = $"{currentHp}/{hpSlider.maxValue}";
     }
 
-    public void UpdateDungeonText(string name, int number)
+    public void UpdateDungeonText(string text)
     {
-        dungeonText.text = $"{name} {number}F";
+        dungeonText.text = text;
     }
 }

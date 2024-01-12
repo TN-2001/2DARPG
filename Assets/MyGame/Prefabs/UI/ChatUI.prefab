@@ -372,6 +372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3481238993801901517}
+  - component: {fileID: 9209533539486683602}
   m_Layer: 0
   m_Name: ChatUI
   m_TagString: Untagged
@@ -400,6 +401,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9209533539486683602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2639247656130355074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01cbd747ebae58b41a11bd647d09e6f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameText: {fileID: 995780430742364087}
+  chatText: {fileID: 7563542600135874405}
 --- !u!1 &6085730349042523364
 GameObject:
   m_ObjectHideFlags: 0

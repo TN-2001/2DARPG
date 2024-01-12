@@ -26,6 +26,8 @@ public class GameManager : Singleton<GameManager>
     private DungeonData currentDungeon = null;
     public DungeonData CurrentDungeon => currentDungeon;
 
+    public Player player = null;
+
 
     protected override void OnAwake ()
     {
