@@ -406,7 +406,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6224060417734280870}
-  - component: {fileID: 2981670092908043471}
   - component: {fileID: 3173537666537596942}
   - component: {fileID: 8131106236155826579}
   m_Layer: 0
@@ -434,36 +433,6 @@ Transform:
   - {fileID: 2384208925290050300}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2981670092908043471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6612995111152988925}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 5619f37aa7c8dec42bc4cc0b3bc1b4d6, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Null
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!81 &3173537666537596942
 AudioListener:
   m_ObjectHideFlags: 0
@@ -488,3 +457,6 @@ MonoBehaviour:
   cameraController: {fileID: 7237269954875747773}
   fadeImage: {fileID: 8311514091921998262}
   currentDungeon: {fileID: 11400000, guid: 482cb2e59ba9bae4391ff9d2dc15e075, type: 2}
+  player:
+    data: {fileID: 0}
+    currentHp: 0

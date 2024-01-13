@@ -11,7 +11,7 @@ public partial class CreateMap : MonoBehaviour
     [SerializeField] // 敵の親
     private Transform enemyParent = null;
     [SerializeField] // 階段
-    private CollisionDetector stairDetector = null;
+    private EventController stairController = null;
     [SerializeField] // 地面タイルマップ
     private Tilemap groundMap = null;
     [SerializeField] // 壁タイルマップ
@@ -43,26 +43,12 @@ public partial class CreateMap : MonoBehaviour
             InitializeBossMap();
         }
 
-        stairDetector.GetComponent<SpriteRenderer>().sprite = dungeonData.StairSprite;
-    }
-
-    private void Update()
-    {
-        if(stairDetector.IsCollosion & GameManager.I.Input.actions["Attack"].WasPressedThisFrame())
-        {
-            if(floorNumber < dungeonData.FloorNumber)
-            {
-                GameManager.I.Fade(InitializeRandomMap, true, null);
-            }
-            else if(!isClear)
-            {
-                GameManager.I.Fade(InitializeBossMap, true, null);
-            }
-            else
-            {
-                GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, true, "Normal");
-            }
-        }
+        stairController.GetComponent<SpriteRenderer>().sprite = dungeonData.StairSprite;
+        stairController.onDo.AddListener(delegate{
+            if(floorNumber < dungeonData.FloorNumber) GameManager.I.Fade(InitializeRandomMap, true);
+            else if(!isClear) GameManager.I.Fade(InitializeBossMap, true);
+            else GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, true);
+        });
     }
 
     public void InitializeRandomMap()
@@ -163,7 +149,7 @@ public partial class CreateMap : MonoBehaviour
         Rect.Room sRoom = rectList[Random.Range(0, rectList.Count)]._Room;
         int xPos = Random.Range(sRoom.Left, sRoom.Right + 1);
         int yPos = Random.Range(sRoom.Down, sRoom.Up + 1);
-        stairDetector.transform.position = new Vector2(xPos + 0.5f, yPos + 0.5f);
+        stairController.transform.position = new Vector2(xPos + 0.5f, yPos + 0.5f);
 
         // UI
         floorNumber ++;
@@ -187,7 +173,7 @@ public partial class CreateMap : MonoBehaviour
         playerTra.position = Vector2.zero;
 
         // 階段配置
-        stairDetector.gameObject.SetActive(false);
+        stairController.gameObject.SetActive(false);
 
         // UI
         DungeonUI.I?.UpdateDungeonText($"{dungeonData.Name} 深層");
@@ -201,8 +187,8 @@ public partial class CreateMap : MonoBehaviour
         isClear = true;
 
         // 階段配置
-        stairDetector.transform.position = new Vector2(0.5f, 3.5f);
-        stairDetector.gameObject.SetActive(true);
+        stairController.transform.position = new Vector2(0.5f, 3.5f);
+        stairController.gameObject.SetActive(true);
 
         yield break;
     }

@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 public class GameManager : Singleton<GameManager>
 {
     // シングルトンのタイプ
     protected override Type type => Type.DontDestroy;
 
-    // 入力コンポーネント
-    public PlayerInput Input { get; private set; } = null;
     [SerializeField] // データベース
     private DataBase dataBase = null;
     public DataBase DataBase => dataBase;
@@ -26,38 +23,33 @@ public class GameManager : Singleton<GameManager>
     private DungeonData currentDungeon = null;
     public DungeonData CurrentDungeon => currentDungeon;
 
-    public Player player = null;
-
-
-    protected override void OnAwake ()
+    // ゲームの状態
+    public enum State
     {
-        Input = GetComponent<PlayerInput>();
+        UI,
+        Player,
     }
+    public State state = State.UI;
+
 
     public void InitializeDungeon(int number)
     {
         currentDungeon = dataBase.DungeonDataList[number];
     }
 
-    public void Fade(UnityAction action, bool isStop, string inputMapName)
+    public void Fade(UnityAction action, bool isStop)
     {
-        StartCoroutine(EFade(action, isStop, inputMapName));
+        StartCoroutine(EFade(action, isStop));
     }
-    private IEnumerator EFade(UnityAction action, bool isStop, string inputMapName)
+    private IEnumerator EFade(UnityAction action, bool isStop)
     {
+        state = State.UI;
+
         // 時間停止
         if(isStop)
         {
             Time.timeScale = 0f;
         }
-        
-        // アクションマップ関係
-        string newxtMapName = Input.currentActionMap.name;
-        if(inputMapName != null)
-        {
-            newxtMapName = inputMapName;
-        }
-        Input.SwitchCurrentActionMap("Null");
 
         fadeImage.enabled = true;
 
@@ -88,14 +80,13 @@ public class GameManager : Singleton<GameManager>
 
         fadeImage.enabled = false;
 
-        // アクションマップ関係
-        Input.SwitchCurrentActionMap(newxtMapName);
-
         // 時間再開
         if(isStop)
         {
             Time.timeScale = 1f;
         }
+
+        state = State.Player;
 
         yield break;
     }

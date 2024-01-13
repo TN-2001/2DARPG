@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : StateMachine<PlayerController>, IBattlerController
 {
@@ -8,8 +9,10 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
-    [SerializeField] // エリア判定
-    private CollisionDetector areaDetector = null;
+    [SerializeField] // 敵エリア判定
+    private CollisionDetector enemyAreaDetector = null;
+    [SerializeField] // イベントエリア判定
+    private CollisionDetector eventAreaDetector = null;
     [SerializeField] // 攻撃
     private AttackController[] attackControllers = null;
     [SerializeField] // 歩きスピード
@@ -21,29 +24,21 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
     private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
+    // PlayerInput
+    private PlayerInput input = null;
     [SerializeField, ReadOnly] // キャラクター
     private Player player = null;
     // 向き
     private Vector2 dir = Vector2.zero;
     [SerializeField, ReadOnly] // エリア内のターゲット
     private List<GameObject> targets = new List<GameObject>();
+    [SerializeField, ReadOnly] // イベントディテクター
+    private EventController eventController = null;
     [SerializeField, ReadOnly] // 攻撃番号
     private int attackNumber = 0;
     // 攻撃終了フラグ
     private bool isAttackEnd = false;
-    // ガードフラグ
-    private bool isGuard = false;
 
-
-    private void OnEnterArea(Collider2D other)
-    {
-        targets.Add(other.gameObject);
-    }
-
-    private void OnExitArea(Collider2D other)
-    {
-        targets.Remove(other.gameObject);
-    }
 
     public void OnAttackEnd()
     {
@@ -52,11 +47,8 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
     public void OnDamage(int damage)
     {
-        if(!isGuard)
-        {
-            player.OnDamage(damage);
-            DungeonUI.I.UpdateHpSlider(player.CurrentHp);
-        }
+        player.OnDamage(damage);
+        DungeonUI.I.UpdateHpSlider(player.CurrentHp);
     }
 
 
@@ -64,11 +56,24 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        input = GetComponent<PlayerInput>();
 
         player = new Player(GameManager.I.DataBase.PlayerData);
 
-        areaDetector.onTriggerEnter.AddListener(OnEnterArea);
-        areaDetector.onTriggerExit.AddListener(OnExitArea);
+        enemyAreaDetector.onTriggerEnter.AddListener(delegate(Collider2D other){
+            targets.Add(other.gameObject);
+        });
+        enemyAreaDetector.onTriggerExit.AddListener(delegate(Collider2D other){
+            targets.Remove(other.gameObject);
+        });
+
+        eventAreaDetector.onTriggerEnter.AddListener(delegate(Collider2D other){
+            eventController = other.GetComponent<EventController>();
+        });
+        eventAreaDetector.onTriggerExit.AddListener(delegate(Collider2D other){
+            if(other.gameObject == eventController.gameObject) eventController = null;
+        });
+
         for(int i = 0; i < attackControllers.Length; i++)
         {
             attackControllers[i].Initialize(player.Atk);
@@ -81,25 +86,41 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
         ChangeState(new IdleState(this));
     }
 
+    private class DoState : State<PlayerController>
+    {
+        public DoState(PlayerController _m) : base(_m){}
+
+        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
+        {
+            (GameManager.I.state == GameManager.State.Player, new IdleState(m)),
+        };
+
+        public override void OnEnter()
+        {
+            GameManager.I.state = GameManager.State.UI;
+            m.eventController.Do();
+        }
+    }
+
     private class IdleState : State<PlayerController>
     {
         public IdleState(PlayerController _m) : base(_m){}
 
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
+            (m.input.actions["Do"].IsPressed() & m.eventController, new DoState(m)),
             (m.player.CurrentHp == 0, new DieState(m)),
-            (GameManager.I.Input.actions["Attack"].IsPressed() || GameManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
-            (GameManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
-            (GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0, new MoveState(m))
+            (m.input.actions["Attack"].IsPressed() || m.input.actions["Skill"].IsPressed(), new AttackState(m)),
+            (m.input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0, new MoveState(m))
         };
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].IsPressed())
+            if(m.input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
             }
-            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            else if(m.input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
             }
@@ -112,30 +133,30 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
+            (m.input.actions["Do"].IsPressed() & m.eventController, new DoState(m)),
             (m.player.CurrentHp == 0, new DieState(m)),
-            (GameManager.I.Input.actions["Attack"].IsPressed() || GameManager.I.Input.actions["Skill"].IsPressed(), new AttackState(m)),
-            (GameManager.I.Input.actions["Guard"].IsPressed(), new GuardState(m)),
-            (GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0, new IdleState(m))
+            (m.input.actions["Attack"].IsPressed() || m.input.actions["Skill"].IsPressed(), new AttackState(m)),
+            (m.input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0, new IdleState(m))
         };
 
         public override void OnUpdate()
         {
-            if(GameManager.I.Input.actions["Attack"].IsPressed())
+            if(m.input.actions["Attack"].IsPressed())
             {
                 m.attackNumber = 0;
             }
-            else if(GameManager.I.Input.actions["Skill"].IsPressed())
+            else if(m.input.actions["Skill"].IsPressed())
             {
                 m.attackNumber = 1;
             }
 
             // 向き取得
-            if(GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
+            if(m.input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
             {
-                m.dir = GameManager.I.Input.actions["Move"].ReadValue<Vector2>().normalized;
+                m.dir = m.input.actions["Move"].ReadValue<Vector2>().normalized;
             }
             // 移動
-            if(GameManager.I.Input.actions["Dash"].IsPressed())
+            if(m.input.actions["Dash"].IsPressed())
             {
                 m.rb.velocity = m.dir * m.dashSpeed;
                 m.anim.SetFloat("speed", 1f);
@@ -167,6 +188,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
         public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
         {
+            (m.input.actions["Do"].IsPressed() & m.eventController, new DoState(m)),
             (m.player.CurrentHp == 0, new DieState(m)),
             (m.isAttackEnd, new IdleState(m))
         };
@@ -212,29 +234,6 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
         {
             m.isAttackEnd = false;
             m.anim.SetFloat("attackNumber", 0);
-        }
-    }
-
-    private class GuardState : State<PlayerController>
-    {
-        public GuardState(PlayerController _m) : base(_m){}
-
-        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
-        {
-            (m.player.CurrentHp == 0, new DieState(m)),
-            (!GameManager.I.Input.actions["Guard"].IsPressed(), new IdleState(m))
-        };
-
-        public override void OnEnter()
-        {
-            m.anim.SetBool("isGuard", true);
-            m.isGuard = true;
-        }
-
-        public override void OnExit()
-        {
-            m.anim.SetBool("isGuard", false);
-            m.isGuard = false;
         }
     }
 

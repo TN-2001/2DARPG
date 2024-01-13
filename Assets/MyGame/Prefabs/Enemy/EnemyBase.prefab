@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 889bd51642f089d44af60a9d7a8fa328, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -296,7 +296,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 19
+  m_SortingOrder: 5
   m_Sprite: {fileID: 412190185, guid: 2c9ac659af142bf4db8996cac6d5569a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -380,7 +380,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 640c2d901a452a5479b3529c6e4d2790, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -402,12 +402,12 @@ GameObject:
   m_Component:
   - component: {fileID: 750250896319599640}
   - component: {fileID: 618351004452812340}
+  - component: {fileID: 5559859950432258319}
+  - component: {fileID: 3513462267963387574}
   - component: {fileID: 2246073608305771362}
   - component: {fileID: 4962825743870065345}
   - component: {fileID: 801755134172529438}
   - component: {fileID: 5669609990201484505}
-  - component: {fileID: 5559859950432258319}
-  - component: {fileID: 3513462267963387574}
   m_Layer: 0
   m_Name: EnemyBase
   m_TagString: Enemy
@@ -472,7 +472,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 10
   m_Sprite: {fileID: -1240484709, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -484,6 +484,84 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &5559859950432258319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907625741774120285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Library:
+  - m_Name: Walk_Down
+    m_Hash: 0
+    m_CategoryList:
+    - m_Name: Entry
+      m_Hash: 0
+      m_Sprite: {fileID: -1533590810, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_0
+      m_Hash: 0
+      m_Sprite: {fileID: -1240484709, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_1
+      m_Hash: 0
+      m_Sprite: {fileID: 1539747363, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+  - m_Name: Walk_Up
+    m_Hash: 0
+    m_CategoryList:
+    - m_Name: Entry
+      m_Hash: 0
+      m_Sprite: {fileID: -914003460, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_0
+      m_Hash: 0
+      m_Sprite: {fileID: 1021680610, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_1
+      m_Hash: 0
+      m_Sprite: {fileID: 302099956, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+  - m_Name: Walk_Left
+    m_Hash: 0
+    m_CategoryList:
+    - m_Name: Entry
+      m_Hash: 0
+      m_Sprite: {fileID: -271276680, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_0
+      m_Hash: 0
+      m_Sprite: {fileID: -102669317, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_1
+      m_Hash: 0
+      m_Sprite: {fileID: 1793271108, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+  - m_Name: Walk_Right
+    m_Hash: 0
+    m_CategoryList:
+    - m_Name: Entry
+      m_Hash: 0
+      m_Sprite: {fileID: 1721954252, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_0
+      m_Hash: 0
+      m_Sprite: {fileID: 349416613, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+    - m_Name: Entry_1
+      m_Hash: 0
+      m_Sprite: {fileID: -1847136785, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
+  m_SpriteLibraryAsset: {fileID: 0}
+--- !u!114 &3513462267963387574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907625741774120285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CategoryHash: 2.5842803e-16
+  m_labelHash: 0.0000001489224
+  m_SpriteKey: 0
+  m_SpriteHash: 194978854
 --- !u!95 &2246073608305771362
 Animator:
   serializedVersion: 5
@@ -598,84 +676,6 @@ MonoBehaviour:
   targets: []
   attackNumber: 0
   target: {fileID: 0}
---- !u!114 &5559859950432258319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4907625741774120285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Library:
-  - m_Name: Walk_Down
-    m_Hash: 0
-    m_CategoryList:
-    - m_Name: Entry
-      m_Hash: 0
-      m_Sprite: {fileID: -1533590810, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_0
-      m_Hash: 0
-      m_Sprite: {fileID: -1240484709, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_1
-      m_Hash: 0
-      m_Sprite: {fileID: 1539747363, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-  - m_Name: Walk_Up
-    m_Hash: 0
-    m_CategoryList:
-    - m_Name: Entry
-      m_Hash: 0
-      m_Sprite: {fileID: -914003460, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_0
-      m_Hash: 0
-      m_Sprite: {fileID: 1021680610, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_1
-      m_Hash: 0
-      m_Sprite: {fileID: 302099956, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-  - m_Name: Walk_Left
-    m_Hash: 0
-    m_CategoryList:
-    - m_Name: Entry
-      m_Hash: 0
-      m_Sprite: {fileID: -271276680, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_0
-      m_Hash: 0
-      m_Sprite: {fileID: -102669317, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_1
-      m_Hash: 0
-      m_Sprite: {fileID: 1793271108, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-  - m_Name: Walk_Right
-    m_Hash: 0
-    m_CategoryList:
-    - m_Name: Entry
-      m_Hash: 0
-      m_Sprite: {fileID: 1721954252, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_0
-      m_Hash: 0
-      m_Sprite: {fileID: 349416613, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-    - m_Name: Entry_1
-      m_Hash: 0
-      m_Sprite: {fileID: -1847136785, guid: c3dd804ea2d847041afb96052b76f994, type: 3}
-  m_SpriteLibraryAsset: {fileID: 0}
---- !u!114 &3513462267963387574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4907625741774120285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_CategoryHash: 2.5842803e-16
-  m_labelHash: 0.0000001489224
-  m_SpriteKey: 0
-  m_SpriteHash: 194978854
 --- !u!1 &5562259308327513354
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,7 +876,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: f66cafb8970f8ea43979922efb09bcec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -960,7 +960,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 3d32961bbbc76574b8251df3bc848f60, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

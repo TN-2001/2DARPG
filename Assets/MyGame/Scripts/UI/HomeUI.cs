@@ -89,7 +89,7 @@ public class HomeUI : Singleton<HomeUI>
     private void GoDungeon()
     {
         GameManager.I.InitializeDungeon(number);
-        GameManager.I.Fade(delegate{SceneManager.LoadScene("Dungeon");}, false, "Battle");
+        GameManager.I.Fade(delegate{SceneManager.LoadScene("Dungeon");}, false);
     }
     private void OffDungeonView()
     {
@@ -100,6 +100,8 @@ public class HomeUI : Singleton<HomeUI>
 
     private void OnCommandView(List<(string name, UnityAction method)> nameList)
     {
+        GameManager.I.state = GameManager.State.UI;
+
         // コマンドボタンを削除
         foreach(Transform child in commandViewTra)
         {
@@ -117,17 +119,13 @@ public class HomeUI : Singleton<HomeUI>
 
         // ビュー表示
         commandViewTra.gameObject.SetActive(true);
-
-        // インプットのマップを変更
-        GameManager.I.Input.SwitchCurrentActionMap("UI");
     }
 
     private void OffCommandView()
     {
+        GameManager.I.state = GameManager.State.Player;
+
         // ビューオフ
         commandViewTra.gameObject.SetActive(false);
-
-        // インプットのマップを変更
-        GameManager.I.Input.SwitchCurrentActionMap("Normal");
     }
 }

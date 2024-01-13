@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class EventDetector : CollisionDetector
+public class EventController : MonoBehaviour
 {
-    protected override string TagName => "Player";
+    public UnityEvent onDo = null;
 
     // UIのタイプ
     private enum Type
@@ -18,26 +19,25 @@ public class EventDetector : CollisionDetector
     private Type type = Type.None;
 
 
-    private void Update()
+    public void Do()
     {
-        if(IsCollosion & GameManager.I.Input.actions["Do"].WasPerformedThisFrame())
+        onDo?.Invoke();
+
+        if(type == Type.None)
         {
-            if(type == Type.None)
-            {
 
-            }
-            else if(type == Type.Shop)
-            {
-                HomeUI.I.OnShopView();
-            }
-            else if(type == Type.Box)
-            {
+        }
+        else if(type == Type.Shop)
+        {
+            HomeUI.I.OnShopView();
+        }
+        else if(type == Type.Box)
+        {
 
-            }
-            else if(type == Type.Dungeon)
-            {
-                HomeUI.I.OnDungeonView();
-            }
+        }
+        else if(type == Type.Dungeon)
+        {
+            HomeUI.I.OnDungeonView();
         }
     }
 }

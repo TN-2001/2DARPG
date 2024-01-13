@@ -25,6 +25,6 @@ public class StartUI : MonoBehaviour
     {
         startButton.interactable = false;
         startText.text = "読み込み中";
-        GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, false, "Normal");
+        GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, false);
     }
 }
