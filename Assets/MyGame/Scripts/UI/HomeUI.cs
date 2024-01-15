@@ -11,17 +11,24 @@ public class HomeUI : Singleton<HomeUI>
     // シングルトンのタイプ
     protected override Type type => Type.Destroy;
 
-    [Header("ショップUI")]
-    [SerializeField] // ショップビュー
-    private GameObject shopView = null;
-    [Header("ダンジョンUI")]
-    [SerializeField] // ダンジョンビュー
-    private GameObject dungeonView = null;
-    [SerializeField] // ダンジョンコンテンツ
-    private RectTransform dungeonContentTra = null;
-    [SerializeField] // ダンジョントグル
-    private GameObject dungeonToggle = null;
-    [Header("コマンドUI")]
+    [Header("スクロールヘッダー")]
+    [SerializeField] // スクロールヘッダー
+    private GameObject scrollHeader = null;
+    [Header("長方形スクロール")]
+    [SerializeField] // 長方形スクロール
+    private GameObject rectScroll = null;
+    [SerializeField] // 長方形コンテンツ
+    private RectTransform rectContentTra = null;
+    [SerializeField] // 長方形トグル
+    private GameObject rectToggle = null;
+    [Header("正方形スクロール")]
+    [SerializeField] // 正方形スクロール
+    private GameObject squareScroll = null;
+    [SerializeField] // 正方形コンテンツ
+    private RectTransform squareContentTra = null;
+    [SerializeField] // 正方形トグル
+    private GameObject squareToggle = null;
+    [Header("コマンド")]
     [SerializeField] // コマンドビュー
     private RectTransform commandViewTra = null;
     [SerializeField] // コマンドボタン
@@ -31,26 +38,11 @@ public class HomeUI : Singleton<HomeUI>
     private int number = 0;
 
 
-    public void OnShopView()
-    {
-        shopView.SetActive(true);
-
-        // コマンドボタンを初期化
-        OnCommandView(new List<(string name, UnityAction method)>()
-            {("閉じる", OffShopView),("買う",null)});
-    }
-
-    private void OffShopView()
-    {
-        shopView.SetActive(false);
-        OffCommandView();
-    }
-
-
+    // ダンジョンUI
     public void OnDungeonView()
     {
         // コンテンツ内をからに
-        foreach(Transform child in dungeonContentTra)
+        foreach(Transform child in rectContentTra)
         {
             Destroy(child.gameObject);
         }
@@ -59,31 +51,33 @@ public class HomeUI : Singleton<HomeUI>
         for(int i = 0; i < dungeonDataList.Count; i++)
         {
             GameObject obj = Instantiate(
-                dungeonToggle, dungeonToggle.transform.position, Quaternion.identity, dungeonContentTra);
+                rectToggle, rectToggle.transform.position, Quaternion.identity, rectContentTra);
             obj.GetComponentInChildren<TextMeshProUGUI>().text = dungeonDataList[i].Name;
-            obj.GetComponent<Toggle>().onValueChanged.AddListener(OnToggle);
-            obj.GetComponent<Toggle>().group = dungeonContentTra.GetComponent<ToggleGroup>();
+            Toggle toggle = obj.GetComponent<Toggle>();
+            toggle.onValueChanged.AddListener(delegate(bool isOn){
+                if(isOn){
+                    for(int i = 0; i < rectContentTra.childCount; i++){
+                        if(rectContentTra.GetChild(i).GetComponent<Toggle>().isOn){
+                            number = i;
+                            break;
+                        }
+                    }
+                }
+            });
+            toggle.group = rectContentTra.GetComponent<ToggleGroup>();
+            if(i == 0)
+            {
+                toggle.isOn = true;
+                toggle.Select();
+            }
         }
-        // ビューを表示
-        dungeonView.SetActive(true);
+
+        // 表示
+        rectScroll.SetActive(true);
 
         // コマンドボタンを初期化
         OnCommandView(new List<(string name, UnityAction method)>()
             {("閉じる", OffDungeonView),("行く",GoDungeon)});
-    }
-    private void OnToggle(bool isOn)
-    {
-        if(isOn)
-        {
-            for(int i = 0; i < dungeonContentTra.childCount; i++)
-            {
-                if(dungeonContentTra.GetChild(i).GetComponent<Toggle>().isOn)
-                {
-                    number = i;
-                    break;
-                }
-            }
-        }
     }
 
     private void GoDungeon()
@@ -91,13 +85,14 @@ public class HomeUI : Singleton<HomeUI>
         GameManager.I.InitializeDungeon(number);
         GameManager.I.Fade(delegate{SceneManager.LoadScene("Dungeon");}, false);
     }
+
     private void OffDungeonView()
     {
-        dungeonView.SetActive(false);
+        rectScroll.SetActive(false);
         OffCommandView();
     }
 
-
+    // コマンド
     private void OnCommandView(List<(string name, UnityAction method)> nameList)
     {
         GameManager.I.state = GameManager.State.UI;

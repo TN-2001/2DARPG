@@ -29,7 +29,7 @@ public class EventController : MonoBehaviour
         }
         else if(type == Type.Shop)
         {
-            HomeUI.I.OnShopView();
+            
         }
         else if(type == Type.Box)
         {

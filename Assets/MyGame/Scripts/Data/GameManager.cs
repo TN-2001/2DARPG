@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -30,6 +31,9 @@ public class GameManager : Singleton<GameManager>
         Player,
     }
     public State state = State.UI;
+
+    [SerializeField, ReadOnly] // 現在の選択状態
+    private GameObject currentSelectObject = null;
 
 
     public void InitializeDungeon(int number)
@@ -89,5 +93,11 @@ public class GameManager : Singleton<GameManager>
         state = State.Player;
 
         yield break;
+    }
+
+
+    private void Update()
+    {
+        currentSelectObject = EventSystem.current.currentSelectedGameObject;
     }
 }
