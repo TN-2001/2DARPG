@@ -52,22 +52,15 @@ public class HomeUI : Singleton<HomeUI>
         {
             GameObject obj = Instantiate(
                 rectToggle, rectToggle.transform.position, Quaternion.identity, rectContentTra);
-            obj.GetComponentInChildren<TextMeshProUGUI>().text = dungeonDataList[i].Name;
-            Toggle toggle = obj.GetComponent<Toggle>();
-            toggle.onValueChanged.AddListener(delegate(bool isOn){
-                if(isOn){
-                    for(int i = 0; i < rectContentTra.childCount; i++){
-                        if(rectContentTra.GetChild(i).GetComponent<Toggle>().isOn){
-                            number = i;
-                            break;
-                        }
-                    }
-                }
+            obj.GetComponent<View>().UpdateUI(dungeonDataList[i].Name);
+            ToggleUI toggle = obj.GetComponent<ToggleUI>();
+            toggle.onSelect.AddListener(delegate{
+                number = obj.transform.GetSiblingIndex();
             });
             toggle.group = rectContentTra.GetComponent<ToggleGroup>();
+
             if(i == 0)
             {
-                toggle.isOn = true;
                 toggle.Select();
             }
         }
@@ -108,7 +101,7 @@ public class HomeUI : Singleton<HomeUI>
         {
             GameObject obj = Instantiate(
                 commandButton, commandButton.transform.position, Quaternion.identity, commandViewTra);
-            obj.GetComponentInChildren<TextMeshProUGUI>().text = nameList[i].name;
+            obj.GetComponent<View>().UpdateUI(nameList[i].name);
             obj.GetComponent<Button>().onClick.AddListener(nameList[i].method);
         }
 
