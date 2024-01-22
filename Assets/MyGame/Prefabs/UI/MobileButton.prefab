@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2012234801838556499}
   - component: {fileID: 228736705510255249}
   - component: {fileID: 2539799638599911929}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 7657312049826405991}
   - component: {fileID: 4021801241035358483}
   - component: {fileID: 6398732179669922190}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: MobileButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 4134529245451123877}
   - component: {fileID: 4568379766106026247}
   - component: {fileID: 6514661954973139892}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}

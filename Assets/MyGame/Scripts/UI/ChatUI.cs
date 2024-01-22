@@ -1,51 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
 public class ChatUI : Singleton<ChatUI>
 {
     // シングルトンのタイプ
     protected override Type type => Type.Destroy;
 
-    [SerializeField] // 名前ウィンドウ
-    private GameObject nameWindow = null;
     [SerializeField] // チャットウィンドウ
-    private GameObject chatWindow = null;
-    [SerializeField] // 名前テキスト
-    private TextMeshProUGUI nameText = null;
-    [SerializeField] // チャットテキスト
-    private TextMeshProUGUI chatText = null;
+    private View chatView = null;
+    [SerializeField] // 次へボタン
+    private Button nextBtn = null;
+
+    // チャットリスト
+    private bool isNext = false;
 
 
-    public void Chat(List<(string name, string chat)> textList)
+    private void Start()
     {
-        StartCoroutine(IChat(textList));
+        nextBtn.onClick.AddListener(delegate{isNext = true;});
     }
-    private IEnumerator IChat(List<(string name, string chat)> textList)
+
+    public void Chat(List<(string name, string text)> chatList)
+    {
+        IChat(chatList);
+    }
+    private IEnumerator IChat(List<(string name, string text)> chatList)
     {
         GameManager.I.state = GameManager.State.UI;
+
         // 初期化
-        HomeUI.I?.gameObject.SetActive(false);
-        DungeonUI.I?.gameObject.SetActive(false);
-        nameWindow.SetActive(true);
-        chatWindow.SetActive(true);
+        chatView.gameObject.SetActive(true);
 
         // UIの更新
-        for(int i = 0; i < textList.Count; i++)
+        for(int i = 0; i < chatList.Count; i++)
         {
-            nameText.text = textList[i].name;
-            chatText.text = textList[i].chat;
+            chatView.UpdateUI(new List<string>(){chatList[i].name, chatList[i].text});
+            yield return new WaitUntil(() => isNext);
+            isNext = false;
         }
 
         // 初期化
-        HomeUI.I?.gameObject.SetActive(true);
-        DungeonUI.I?.gameObject.SetActive(true);
-        nameWindow.SetActive(false);
-        chatWindow.SetActive(false);
+        chatView.gameObject.SetActive(false);
 
         GameManager.I.state = GameManager.State.Player;
-
-        yield break;
     }
 }

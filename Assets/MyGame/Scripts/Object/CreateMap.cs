@@ -28,30 +28,30 @@ public partial class CreateMap : MonoBehaviour
     // クリアフラグ
     private bool isClear = false;
 
-    [SerializeField, Button("InitializeRandomMap")]
-    private bool initializeRandomMap;
+    [SerializeField, Button("InitRandomMap")]
+    private bool initRandomMap;
 
 
     private void Start()
     {
         if(dungeonData.FloorNumber > 0)
         {
-            InitializeRandomMap();
+            InitRandomMap();
         }
         else
         {
-            InitializeBossMap();
+            InitBossMap();
         }
 
         stairController.GetComponent<SpriteRenderer>().sprite = dungeonData.StairSprite;
         stairController.onDo.AddListener(delegate{
-            if(floorNumber < dungeonData.FloorNumber) GameManager.I.Fade(InitializeRandomMap, true);
-            else if(!isClear) GameManager.I.Fade(InitializeBossMap, true);
-            else GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, true);
+            if(floorNumber < dungeonData.FloorNumber) FadeUI.I.Fade(InitRandomMap);
+            else if(!isClear) FadeUI.I.Fade(InitBossMap);
+            else FadeUI.I.FadeIn(delegate{SceneManager.LoadScene("Home");});
         });
     }
 
-    public void InitializeRandomMap()
+    public void InitRandomMap()
     {
         if(GameManager.I)
         {
@@ -156,7 +156,7 @@ public partial class CreateMap : MonoBehaviour
         DungeonUI.I?.UpdateDungeonText($"{dungeonData.Name} {floorNumber}F");
     }
 
-    private void InitializeBossMap()
+    private void InitBossMap()
     {
         // タイルマップ
         groundMap.gameObject.SetActive(false);

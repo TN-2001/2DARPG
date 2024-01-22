@@ -13,35 +13,25 @@ public class View : MonoBehaviour
 
     public void UpdateUI(List<string> stringList, List<Sprite> spriteList)
     {
-        if(stringList != null)
+        if(stringList == null) stringList = new List<string>();
+        for(int i = 0; i < textList.Count; i++)
         {
-            for(int i = 0; i < textList.Count; i++)
-            {
-                if(i < stringList.Count)
-                {
-                    textList[i].text = stringList[i];
-                }
-                else
-                {
-                    textList[i].text = "";
-                }
-            }
+            if(i < stringList.Count) textList[i].text = stringList[i];
+            else textList[i].text = "";
         }
 
-        if(spriteList != null)
+        if(spriteList == null) spriteList = new List<Sprite>();
+        for(int i = 0; i < imageList.Count; i++)
         {
-            for(int i = 0; i < imageList.Count; i++)
+            if(i < spriteList.Count)
             {
-                if(i < spriteList.Count)
-                {
-                    imageList[i].sprite = spriteList[i];
-                    imageList[i].enabled = true;
-                }
-                else
-                {
-                    imageList[i].sprite = null;
-                    imageList[i].enabled = false;
-                }
+                imageList[i].sprite = spriteList[i];
+                imageList[i].enabled = true;
+            }
+            else
+            {
+                imageList[i].sprite = null;
+                imageList[i].enabled = false;
             }
         }
     }

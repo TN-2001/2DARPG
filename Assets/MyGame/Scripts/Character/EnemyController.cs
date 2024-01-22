@@ -31,7 +31,7 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
     private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
-    [SerializeField, ReadOnly] // キャラクター
+    // キャラクター
     private Enemy enemy = null;
     // 向き
     private Vector2 dir = Vector2.zero;
@@ -93,20 +93,23 @@ public class EnemyController : StateMachine<EnemyController>, IBattlerController
 
     public void OnDamage(int damage)
     {
-        int dam = enemy.OnDamage(damage);
-        DungeonUI.I.InitializeDamageText(dam, transform);
-
-        if(!target)
+        if(GameManager.I.state == GameManager.State.Player)
         {
-            if(targets.Count > 0)
+            int dam = enemy.UpdateHp(-damage);
+            DungeonUI.I.InitializeDamageText(dam, transform);
+
+            if(!target)
             {
-                float dis = 100;
-                for(int i = 0; i < targets.Count; i++)
+                if(targets.Count > 0)
                 {
-                    if(Vector3.Distance(targets[i].transform.position, transform.position) < dis)
+                    float dis = 100;
+                    for(int i = 0; i < targets.Count; i++)
                     {
-                        target = targets[i];
-                        dis = Vector3.Distance(targets[i].transform.position, transform.position);
+                        if(Vector3.Distance(targets[i].transform.position, transform.position) < dis)
+                        {
+                            target = targets[i];
+                            dis = Vector3.Distance(targets[i].transform.position, transform.position);
+                        }
                     }
                 }
             }

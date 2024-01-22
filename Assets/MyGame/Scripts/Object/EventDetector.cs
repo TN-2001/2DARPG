@@ -5,10 +5,7 @@ using UnityEngine.Events;
 
 public class EventController : MonoBehaviour
 {
-    public UnityEvent onDo = null;
-
-    // UIのタイプ
-    private enum Type
+    private enum Type // UIのタイプ
     {
         None,
         Shop,
@@ -17,6 +14,9 @@ public class EventController : MonoBehaviour
     }
     [SerializeField]
     private Type type = Type.None;
+
+    // イベント
+    public UnityEvent onDo = null;
 
 
     public void Do()

@@ -26,7 +26,7 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
     private Animator anim = null;
     // PlayerInput
     private PlayerInput input = null;
-    [SerializeField, ReadOnly] // キャラクター
+    // キャラクター
     private Player player = null;
     // 向き
     private Vector2 dir = Vector2.zero;
@@ -47,8 +47,11 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
 
     public void OnDamage(int damage)
     {
-        player.OnDamage(damage);
-        DungeonUI.I.UpdateHpSlider(player.CurrentHp);
+        if(GameManager.I.state == GameManager.State.Player)
+        {
+            player.UpdateHp(-damage);
+            DungeonUI.I.UpdateHpSlider(player.CurrentHp);
+        }
     }
 
 
@@ -80,8 +83,6 @@ public class PlayerController : StateMachine<PlayerController>, IBattlerControll
         }
 
         DungeonUI.I?.InitializeHpSlider(player.Hp);
-
-        GameManager.I.CameraController.Initialize(transform);
 
         ChangeState(new IdleState(this));
     }

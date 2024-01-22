@@ -15,16 +15,10 @@ public class StartUI : MonoBehaviour
 
     private void Start()
     {
-        startButton.onClick.RemoveAllListeners();
-        startButton.onClick.AddListener(OnStartButton);
-
-        GetComponent<Canvas>().worldCamera = Camera.main;
-    }
-
-    private void OnStartButton()
-    {
-        startButton.interactable = false;
-        startText.text = "読み込み中";
-        GameManager.I.Fade(delegate{SceneManager.LoadScene("Home");}, false);
+        startButton.onClick.AddListener(delegate{
+            startButton.interactable = false;
+            startText.text = "読み込み中";
+            FadeUI.I.FadeIn(delegate{SceneManager.LoadScene("Home");});
+        });
     }
 }
