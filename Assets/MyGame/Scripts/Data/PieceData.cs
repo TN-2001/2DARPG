@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObject/ItemData")]
-public class ItemData : ScriptableObject
+[CreateAssetMenu(menuName = "ScriptableObject/PieceData")]
+public class PieceData : ScriptableObject
 {
     [SerializeField] // 名前
     private new string name = null;
@@ -25,8 +25,13 @@ public class ItemData : ScriptableObject
     public int Value => value;
 }
 
-public enum ItemType
+public class Piece
 {
-    Damage,
-    Recovery,
+    private PieceData data = null;
+    public PieceData Data => data;
+
+    public Piece(PieceData data)
+    {
+        this.data = data;
+    }
 }

@@ -4,8 +4,17 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(menuName = "ScriptableObject/DungeonData")]
-public class DungeonData : BaseData
+public class DungeonData : ScriptableObject
 {
+    [SerializeField] // 名前
+    private new string name = null;
+    public string Name => name;
+    [SerializeField, TextArea] // 情報
+    private string info = null;
+    public string Info => info;
+    [SerializeField] // イメージ
+    private Sprite image = null;
+    public Sprite Image => image;
     [SerializeField] // 階数
     private int floorNumber = 0;
     public int FloorNumber => floorNumber;

@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d2d9a5d8377def4c853c2fb4048f54c, type: 3}
-  m_Name: PlayerData
+  m_Script: {fileID: 11500000, guid: 6c86fafb8db4be24f8e03351f235b921, type: 3}
+  m_Name: 001
   m_EditorClassIdentifier: 
   name: 
   info: 
-  hp: 100
-  atk: 10
+  image: {fileID: 0}
+  price: 0
+  itemType: 0
+  value: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : StateMachine<EnemyController>, IBattlerController
+public class EnemyController : StateMachine<EnemyController>
 {
     protected override Type type => Type.FixedUpdate;
 

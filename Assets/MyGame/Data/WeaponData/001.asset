@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 217a0e1068768934da78278e9a0142a9, type: 3}
-  m_Name: New Item Data
+  m_Script: {fileID: 11500000, guid: e80160f0d0ff0954f9f8389da6529102, type: 3}
+  m_Name: 001
   m_EditorClassIdentifier: 
   name: 
   info: 
+  image: {fileID: 0}
+  price: 0
+  itemDataList: []
+  weaponType: 0
+  value: 0

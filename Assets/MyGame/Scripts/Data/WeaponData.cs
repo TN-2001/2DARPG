@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObject/ItemData")]
-public class ItemData : ScriptableObject
+[CreateAssetMenu(menuName = "ScriptableObject/WeaponData")]
+public class WeaponData : ScriptableObject
 {
     [SerializeField] // 名前
     private new string name = null;
@@ -17,16 +17,29 @@ public class ItemData : ScriptableObject
     [SerializeField] // 価値
     private int price = 0;
     public int Price => price;
+    [SerializeField] // 作製に必要なアイテム
+    private List<ItemData> itemDataList = new List<ItemData>();
+    public List<ItemData> ItemDataList => itemDataList;
     [SerializeField] // アイテムのタイプ
-    private ItemType itemType = ItemType.Damage;
-    public ItemType ItemType => itemType;
+    private WeaponType weaponType = WeaponType.Sword;
+    public WeaponType WeaponType => weaponType;
     [SerializeField] // 値
     private int value = 0;
     public int Value => value;
 }
 
-public enum ItemType
+public class Weapon
 {
-    Damage,
-    Recovery,
+    private WeaponData data = null;
+    public WeaponData Data => data;
+
+    public Weapon(WeaponData data)
+    {
+        this.data = data;
+    }
+}
+
+public enum WeaponType
+{
+    Sword,
 }

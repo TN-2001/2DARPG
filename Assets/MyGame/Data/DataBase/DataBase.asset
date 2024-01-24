@@ -16,7 +16,8 @@ MonoBehaviour:
   enemyDataList:
   - {fileID: 11400000, guid: 6a12418fc60f9854ebe45b569dc1e26f, type: 2}
   npcDataList: []
-  itemDataList: []
+  itemDataList:
+  - {fileID: 11400000, guid: 05294ceb51bb2244bb19da27919aa67b, type: 2}
   eventDataList: []
   dungeonDataList:
   - {fileID: 11400000, guid: 482cb2e59ba9bae4391ff9d2dc15e075, type: 2}

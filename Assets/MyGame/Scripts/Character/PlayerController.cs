@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : StateMachine<PlayerController>, IBattlerController
+public class PlayerController : StateMachine<PlayerController>
 {
     protected override Type type => Type.FixedUpdate;
 

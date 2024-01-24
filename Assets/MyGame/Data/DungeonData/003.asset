@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20d6ca0e07341b74aa11291d21d8f898, type: 3}
-  m_Name: Cilyakunetunokairo
+  m_Name: 003
   m_EditorClassIdentifier: 
   name: "\u707C\u71B1\u306E\u56DE\u8DEF"
   floorNumber: 4

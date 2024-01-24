@@ -40,7 +40,8 @@ public class AttackController : MonoBehaviour
     {
         if(other.gameObject.tag == tagName)
         {
-            other.GetComponent<IBattlerController>().OnDamage(atk);
+            other.GetComponent<PlayerController>()?.OnDamage(atk);
+            other.GetComponent<EnemyController>()?.OnDamage(atk);
 
             if(isThrow)
             {
