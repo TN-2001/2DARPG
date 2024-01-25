@@ -13,10 +13,20 @@ public class PlayerData : ScriptableObject
     public int Atk => atk;
 }
 
+[System.Serializable]
 public class Player
 {
+    [SerializeField]
     private PlayerData data = null;
     public PlayerData Data => data;
+
+    [SerializeField] // プレイヤーアイテム
+    private List<PlayerItem> playerItemList = new List<PlayerItem>(4){
+        new PlayerItem(), new PlayerItem(), new PlayerItem(), new PlayerItem()};
+    public List<PlayerItem> PlayerItemList => playerItemList;
+    [SerializeField] // 武器
+    private Weapon weapon = null;
+    public Weapon Weapon => weapon;
 
     // hp
     public int Hp => data.Hp;
@@ -42,4 +52,13 @@ public class Player
 
         return para;
     }
+}
+
+[System.Serializable]
+public class PlayerItem
+{
+    // アイテム（10個まで）
+    public Item Itemt = null;
+    // かけら
+    public Piece piece = null;
 }

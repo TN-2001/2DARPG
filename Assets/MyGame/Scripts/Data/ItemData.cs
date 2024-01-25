@@ -25,6 +25,29 @@ public class ItemData : ScriptableObject
     public int Value => value;
 }
 
+[System.Serializable]
+public class Item
+{
+    [SerializeField]
+    private ItemData data = null;
+    public ItemData Data => data;
+
+    [SerializeField] // 数
+    private int count = 0;
+    public int Count => count;
+
+
+    public Item(ItemData data)
+    {
+        this.data = data;
+    }
+
+    public void UpadateCount(int para)
+    {
+        count += para;
+    }
+}
+
 public enum ItemType
 {
     Damage,

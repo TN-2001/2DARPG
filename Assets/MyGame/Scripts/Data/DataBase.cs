@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 [CreateAssetMenu(menuName = "ScriptableObject/DataBase")]
 public class DataBase : ScriptableObject
@@ -33,19 +30,3 @@ public class DataBase : ScriptableObject
     private List<DungeonData> dungeonDataList = new List<DungeonData>();
     public List<DungeonData> DungeonDataList => dungeonDataList;
 }
-
-#if UNITY_EDITOR
-public class DataBaseWindow : EditorWindow
-{
-    [MenuItem("Window/DataBase")]
-    private static void Open()
-    {
-        var window = GetWindow<DataBaseWindow>("DataBase");
-    }
-
-    private void OnGUI()
-    {
-        
-    }
-}
-#endif

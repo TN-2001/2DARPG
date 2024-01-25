@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d2d9a5d8377def4c853c2fb4048f54c, type: 3}
-  m_Name: 001
+  m_Script: {fileID: 11500000, guid: 52870ff5f5c30df4a8823b4540202e53, type: 3}
+  m_Name: "001_\u30B4\u30D6\u30EA\u30F3"
   m_EditorClassIdentifier: 
-  name: 
-  info: 
-  hp: 100
-  atk: 10
+  name: "\u30B4\u30D6\u30EA\u30F3"
+  hp: 30
+  atk: 5
+  prefab: {fileID: 4907625741774120285, guid: 36c7dae797b82ba4186972a8302c5e5b, type: 3}

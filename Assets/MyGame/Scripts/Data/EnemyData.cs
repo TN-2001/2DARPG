@@ -20,6 +20,9 @@ public class EnemyData : ScriptableObject
     [SerializeField] // 攻撃力
     private int atk = 0;
     public int Atk => atk;
+    [SerializeField] // アイテム
+    private List<ItemData> itemDataList = null;
+    public List<ItemData> ItemDataList => itemDataList;
     [SerializeField] // プレハブ
     private GameObject prefab = null;
     public GameObject Prefab => prefab;
