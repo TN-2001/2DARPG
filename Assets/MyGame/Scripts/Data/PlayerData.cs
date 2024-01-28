@@ -20,27 +20,53 @@ public class Player
     private PlayerData data = null;
     public PlayerData Data => data;
 
-    [SerializeField] // プレイヤーアイテム
-    private List<PlayerItem> playerItemList = new List<PlayerItem>(4){
-        new PlayerItem(), new PlayerItem(), new PlayerItem(), new PlayerItem()};
-    public List<PlayerItem> PlayerItemList => playerItemList;
-    [SerializeField] // 武器
-    private Weapon weapon = null;
-    public Weapon Weapon => weapon;
-
+    [SerializeField] // レベル
+    private int lev = 1;
+    public int Lev => lev;
+    // 必要経験値
+    public int Exp => lev * 100;
+    [SerializeField] // 現在の経験値
+    private int currentExp = 0;
+    public int CurrentExp => currentExp;
     // hp
-    public int Hp => data.Hp;
-    // 攻撃力
-    public int Atk => data.Atk;
-
+    public int Hp{get{
+        int hp = data.Hp * lev;;
+        foreach(Armor armor in armorList) hp += armor.Hp;
+        return hp;
+    }}
     // 現在のhp
     private int currentHp = 0;
     public int CurrentHp => currentHp;
+    // 攻撃力
+    public int Atk{get{
+        int atk = data.Atk * lev;
+        atk += weapon.Atk;
+        return atk;
+    }}
+    [SerializeField] // 武器
+    private Weapon weapon = null;
+    public Weapon Weapon => weapon;
+    [SerializeField] // 防具
+    private List<Armor> armorList = new List<Armor>(4);
+    public List<Armor> ArmorList => armorList;
 
 
-    public Player(PlayerData data)
+    public Player(PlayerData data, DataBase dataBase)
     {
         this.data = data;
+        weapon = new Weapon(dataBase.WeaponDataList[0]);
+        currentHp = Hp;
+    }
+
+    public void UpdateExp(int exp)
+    {
+        currentExp += exp;
+
+        while(currentExp >= Exp)
+        {
+            currentExp = currentExp - Exp;
+            lev ++;
+        }
     }
 
     public int UpdateHp(int para)
@@ -52,13 +78,9 @@ public class Player
 
         return para;
     }
-}
 
-[System.Serializable]
-public class PlayerItem
-{
-    // アイテム（10個まで）
-    public Item Itemt = null;
-    // かけら
-    public Piece piece = null;
+    public void UpdateWeapon(Weapon weapon)
+    {
+        this.weapon = weapon;
+    }
 }

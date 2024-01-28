@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class ChatUI : Singleton<ChatUI>
 {
@@ -22,14 +23,12 @@ public class ChatUI : Singleton<ChatUI>
         nextBtn.onClick.AddListener(delegate{isNext = true;});
     }
 
-    public void Chat(List<(string name, string text)> chatList)
+    public void Chat(List<(string name, string text)> chatList, UnityAction action)
     {
-        IChat(chatList);
+        IChat(chatList, action);
     }
-    private IEnumerator IChat(List<(string name, string text)> chatList)
+    private IEnumerator IChat(List<(string name, string text)> chatList, UnityAction action)
     {
-        GameManager.I.state = GameManager.State.UI;
-
         // 初期化
         chatView.gameObject.SetActive(true);
 
@@ -44,6 +43,7 @@ public class ChatUI : Singleton<ChatUI>
         // 初期化
         chatView.gameObject.SetActive(false);
 
-        GameManager.I.state = GameManager.State.Player;
+        // イベント実行
+        if(action != null) action();
     }
 }

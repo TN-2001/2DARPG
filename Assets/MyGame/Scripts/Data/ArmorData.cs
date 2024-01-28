@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObject/WeaponData")]
-public class WeaponData : ScriptableObject
+[CreateAssetMenu(menuName = "ScriptableObject/ArmorData")]
+public class ArmorData : ScriptableObject
 {
     [SerializeField] // 名前
     private new string name = null;
@@ -17,23 +17,20 @@ public class WeaponData : ScriptableObject
     [SerializeField] // 価値
     private int price = 0;
     public int Price => price;
-    [SerializeField] // 作製に必要なアイテム
-    private List<ItemData> itemDataList = new List<ItemData>();
-    public List<ItemData> ItemDataList => itemDataList;
-    [SerializeField] // 武器のタイプ
-    private WeaponType weaponType = WeaponType.Sword;
-    public WeaponType WeaponType => weaponType;
-    [SerializeField] // 攻撃力
-    private int atk = 0;
-    public int Atk => atk;
+    [SerializeField] // 防具のタイプ
+    private ArmorType armorType = ArmorType.Head;
+    public ArmorType ArmorType => armorType;
+    [SerializeField] // hp
+    private int hp = 0;
+    public int Hp => hp;
 }
 
 [System.Serializable]
-public class Weapon
+public class Armor
 {
     [SerializeField]
-    private WeaponData data = null;
-    public WeaponData Data => data;
+    private ArmorData data = null;
+    public ArmorData Data => data;
 
     [SerializeField] // レベル
     private int lev = 1;
@@ -43,11 +40,11 @@ public class Weapon
     [SerializeField] // 現在の経験値
     private int currentExp = 0;
     public int CurrentExp => currentExp;
-    // 攻撃力
-    public int Atk => data.Atk * lev;
+    // hp
+    public int Hp => data.Hp * lev;
 
 
-    public Weapon(WeaponData data)
+    public Armor(ArmorData data)
     {
         this.data = data;
     }
@@ -64,7 +61,10 @@ public class Weapon
     }
 }
 
-public enum WeaponType
+public enum ArmorType
 {
-    Sword,
+    Head,
+    Chest,
+    Arm,
+    Leg,
 }

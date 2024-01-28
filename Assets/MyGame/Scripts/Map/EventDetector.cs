@@ -33,7 +33,7 @@ public class EventController : MonoBehaviour
         }
         else if(type == Type.Box)
         {
-
+            HomeUI.I.OnBoxView();
         }
         else if(type == Type.Dungeon)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class FadeUI : Singleton<FadeUI>
 {
@@ -10,14 +11,8 @@ public class FadeUI : Singleton<FadeUI>
 
     [SerializeField] // フェード画像
     private Image fadeImage = null;
-
-    private void Start()
-    {
-        if(GameManager.I.state == GameManager.State.UI)
-        {
-            StartCoroutine(EFadeOut());
-        }
-    }
+    [SerializeField] // EventSystem
+    private EventSystem eventSystem = null;
 
     public void Fade(UnityAction action)
     {
@@ -26,7 +21,7 @@ public class FadeUI : Singleton<FadeUI>
     private IEnumerator EFade(UnityAction action)
     {
         yield return EFadeIn(action);
-        yield return EFadeOut();
+        yield return EFadeOut(null);
     }
 
     public void FadeIn(UnityAction action)
@@ -35,7 +30,7 @@ public class FadeUI : Singleton<FadeUI>
     }
     private IEnumerator EFadeIn(UnityAction action)
     {
-        GameManager.I.state = GameManager.State.UI;
+        eventSystem.enabled = false;
 
         fadeImage.enabled = true;
 
@@ -50,14 +45,16 @@ public class FadeUI : Singleton<FadeUI>
         }
 
         // 関数実行
-        if(action != null)
-        {
-            action();
-        }
+        if(action != null) action();
     }
 
-    private IEnumerator EFadeOut()
+    public void FadeOut(UnityAction action)
     {
+        StartCoroutine(EFadeOut(action));
+    }
+    private IEnumerator EFadeOut(UnityAction action)
+    {
+        eventSystem.enabled = false;
         fadeImage.enabled = true;
 
         float alpha = 1f;
@@ -71,7 +68,9 @@ public class FadeUI : Singleton<FadeUI>
         }
 
         fadeImage.enabled = false;
+        eventSystem.enabled = true;
 
-        GameManager.I.state = GameManager.State.Player;
+        // 関数実行
+        if(action != null) action();
     }
 }

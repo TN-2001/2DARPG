@@ -135,12 +135,13 @@ public partial class CreateMap : MonoBehaviour
                 int enemyNumber = Random.Range(1, 3);
                 for(int j = 0; j < enemyNumber; j++)
                 {
-                    GameObject obj = Instantiate(
-                        dungeonData.EnemyDataList[Random.Range(0, dungeonData.EnemyDataList.Count)].Prefab);
+                    EnemyData data = dungeonData.EnemyDataList[Random.Range(0, dungeonData.EnemyDataList.Count)];
+                    GameObject obj = Instantiate(data.Prefab);
                     obj.transform.SetParent(enemyParent);
                     int x = Random.Range(room.Left, room.Right + 1);
                     int y = Random.Range(room.Down, room.Up + 1);
                     obj.transform.position = new Vector2(x + 0.5f, y + 0.5f);
+                    obj.GetComponent<EnemyController>().Init(new Enemy(data, 1));
                 }
             }
         }
@@ -169,7 +170,8 @@ public partial class CreateMap : MonoBehaviour
         {
             GameObject.DestroyImmediate(enemyParent.GetChild(0).gameObject);
         }
-        Instantiate(dungeonData.BossEnemyData.Prefab, new Vector2(0f, 3f), Quaternion.identity, enemyParent);
+        GameObject obj = Instantiate(dungeonData.BossEnemyData.Prefab, new Vector2(0f, 3f), Quaternion.identity, enemyParent);
+        obj.GetComponent<EnemyController>().Init(new Enemy(dungeonData.BossEnemyData, 1));
         playerTra.position = Vector2.zero;
 
         // 階段配置

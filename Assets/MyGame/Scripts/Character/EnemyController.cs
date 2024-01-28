@@ -31,7 +31,7 @@ public class EnemyController : StateMachine<EnemyController>
     private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
-    // キャラクター
+    [SerializeField, ReadOnly] // キャラクター
     private Enemy enemy = null;
     // 向き
     private Vector2 dir = Vector2.zero;
@@ -50,6 +50,11 @@ public class EnemyController : StateMachine<EnemyController>
     // 可能な攻撃番号
     private List<int> numbers = new List<int>();
 
+
+    public void Init(Enemy enemy)
+    {
+        this.enemy = enemy;
+    }
 
     private void OnEnterArea(Collider2D other)
     {
@@ -93,23 +98,20 @@ public class EnemyController : StateMachine<EnemyController>
 
     public void OnDamage(int damage)
     {
-        if(GameManager.I.state == GameManager.State.Player)
-        {
-            int dam = enemy.UpdateHp(-damage);
-            DungeonUI.I.InitializeDamageText(dam, transform);
+        int dam = enemy.UpdateHp(-damage);
+        DungeonUI.I.InitializeDamageText(dam, transform);
 
-            if(!target)
+        if(!target)
+        {
+            if(targets.Count > 0)
             {
-                if(targets.Count > 0)
+                float dis = 100;
+                for(int i = 0; i < targets.Count; i++)
                 {
-                    float dis = 100;
-                    for(int i = 0; i < targets.Count; i++)
+                    if(Vector3.Distance(targets[i].transform.position, transform.position) < dis)
                     {
-                        if(Vector3.Distance(targets[i].transform.position, transform.position) < dis)
-                        {
-                            target = targets[i];
-                            dis = Vector3.Distance(targets[i].transform.position, transform.position);
-                        }
+                        target = targets[i];
+                        dis = Vector3.Distance(targets[i].transform.position, transform.position);
                     }
                 }
             }
@@ -121,12 +123,6 @@ public class EnemyController : StateMachine<EnemyController>
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-
-        // agent = GetComponent<NavMeshAgent>();
-        // agent.updateRotation = false;
-        // agent.updateUpAxis = false;
-
-        enemy = new Enemy(GameManager.I.DataBase.EnemyDataList[0]);
 
         areaDetector.onTriggerEnter.AddListener(OnEnterArea);
         areaDetector.onTriggerExit.AddListener(OnExitArea);
@@ -350,6 +346,7 @@ public class EnemyController : StateMachine<EnemyController>
 
         public override void OnEnter()
         {
+            GameManager.I.Data.UpdateEnemyData(m.enemy.Data);
             Destroy(m.gameObject);
         }
     }

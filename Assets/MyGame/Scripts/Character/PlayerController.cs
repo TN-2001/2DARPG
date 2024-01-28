@@ -3,10 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : StateMachine<PlayerController>
+public class PlayerController : MonoBehaviour
 {
-    protected override Type type => Type.FixedUpdate;
+    public static PlayerController I = null;
+    // ステート
+    private enum State{Idle, Move, Attack, Die}
+    [SerializeField, ReadOnly]
+    private State state = State.Idle;
+    private State nextState = State.Idle;
+    private bool isEnter = false;
 
+    // 物理コンポーネント
+    private Rigidbody2D rb = null;
+    // アニメーションコンポーネント
+    private Animator anim = null;
+    // PlayerInput
+    private PlayerInput input = null;
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // 敵エリア判定
@@ -20,13 +32,7 @@ public class PlayerController : StateMachine<PlayerController>
     [SerializeField] // ダッシュスピード
     private float dashSpeed = 0;
 
-    // 物理コンポーネント
-    private Rigidbody2D rb = null;
-    // アニメーションコンポーネント
-    private Animator anim = null;
-    // PlayerInput
-    private PlayerInput input = null;
-    // キャラクター
+    [SerializeField, ReadOnly] // キャラクター
     private Player player = null;
     // 向き
     private Vector2 dir = Vector2.zero;
@@ -36,24 +42,14 @@ public class PlayerController : StateMachine<PlayerController>
     private EventController eventController = null;
     [SerializeField, ReadOnly] // 攻撃番号
     private int attackNumber = 0;
-    // 攻撃終了フラグ
-    private bool isAttackEnd = false;
+    // 強制アイドルフラグ
+    public bool isIdle = false;
 
 
-    public void OnAttackEnd()
+    private void Awake()
     {
-        isAttackEnd = true;
+        I = this;
     }
-
-    public void OnDamage(int damage)
-    {
-        if(GameManager.I.state == GameManager.State.Player)
-        {
-            player.UpdateHp(-damage);
-            DungeonUI.I.UpdateHpSlider(player.CurrentHp);
-        }
-    }
-
 
     private void Start()
     {
@@ -61,7 +57,7 @@ public class PlayerController : StateMachine<PlayerController>
         anim = GetComponent<Animator>();
         input = GetComponent<PlayerInput>();
 
-        player = new Player(GameManager.I.DataBase.PlayerData);
+        player = GameManager.I.Data.Player;
 
         enemyAreaDetector.onTriggerEnter.AddListener(delegate(Collider2D other){
             targets.Add(other.gameObject);
@@ -83,163 +79,154 @@ public class PlayerController : StateMachine<PlayerController>
         }
 
         DungeonUI.I?.InitializeHpSlider(player.Hp);
-
-        ChangeState(new IdleState(this));
     }
 
-    private class DoState : State<PlayerController>
+    public void OnAttackEnd()
     {
-        public DoState(PlayerController _m) : base(_m){}
-
-        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
-        {
-            (GameManager.I.state == GameManager.State.Player, new IdleState(m)),
-        };
-
-        public override void OnEnter()
-        {
-            GameManager.I.state = GameManager.State.UI;
-            m.eventController.Do();
-        }
+        nextState = State.Idle;
     }
 
-    private class IdleState : State<PlayerController>
+    public void OnDamage(int damage)
     {
-        public IdleState(PlayerController _m) : base(_m){}
-
-        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
-        {
-            (m.input.actions["Do"].IsPressed() & m.eventController, new DoState(m)),
-            (m.player.CurrentHp == 0, new DieState(m)),
-            (m.input.actions["Attack"].IsPressed() || m.input.actions["Skill"].IsPressed(), new AttackState(m)),
-            (m.input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0, new MoveState(m))
-        };
-
-        public override void OnUpdate()
-        {
-            if(m.input.actions["Attack"].IsPressed())
-            {
-                m.attackNumber = 0;
-            }
-            else if(m.input.actions["Skill"].IsPressed())
-            {
-                m.attackNumber = 1;
-            }
-        }
+        player.UpdateHp(-damage);
+        DungeonUI.I.UpdateHpSlider(player.CurrentHp);
     }
 
-    private class MoveState : State<PlayerController>
+    private void FixedUpdate()
     {
-        public MoveState(PlayerController _m) : base(_m){}
-
-        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
+        if(state != State.Attack)
         {
-            (m.input.actions["Do"].IsPressed() & m.eventController, new DoState(m)),
-            (m.player.CurrentHp == 0, new DieState(m)),
-            (m.input.actions["Attack"].IsPressed() || m.input.actions["Skill"].IsPressed(), new AttackState(m)),
-            (m.input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0, new IdleState(m))
-        };
-
-        public override void OnUpdate()
-        {
-            if(m.input.actions["Attack"].IsPressed())
-            {
-                m.attackNumber = 0;
+            if(input.actions["Attack"].IsPressed()){
+                attackNumber = 0;
+                nextState = State.Attack;
             }
-            else if(m.input.actions["Skill"].IsPressed())
-            {
-                m.attackNumber = 1;
+            else if(input.actions["Skill"].IsPressed()){
+                attackNumber = 1;
+                nextState = State.Attack;
             }
-
-            // 向き取得
-            if(m.input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
-            {
-                m.dir = m.input.actions["Move"].ReadValue<Vector2>().normalized;
-            }
-            // 移動
-            if(m.input.actions["Dash"].IsPressed())
-            {
-                m.rb.velocity = m.dir * m.dashSpeed;
-                m.anim.SetFloat("speed", 1f);
-            }
-            else
-            {
-                m.rb.velocity = m.dir * m.walkSpeed;
-                m.anim.SetFloat("speed", 0.5f);
-            }
-            // 向き
-            m.anim.SetFloat("x", m.dir.x);
-            m.anim.SetFloat("y", m.dir.y);
-            Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, m.dir);
-            Vector3 vector3 = quaternion.eulerAngles;
-            vector3.y = 0;
-            m.rotation.rotation = Quaternion.Euler(vector3);
         }
 
-        public override void OnExit()
-        {
-            m.rb.velocity = Vector2.zero;
-            m.anim.SetFloat("speed", 0);
+        if(isIdle){
+            nextState = State.Idle;
         }
-    }
+        else if(input.actions["Do"].IsPressed()){
+            eventController.Do();
+            isIdle = true;
+        }
 
-    private class AttackState : State<PlayerController>
-    {
-        public AttackState(PlayerController _m) : base(_m){}
 
-        public override List<(bool, State<PlayerController>)> StateList => new List<(bool, State<PlayerController>)>()
+        switch(state)
         {
-            (m.input.actions["Do"].IsPressed() & m.eventController, new DoState(m)),
-            (m.player.CurrentHp == 0, new DieState(m)),
-            (m.isAttackEnd, new IdleState(m))
-        };
-
-        private GameObject target = null;
-
-        public override void OnEnter()
-        {
-            if(m.targets.Count > 0)
-            {
-                float dis = 100;
-                for(int i = 0; i < m.targets.Count; i++)
-                {
-                    if(Vector3.Distance(m.targets[i].transform.position, m.transform.position) < dis)
-                    {
-                        target = m.targets[i];
-                        dis = Vector3.Distance(m.targets[i].transform.position, m.transform.position);
-                    }
+            case State.Idle:
+                if(!isEnter){
+                    isEnter = true;
                 }
-                m.dir = (target.transform.position - m.transform.position).normalized;
-                Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, m.dir);
+
+                if(input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0 & !isIdle)
+                    nextState = State.Move;
+
+                if(nextState != state){
+                    state = nextState;
+                    isEnter = false;
+                }
+                break;
+
+            case State.Move:
+                if(!isEnter){
+                    isEnter = true;
+                }
+
+                // 向き取得
+                if(input.actions["Move"].ReadValue<Vector2>().normalized.magnitude > 0)
+                    dir = input.actions["Move"].ReadValue<Vector2>().normalized;
+                // 移動
+                if(input.actions["Dash"].IsPressed()){
+                    rb.velocity = dir * dashSpeed;
+                    anim.SetFloat("speed", 1f);
+                }
+                else{
+                    rb.velocity = dir * walkSpeed;
+                    anim.SetFloat("speed", 0.5f);
+                }
+                // 向き
+                anim.SetFloat("x", dir.x);
+                anim.SetFloat("y", dir.y);
+                Quaternion quaternion = Quaternion.FromToRotation(Vector3.up, dir);
                 Vector3 vector3 = quaternion.eulerAngles;
                 vector3.y = 0;
-                m.rotation.rotation = Quaternion.Euler(vector3);
-                m.anim.SetFloat("x", m.dir.normalized.x);
-                m.anim.SetFloat("y", m.dir.normalized.y);
-            }
+                rotation.rotation = Quaternion.Euler(vector3);
 
-            if(m.attackControllers[m.attackNumber].IsThrow)
-            {
-                GameObject obj = Instantiate(m.attackControllers[m.attackNumber].gameObject, 
-                    m.attackControllers[m.attackNumber].transform.position,
-                    m.attackControllers[m.attackNumber].transform.rotation);
-                obj.transform.SetParent(m.transform.parent);
-                obj.SetActive(true);
-            }
+                if(input.actions["Move"].ReadValue<Vector2>().normalized.magnitude == 0)
+                    nextState = State.Idle;
 
-            m.anim.SetFloat("attackNumber", m.attackNumber + 1);
-            m.anim.SetTrigger("isAttack");
-        }
+                if(nextState != state){
+                    state = nextState;
+                    isEnter = false;
 
-        public override void OnExit()
-        {
-            m.isAttackEnd = false;
-            m.anim.SetFloat("attackNumber", 0);
+                    rb.velocity = Vector2.zero;
+                    anim.SetFloat("speed", 0f);
+                }
+                break;
+
+            case State.Attack:
+                if(!isEnter){
+                    isEnter = true;
+
+                    if(targets.Count > 0)
+                    {
+                        GameObject target = null;
+                        float dis = 100;
+                        for(int i = 0; i < targets.Count; i++)
+                        {
+                            if(Vector3.Distance(targets[i].transform.position, transform.position) < dis)
+                            {
+                                target = targets[i];
+                                dis = Vector3.Distance(targets[i].transform.position, transform.position);
+                            }
+                        }
+                        dir = (target.transform.position - transform.position).normalized;
+                        Quaternion quat = Quaternion.FromToRotation(Vector3.up, dir);
+                        Vector3 vec3 = quat.eulerAngles;
+                        vec3.y = 0;
+                        rotation.rotation = Quaternion.Euler(vec3);
+                        anim.SetFloat("x", dir.normalized.x);
+                        anim.SetFloat("y", dir.normalized.y);
+                    }
+
+                    if(attackControllers[attackNumber].IsThrow)
+                    {
+                        GameObject obj = Instantiate(attackControllers[attackNumber].gameObject, 
+                            attackControllers[attackNumber].transform.position,
+                            attackControllers[attackNumber].transform.rotation);
+                        obj.transform.SetParent(transform.parent);
+                        obj.SetActive(true);
+                    }
+
+                    anim.SetFloat("attackNumber", attackNumber + 1);
+                    anim.SetTrigger("isAttack");
+                }
+
+                if(nextState != state){
+                    state = nextState;
+                    isEnter = false;
+                }
+                break;
+
+            case State.Die:
+                if(!isEnter){
+                    isEnter = true;
+                }
+
+                if(nextState != state){
+                    state = nextState;
+                    isEnter = false;
+                }
+                break;
         }
     }
 
-    private class DieState : State<PlayerController>
+    private void OnDestroy()
     {
-        public DieState(PlayerController _m) : base(_m){}
+        GameManager.I.Data.UpdatePlayer(player);
     }
 }
