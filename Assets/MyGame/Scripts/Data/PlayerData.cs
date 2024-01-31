@@ -16,7 +16,6 @@ public class PlayerData : ScriptableObject
 [System.Serializable]
 public class Player
 {
-    [SerializeField]
     private PlayerData data = null;
     public PlayerData Data => data;
 
@@ -32,7 +31,7 @@ public class Player
     public int Hp{get{
         int hp = data.Hp * lev;;
         foreach(Armor armor in armorList){
-            if(armor != null) hp += armor.Hp;
+            if(armor.Data) hp += armor.Hp;
         }
         return hp;
     }}
@@ -42,21 +41,37 @@ public class Player
     // 攻撃力
     public int Atk{get{
         int atk = data.Atk * lev;
-        atk += weapon.Atk;
+        atk += weaponList[weaponNumber].Atk;
         return atk;
     }}
-    [SerializeField] // 武器
-    private Weapon weapon = null;
-    public Weapon Weapon => weapon;
-    [SerializeField] // 防具
+    [SerializeField] // 武器リスト
+    private List<Weapon> weaponList = new List<Weapon>();
+    public List<Weapon> WeaponList => weaponList;
+    // 現在の武器番号
+    private int weaponNumber = 0;
+    public int WeaponNumber => weaponNumber;
+    [SerializeField] // 防具リスト
     private List<Armor> armorList = new List<Armor>(){null, null, null, null};
     public List<Armor> ArmorList => armorList;
 
 
-    public Player(PlayerData data, DataBase dataBase)
+    public Player(DataBase dataBase)
     {
-        this.data = data;
-        weapon = new Weapon(dataBase.WeaponDataList[0]);
+        this.data = dataBase.PlayerData;
+        weaponList.Add(new Weapon(dataBase.WeaponDataList[0], 0));
+    }
+
+    public void Init(DataBase dataBase)
+    {
+        this.data = dataBase.PlayerData;
+        for(int i = 0; i < WeaponList.Count; i++){
+            if(weaponList[i].Number >= 0)
+                weaponList[i].Init(dataBase.WeaponDataList[weaponList[i].Number]);
+        }
+        for(int i = 0; i < 4; i++){
+            if(armorList[i].Number >= 0)
+                armorList[i].Init(dataBase.ArmorDataList[armorList[i].Number]);
+        }
         currentHp = Hp;
     }
 
@@ -79,10 +94,5 @@ public class Player
         else if(currentHp > Hp) currentHp = Hp;
 
         return para;
-    }
-
-    public void UpdateWeapon(Weapon weapon)
-    {
-        this.weapon = weapon;
     }
 }

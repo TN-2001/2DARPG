@@ -71,8 +71,7 @@ public class PlayerController : MonoBehaviour
             if(other.gameObject == eventController.gameObject) eventController = null;
         });
 
-        for(int i = 0; i < attackControllers.Length; i++)
-        {
+        for(int i = 0; i < attackControllers.Length; i++){
             attackControllers[i].Initialize(player.Atk);
         }
 

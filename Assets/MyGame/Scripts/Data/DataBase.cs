@@ -35,6 +35,9 @@ public class DataBase : ScriptableObject
 public class SaveData
 {
     [SerializeField]
+    private int money = 1000;
+    public int Money => money;
+    [SerializeField]
     private Player player = null;
     public Player Player => player;
     [SerializeField]
@@ -46,36 +49,85 @@ public class SaveData
     [SerializeField]
     private List<Weapon> weaponList = new List<Weapon>();
     public List<Weapon> WeaponList => weaponList;
-
     [SerializeField]
-    private List<EnemyData> enemyDataList = new List<EnemyData>();
-    public List<EnemyData> EnemyDataList => enemyDataList;
+    private List<bool> isFindEnemyList = new List<bool>();
+    public List<bool> IsFindEnemyList => isFindEnemyList;
     [SerializeField]
-    private List<DungeonData> dungeonDataList = new List<DungeonData>();
-    public List<DungeonData> DungeonDataList => dungeonDataList;
+    private int currentDungeonNumber = 0;
+    public int CurrentDungeonNumber => currentDungeonNumber;
 
 
     public SaveData(DataBase data)
     {
-        player = new Player(data.PlayerData, data);
-        dungeonDataList.Add(data.DungeonDataList[0]);
-    }
-
-    public void UpdateEnemyData(EnemyData enemyData)
-    {
-        for(int i = 0; i < enemyDataList.Count; i++)
-        {
-            if(enemyDataList[i] == enemyData) return;
+        player = new Player(data);
+        while(isFindEnemyList.Count < data.EnemyDataList.Count){
+            isFindEnemyList.Add(false);
         }
-
-        enemyDataList.Add(enemyData);
     }
 
-    public void ChengeWeapon(int number)
+    public void Init(DataBase data)
     {
-        Weapon weapon = Player.Weapon;
-        Player.UpdateWeapon(weaponList[number]);
-        weaponList.Remove(weaponList[number]);
-        weaponList.Add(weapon);
+        player.Init(data);
+        for(int i = 0; i < itemList.Count; i++){
+            itemList[i].Init(data.ItemDataList[itemList[i].Number]);
+        }
+        for(int i = 0; i < armorList.Count; i++){
+            armorList[i].Init(data.ArmorDataList[armorList[i].Number]);
+        }
+        for(int i = 0; i < weaponList.Count; i++){
+            weaponList[i].Init(data.WeaponDataList[weaponList[i].Number]);
+        }
+        while(isFindEnemyList.Count < data.EnemyDataList.Count){
+            isFindEnemyList.Add(false);
+        }
+    }
+
+    public void UpdateMoney(int money)
+    {
+        this.money += money;
+    }
+
+    public void AddWeapon(Weapon weapon)
+    {
+        Player.WeaponList.Add(weapon);
+        weaponList.Remove(weapon);
+    }
+    public void RemoveWeapon(int number)
+    {
+        weaponList.Add(Player.WeaponList[number]);
+        Player.WeaponList.Remove(Player.WeaponList[number]);
+    }
+    public void ChengeWeapon(Weapon weapon, int number)
+    {
+        weaponList.Add(Player.WeaponList[number]);
+        Player.WeaponList[number] = weapon;
+        weaponList.Remove(weapon);
+    }
+
+    public void AddArmor(Armor armor, int number)
+    {
+        Player.ArmorList[number] = armor;
+        armorList.Remove(armor);
+    }
+    public void RemoveArmor(int number)
+    {
+        armorList.Add(player.ArmorList[number]);
+        Player.ArmorList[number] = null;
+    }
+    public void ChengeArmor(Armor armor, int number)
+    {
+        armorList.Add(Player.ArmorList[number]);
+        Player.ArmorList[number] = armor;
+        armorList.Remove(armor);
+    }
+
+    public void UpdateFindEnemy(int number)
+    {
+        isFindEnemyList[number] = true;
+    }
+
+    public void UpdateDungeonNumber()
+    {
+        currentDungeonNumber ++;
     }
 }

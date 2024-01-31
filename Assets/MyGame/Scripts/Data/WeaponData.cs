@@ -31,10 +31,12 @@ public class WeaponData : ScriptableObject
 [System.Serializable]
 public class Weapon
 {
-    [SerializeField]
     private WeaponData data = null;
     public WeaponData Data => data;
 
+    [SerializeField] // 番号
+    private int number = -1;
+    public int Number => number;
     [SerializeField] // レベル
     private int lev = 1;
     public int Lev => lev;
@@ -47,7 +49,13 @@ public class Weapon
     public int Atk => data.Atk * lev;
 
 
-    public Weapon(WeaponData data)
+    public Weapon(WeaponData data, int number)
+    {
+        this.data = data;
+        this.number = number;
+    }
+
+    public void Init(WeaponData data)
     {
         this.data = data;
     }

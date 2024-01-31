@@ -18,9 +18,13 @@ MonoBehaviour:
   npcDataList: []
   itemDataList:
   - {fileID: 11400000, guid: 05294ceb51bb2244bb19da27919aa67b, type: 2}
-  pieceDataList: []
   weaponDataList:
   - {fileID: 11400000, guid: ff58a22bc2523b145b79979c9c5c67b1, type: 2}
+  armorData:
+  - {fileID: 11400000, guid: e47ef25002c15b847a98ad5cba0bb20f, type: 2}
+  - {fileID: 11400000, guid: ab02addc6665fc04a8af3adb0ba865af, type: 2}
+  - {fileID: 11400000, guid: 0295f82bdbc25f34583fd0fd8bf93d51, type: 2}
+  - {fileID: 11400000, guid: 119d6783473480548981a67b04aba028, type: 2}
   eventDataList: []
   dungeonDataList:
   - {fileID: 11400000, guid: 482cb2e59ba9bae4391ff9d2dc15e075, type: 2}

@@ -35,6 +35,8 @@ public class HomeUI : MonoBehaviour
     private GameObject equipWindowObj = null;
     [SerializeField] // 装備トグル
     private List<ToggleUI> equipToggleList = new List<ToggleUI>(5);
+    [SerializeField] // プレイヤーステータステキスト
+    private TextMeshProUGUI playerStatusText = null;
     [Header("右ウィンドウ")]
     [SerializeField] // 右ビュー
     private View rightView = null;
@@ -44,6 +46,8 @@ public class HomeUI : MonoBehaviour
 
     [SerializeField, ReadOnly] // 番号
     private int number = 0;
+    [SerializeField, ReadOnly] // 前の番号
+    private int preNumber = 0;
 
 
     private void Start()
@@ -85,6 +89,7 @@ public class HomeUI : MonoBehaviour
     public void OnBoxView()
     {
         PlayerController.I.isIdle = true;
+        preNumber = 0;
         OnEquipView();
     }
 
@@ -92,28 +97,40 @@ public class HomeUI : MonoBehaviour
     {
         Player player = GameManager.I.Data.Player;
         // トグルの編集
-        equipToggleList[0].GetComponent<View>().UpdateUI(player.Weapon.Data.Name);
-        equipToggleList[0].onSelect.RemoveAllListeners();
-        string equipInfo = $"レベル：{player.Weapon.Lev}\n攻撃力：{player.Weapon.Atk}\n\n{player.Weapon.Data.Info}";
-        equipToggleList[0].onSelect.AddListener(delegate{
-            rightView.UpdateUI(new List<string>(){player.Weapon.Data.Name, equipInfo});
-            number = 0;
-            // コマンドボタンを初期化
-            if(GameManager.I.Data.WeaponList.Count > 0){
-                OnCommandView(new List<(string name, UnityAction method)>(){
-                    ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
-                    ("装備変更", delegate{OffView(); OnWeaponView();})
+        for(int i = 0; i < 4; i++)
+        {
+            ToggleUI toggle = equipToggleList[i];
+            toggle.onSelect.RemoveAllListeners();
+            List<Weapon> weaponList =  GameManager.I.Data.WeaponList;
+            if(i < player.WeaponList.Count){
+                Weapon weapon = player.WeaponList[i];
+                toggle.GetComponent<View>().UpdateUI(weapon.Data.Name);
+                toggle.onSelect.AddListener(delegate{
+                    string info = $"レベル：{weapon.Lev}\n攻撃力：{weapon.Atk}\n\n{weapon.Data.Info}";
+                    rightView.UpdateUI(new List<string>(){weapon.Data.Name, info});
+                    number = int.Parse(toggle.gameObject.name);
+                    // コマンドボタン初期化
+                    if(weaponList.Count > 0) commandList[1].gameObject.SetActive(true);
+                    else commandList[1].gameObject.SetActive(false);
+                    if(player.WeaponList.Count >= 2) commandList[2].gameObject.SetActive(true);
+                    else commandList[2].gameObject.SetActive(false);
                 });
             }
             else{
-                OnCommandView(new List<(string name, UnityAction method)>(){
-                    ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;})
+                toggle.GetComponent<View>().UpdateUI("なし");
+                toggle.onSelect.AddListener(delegate{
+                    rightView.UpdateUI(new List<string>(){"なし"});
+                    number = int.Parse(toggle.gameObject.name);
+                    // コマンドボタン初期化
+                    if(weaponList.Count > 0) commandList[1].gameObject.SetActive(true);
+                    else commandList[1].gameObject.SetActive(false);
+                    commandList[2].gameObject.SetActive(false);
                 });
             }
-        });
+        }
         for(int i = 0; i < 4; i++)
         {
-            ToggleUI toggle = equipToggleList[i+1];
+            ToggleUI toggle = equipToggleList[i+4];
             toggle.onSelect.RemoveAllListeners();
             List<Armor> armorList =  GameManager.I.Data.ArmorList;
             if(i == 0) armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Head);
@@ -124,21 +141,13 @@ public class HomeUI : MonoBehaviour
                 Armor armor = player.ArmorList[i];
                 toggle.GetComponent<View>().UpdateUI(armor.Data.Name);
                 toggle.onSelect.AddListener(delegate{
-                    string info = $"体力　：{armor.Data.Hp}\n\n{armor.Data.Info}";
+                    string info = $"レベル：{armor.Lev}\n体力　：{armor.Hp}\n\n{armor.Data.Info}";
                     rightView.UpdateUI(new List<string>(){armor.Data.Name, info});
                     number = int.Parse(toggle.gameObject.name);
                     // コマンドボタン初期化
-                    if(armorList.Count > 0){
-                        OnCommandView(new List<(string name, UnityAction method)>(){
-                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
-                            ("装備変更", delegate{OffView(); OnArmorView();})
-                        });
-                    }
-                    else{
-                        OnCommandView(new List<(string name, UnityAction method)>(){
-                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;})
-                        });
-                    }
+                    if(armorList.Count > 0) commandList[1].gameObject.SetActive(true);
+                    else commandList[1].gameObject.SetActive(false);
+                    commandList[2].gameObject.SetActive(true);
                 });
             }
             else{
@@ -147,28 +156,42 @@ public class HomeUI : MonoBehaviour
                     rightView.UpdateUI(new List<string>(){"なし"});
                     number = int.Parse(toggle.gameObject.name);
                     // コマンドボタン初期化
-                    if(armorList.Count > 0){
-                        OnCommandView(new List<(string name, UnityAction method)>(){
-                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
-                            ("装備変更", delegate{OffView(); OnArmorView();})
-                        });
-                    }
-                    else{
-                        OnCommandView(new List<(string name, UnityAction method)>(){
-                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;})
-                        });
-                    }
+                    if(armorList.Count > 0) commandList[1].gameObject.SetActive(true);
+                    else commandList[1].gameObject.SetActive(false);
+                    commandList[2].gameObject.SetActive(false);
                 });
             }
         }
+        // プレイヤー情報
+        playerStatusText.text = $"レベル：{player.Lev}\n体力　：{player.Hp}\n攻撃力：{player.Atk}";
 
         // 初期化
         equipWindowObj.SetActive(true);
         rightView.gameObject.SetActive(true);
-        equipToggleList[0].Select();
+        equipToggleList[preNumber].Select();
+
+        // コマンド初期化
+        OnCommandView(new List<(string name, UnityAction method)>(){
+            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
+            ("装備変更", delegate{
+                OffView();
+                if(number < 4) 
+                    if(number < player.WeaponList.Count) OnWeaponView(false);
+                    else OnWeaponView(true);
+                else
+                    if(!player.ArmorList[number-4].Data) OnArmorView(false);
+                    else OnWeaponView(true);
+            }),
+            ("外す", delegate{
+                OffView();
+                if(number < 4) GameManager.I.Data.RemoveWeapon(number);
+                else GameManager.I.Data.RemoveArmor(number-4);
+                OnEquipView();
+            }),
+        });
     }
 
-    private void OnWeaponView()
+    private void OnWeaponView(bool isAdd)
     {
         // コンテンツ内をからに
         foreach(Transform child in squareContentTra) Destroy(child.gameObject);
@@ -201,13 +224,60 @@ public class HomeUI : MonoBehaviour
         // コマンドボタンを初期化
         OnCommandView(new List<(string name, UnityAction method)>(){
             ("戻る", delegate{OffView(); OnEquipView();}), 
-            ("装備", delegate{GameManager.I.Data.ChengeWeapon(number); OffView(); OnEquipView();})
+            ("装備", delegate{
+                if(isAdd) GameManager.I.Data.AddWeapon(weaponList[number]);
+                else GameManager.I.Data.ChengeWeapon(weaponList[number], preNumber);
+                OffView();
+                OnEquipView();
+            })
         });
     }
 
-    private void OnArmorView()
+    private void OnArmorView(bool isAdd)
     {
+        // コンテンツ内をからに
+        foreach(Transform child in squareContentTra) Destroy(child.gameObject);
+        // コンテンツ内に必要なものを生成
+        List<Armor> armorList = GameManager.I.Data.ArmorList;
+        int typeNumber = number - 3;
+        if(typeNumber == 0) armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Head);
+        else if(typeNumber == 1) armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Chest);
+        else if(typeNumber == 2) armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Arm);
+        else armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Leg);
+        ToggleUI firstToggle = null;
+        for(int i = 0; i < armorList.Count; i++)
+        {
+            GameObject obj = Instantiate(
+                squareToggle, squareToggle.transform.position, Quaternion.identity, squareContentTra);
+            obj.name = i.ToString();
+            obj.GetComponent<View>().UpdateUI(armorList[i].Data.Name);
+            ToggleUI toggle = obj.GetComponent<ToggleUI>();
+            toggle.onSelect.AddListener(delegate{
+                number = int.Parse(obj.name);
+                Armor data = armorList[number];
+                string info = $"レベル：{data.Lev}\n体力　：{data.Hp}\n\n{data.Data.Info}";
+                rightView.UpdateUI(new List<string>(){data.Data.Name, info});
+            });
+            toggle.group = squareContentTra.GetComponent<ToggleGroup>();
 
+            if(i == 0) firstToggle = toggle;
+        }
+
+        // 初期化
+        squareScroll.SetActive(true);
+        rightView.gameObject.SetActive(true);
+        firstToggle?.Select();
+
+        // コマンドボタンを初期化
+        OnCommandView(new List<(string name, UnityAction method)>(){
+            ("戻る", delegate{OffView(); OnEquipView();}), 
+            ("装備", delegate{
+                if(isAdd) GameManager.I.Data.AddArmor(armorList[number], typeNumber);
+                else GameManager.I.Data.ChengeArmor(armorList[number], typeNumber);
+                OffView();
+                OnEquipView();
+            })
+        });
     }
 
     // ダンジョンUI
@@ -218,7 +288,10 @@ public class HomeUI : MonoBehaviour
         // コンテンツ内をからに
         foreach(Transform child in rectContentTra) Destroy(child.gameObject);
         // コンテンツ内に必要なものを生成
-        List<DungeonData> dungeonDataList = GameManager.I.Data.DungeonDataList;
+        List<DungeonData> dungeonDataList = new List<DungeonData>();
+        for(int i = 0; i <= GameManager.I.Data.CurrentDungeonNumber; i++){
+            dungeonDataList.Add(GameManager.I.DataBase.DungeonDataList[i]);
+        }
         ToggleUI firstToggle = null;
         for(int i = 0; i < dungeonDataList.Count; i++)
         {
@@ -293,5 +366,8 @@ public class HomeUI : MonoBehaviour
         {
             btn.gameObject.SetActive(false);
         }
+
+        // 前の番号保存
+        preNumber = number;
     }
 }

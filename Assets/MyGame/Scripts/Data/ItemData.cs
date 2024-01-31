@@ -28,16 +28,24 @@ public class ItemData : ScriptableObject
 [System.Serializable]
 public class Item
 {
-    [SerializeField]
     private ItemData data = null;
     public ItemData Data => data;
 
+    [SerializeField] // 番号
+    private int number = 0;
+    public int Number => number;
     [SerializeField] // 数
     private int count = 0;
     public int Count => count;
 
 
-    public Item(ItemData data)
+    public Item(ItemData data, int number)
+    {
+        this.data = data;
+        this.number = number;
+    }
+
+    public void Init(ItemData data)
     {
         this.data = data;
     }

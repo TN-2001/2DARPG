@@ -10,6 +10,7 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] // データベース
     private DataBase dataBase = null;
+    public DataBase DataBase => dataBase;
     [SerializeField] // セーブデータ
     private SaveData data = null;
     public SaveData Data => data;
@@ -35,6 +36,7 @@ public class GameManager : Singleton<GameManager>
             string json = rd.ReadToEnd();
             rd.Close();
             data = JsonUtility.FromJson<SaveData>(json);
+            data.Init(dataBase);
         }catch{}
     }
 

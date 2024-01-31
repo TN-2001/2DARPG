@@ -28,10 +28,12 @@ public class ArmorData : ScriptableObject
 [System.Serializable]
 public class Armor
 {
-    [SerializeField]
     private ArmorData data = null;
     public ArmorData Data => data;
 
+    [SerializeField] // 番号
+    private int number = -1;
+    public int Number => number;
     [SerializeField] // レベル
     private int lev = 1;
     public int Lev => lev;
@@ -44,7 +46,13 @@ public class Armor
     public int Hp => data.Hp * lev;
 
 
-    public Armor(ArmorData data)
+    public Armor(ArmorData data, int number)
+    {
+        this.data = data;
+        this.number = number;
+    }
+
+    public void Init(ArmorData data)
     {
         this.data = data;
     }
