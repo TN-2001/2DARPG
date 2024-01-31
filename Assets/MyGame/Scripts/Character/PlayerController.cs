@@ -32,8 +32,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] // ダッシュスピード
     private float dashSpeed = 0;
 
-    [SerializeField, ReadOnly] // キャラクター
-    private Player player = null;
+    // キャラクター
+    private Player player => GameManager.I.Data.Player;
     // 向き
     private Vector2 dir = Vector2.zero;
     [SerializeField, ReadOnly] // エリア内のターゲット
@@ -56,8 +56,6 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         input = GetComponent<PlayerInput>();
-
-        player = GameManager.I.Data.Player;
 
         enemyAreaDetector.onTriggerEnter.AddListener(delegate(Collider2D other){
             targets.Add(other.gameObject);
@@ -106,13 +104,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(isIdle){
-            nextState = State.Idle;
-        }
-        else if(input.actions["Do"].IsPressed()){
-            eventController.Do();
-            isIdle = true;
-        }
+        if(isIdle) nextState = State.Idle;
+        else if(input.actions["Do"].IsPressed()) eventController.Do();
 
 
         switch(state)
@@ -223,10 +216,5 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
         }
-    }
-
-    private void OnDestroy()
-    {
-        GameManager.I.Data.UpdatePlayer(player);
     }
 }

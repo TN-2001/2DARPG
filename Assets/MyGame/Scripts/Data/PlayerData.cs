@@ -31,7 +31,9 @@ public class Player
     // hp
     public int Hp{get{
         int hp = data.Hp * lev;;
-        foreach(Armor armor in armorList) hp += armor.Hp;
+        foreach(Armor armor in armorList){
+            if(armor != null) hp += armor.Hp;
+        }
         return hp;
     }}
     // 現在のhp
@@ -47,7 +49,7 @@ public class Player
     private Weapon weapon = null;
     public Weapon Weapon => weapon;
     [SerializeField] // 防具
-    private List<Armor> armorList = new List<Armor>(4);
+    private List<Armor> armorList = new List<Armor>(){null, null, null, null};
     public List<Armor> ArmorList => armorList;
 
 

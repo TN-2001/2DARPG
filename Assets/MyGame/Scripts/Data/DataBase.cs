@@ -61,11 +61,6 @@ public class SaveData
         dungeonDataList.Add(data.DungeonDataList[0]);
     }
 
-    public void UpdatePlayer(Player player)
-    {
-        this.player = player;
-    }
-
     public void UpdateEnemyData(EnemyData enemyData)
     {
         for(int i = 0; i < enemyDataList.Count; i++)
@@ -74,5 +69,13 @@ public class SaveData
         }
 
         enemyDataList.Add(enemyData);
+    }
+
+    public void ChengeWeapon(int number)
+    {
+        Weapon weapon = Player.Weapon;
+        Player.UpdateWeapon(weaponList[number]);
+        weaponList.Remove(weaponList[number]);
+        weaponList.Add(weapon);
     }
 }

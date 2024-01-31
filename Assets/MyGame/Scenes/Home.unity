@@ -770,7 +770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &109805088
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1180,10 +1180,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d01e97ce3225b47a111e9aa93bc618, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
   onDo:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 109805089}
+        m_TargetAssemblyTypeName: HomeUI, Assembly-CSharp
+        m_MethodName: OnBoxView
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!61 &157550064
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1583,7 +1594,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3415357234242180029, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Name
-      value: EquipToggle (2)
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3713889116578586819, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Pivot.x
@@ -2303,7 +2314,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d01e97ce3225b47a111e9aa93bc618, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
   onDo:
     m_PersistentCalls:
       m_Calls: []
@@ -3388,7 +3398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4385301635655155642, guid: 0a027f5b603b54442a83d425224500dd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6936204914681523902, guid: 0a027f5b603b54442a83d425224500dd, type: 3}
       propertyPath: m_IsActive
@@ -5070,7 +5080,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3415357234242180029, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Name
-      value: EquipToggle
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3713889116578586819, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Pivot.x
@@ -6126,10 +6136,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d01e97ce3225b47a111e9aa93bc618, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 3
   onDo:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 109805089}
+        m_TargetAssemblyTypeName: HomeUI, Assembly-CSharp
+        m_MethodName: OnDungeonView
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!61 &1206420361
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6526,7 +6547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3415357234242180029, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Name
-      value: EquipToggle (1)
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3713889116578586819, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Pivot.x
@@ -8018,7 +8039,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3415357234242180029, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Name
-      value: EquipToggle (4)
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3713889116578586819, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Pivot.x
@@ -8086,7 +8107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3713889116578586819, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3713889116578586819, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8859,7 +8880,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3415357234242180029, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Name
-      value: EquipToggle (3)
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3713889116578586819, guid: af8faa49842c208408325720355042f2, type: 3}
       propertyPath: m_Pivot.x

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e80160f0d0ff0954f9f8389da6529102, type: 3}
-  m_Name: 001
+  m_Name: "001_\u6728\u5263"
   m_EditorClassIdentifier: 
-  name: 
-  info: 
+  name: "\u6728\u5263"
+  info: "\u6728\u3067\u3067\u304D\u305F\u5263\u3002"
   image: {fileID: 0}
-  price: 0
+  price: 100
   itemDataList: []
   weaponType: 0
-  value: 0
+  atk: 10

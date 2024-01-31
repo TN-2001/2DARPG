@@ -6,11 +6,8 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class HomeUI : Singleton<HomeUI>
+public class HomeUI : MonoBehaviour
 {
-    // シングルトンのタイプ
-    protected override Type type => Type.Destroy;
-
     [Header("選択")]
     [SerializeField] // 選択コンテンツ
     private RectTransform choiceContentTra = null;
@@ -97,28 +94,70 @@ public class HomeUI : Singleton<HomeUI>
         // トグルの編集
         equipToggleList[0].GetComponent<View>().UpdateUI(player.Weapon.Data.Name);
         equipToggleList[0].onSelect.RemoveAllListeners();
-        string equipInfo = $"レベル：{player.Weapon.Lev}/n攻撃力：{player.Weapon.Atk}/n/n{player.Weapon.Data.Info}";
+        string equipInfo = $"レベル：{player.Weapon.Lev}\n攻撃力：{player.Weapon.Atk}\n\n{player.Weapon.Data.Info}";
         equipToggleList[0].onSelect.AddListener(delegate{
             rightView.UpdateUI(new List<string>(){player.Weapon.Data.Name, equipInfo});
             number = 0;
-        });
-        for(int i = 0; i < 4; i++)
-        {
-            Armor armor = player.ArmorList[i];
-            equipToggleList[i+1].onSelect.RemoveAllListeners();
-            if(armor != null){
-                equipToggleList[i+1].GetComponent<View>().UpdateUI(armor.Data.Name);
-                equipToggleList[i+1].onSelect.AddListener(delegate{
-                    string info = $"体力　：{armor.Data.Hp}/n/n{armor.Data.Info}";
-                    rightView.UpdateUI(new List<string>(){armor.Data.Name, info});
-                    number = i+1;
+            // コマンドボタンを初期化
+            if(GameManager.I.Data.WeaponList.Count > 0){
+                OnCommandView(new List<(string name, UnityAction method)>(){
+                    ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
+                    ("装備変更", delegate{OffView(); OnWeaponView();})
                 });
             }
             else{
-                equipToggleList[i+1].GetComponent<View>().UpdateUI("なし");
-                equipToggleList[i+1].onSelect.AddListener(delegate{
+                OnCommandView(new List<(string name, UnityAction method)>(){
+                    ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;})
+                });
+            }
+        });
+        for(int i = 0; i < 4; i++)
+        {
+            ToggleUI toggle = equipToggleList[i+1];
+            toggle.onSelect.RemoveAllListeners();
+            List<Armor> armorList =  GameManager.I.Data.ArmorList;
+            if(i == 0) armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Head);
+            else if(i == 1) armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Chest);
+            else if(i == 2) armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Arm);
+            else armorList = armorList.FindAll(x => x.Data.ArmorType == ArmorType.Leg);
+            if(player.ArmorList[i].Data != null){
+                Armor armor = player.ArmorList[i];
+                toggle.GetComponent<View>().UpdateUI(armor.Data.Name);
+                toggle.onSelect.AddListener(delegate{
+                    string info = $"体力　：{armor.Data.Hp}\n\n{armor.Data.Info}";
+                    rightView.UpdateUI(new List<string>(){armor.Data.Name, info});
+                    number = int.Parse(toggle.gameObject.name);
+                    // コマンドボタン初期化
+                    if(armorList.Count > 0){
+                        OnCommandView(new List<(string name, UnityAction method)>(){
+                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
+                            ("装備変更", delegate{OffView(); OnArmorView();})
+                        });
+                    }
+                    else{
+                        OnCommandView(new List<(string name, UnityAction method)>(){
+                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;})
+                        });
+                    }
+                });
+            }
+            else{
+                toggle.GetComponent<View>().UpdateUI("なし");
+                toggle.onSelect.AddListener(delegate{
                     rightView.UpdateUI(new List<string>(){"なし"});
-                    number = i+1;
+                    number = int.Parse(toggle.gameObject.name);
+                    // コマンドボタン初期化
+                    if(armorList.Count > 0){
+                        OnCommandView(new List<(string name, UnityAction method)>(){
+                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
+                            ("装備変更", delegate{OffView(); OnArmorView();})
+                        });
+                    }
+                    else{
+                        OnCommandView(new List<(string name, UnityAction method)>(){
+                            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;})
+                        });
+                    }
                 });
             }
         }
@@ -126,21 +165,47 @@ public class HomeUI : Singleton<HomeUI>
         // 初期化
         equipWindowObj.SetActive(true);
         rightView.gameObject.SetActive(true);
-        number = 0;
-        rightView.UpdateUI(new List<string>(){player.Weapon.Data.Name, equipInfo});
-
-        // コマンドボタンを初期化
-        OnCommandView(new List<(string name, UnityAction method)>(){
-            ("閉じる", delegate{OffView(); PlayerController.I.isIdle = false;}),
-            ("装備変更", delegate{if(number == 0) OnWeaponView(); else OnItemPieceView(); OffView();})});
+        equipToggleList[0].Select();
     }
 
     private void OnWeaponView()
     {
+        // コンテンツ内をからに
+        foreach(Transform child in squareContentTra) Destroy(child.gameObject);
+        // コンテンツ内に必要なものを生成
+        List<Weapon> weaponList = GameManager.I.Data.WeaponList;
+        ToggleUI firstToggle = null;
+        for(int i = 0; i < weaponList.Count; i++)
+        {
+            GameObject obj = Instantiate(
+                squareToggle, squareToggle.transform.position, Quaternion.identity, squareContentTra);
+            obj.name = i.ToString();
+            obj.GetComponent<View>().UpdateUI(weaponList[i].Data.Name);
+            ToggleUI toggle = obj.GetComponent<ToggleUI>();
+            toggle.onSelect.AddListener(delegate{
+                number = int.Parse(obj.name);
+                Weapon data = weaponList[number];
+                string info = $"レベル：{data.Lev}\n攻撃力：{data.Atk}\n\n{data.Data.Info}";
+                rightView.UpdateUI(new List<string>(){data.Data.Name, info});
+            });
+            toggle.group = squareContentTra.GetComponent<ToggleGroup>();
 
+            if(i == 0) firstToggle = toggle;
+        }
+
+        // 初期化
+        squareScroll.SetActive(true);
+        rightView.gameObject.SetActive(true);
+        firstToggle?.Select();
+
+        // コマンドボタンを初期化
+        OnCommandView(new List<(string name, UnityAction method)>(){
+            ("戻る", delegate{OffView(); OnEquipView();}), 
+            ("装備", delegate{GameManager.I.Data.ChengeWeapon(number); OffView(); OnEquipView();})
+        });
     }
 
-    private void OnItemPieceView()
+    private void OnArmorView()
     {
 
     }
@@ -151,24 +216,22 @@ public class HomeUI : Singleton<HomeUI>
         PlayerController.I.isIdle = true;
 
         // コンテンツ内をからに
-        foreach(Transform child in rectContentTra)
-        {
-            Destroy(child.gameObject);
-        }
+        foreach(Transform child in rectContentTra) Destroy(child.gameObject);
         // コンテンツ内に必要なものを生成
         List<DungeonData> dungeonDataList = GameManager.I.Data.DungeonDataList;
+        ToggleUI firstToggle = null;
         for(int i = 0; i < dungeonDataList.Count; i++)
         {
             GameObject obj = Instantiate(
                 rectToggle, rectToggle.transform.position, Quaternion.identity, rectContentTra);
+            obj.name = i.ToString();
             obj.GetComponent<View>().UpdateUI(dungeonDataList[i].Name);
             ToggleUI toggle = obj.GetComponent<ToggleUI>();
             toggle.onSelect.AddListener(delegate{
-                number = obj.transform.GetSiblingIndex();
+                number = int.Parse(obj.name);
                 DungeonData data = dungeonDataList[number];
                 string info = $"階層数：{data.FloorNumber}階";
-                for(int j = 0; j < data.EnemyDataList.Count; j++)
-                {
+                for(int j = 0; j < data.EnemyDataList.Count; j++){
                     if(j == 0) info = $"{info}\n敵　　：{data.EnemyDataList[j].Name}";
                     else  info = $"{info}\n　　　：{data.EnemyDataList[j].Name}";
                 }
@@ -177,24 +240,13 @@ public class HomeUI : Singleton<HomeUI>
             });
             toggle.group = rectContentTra.GetComponent<ToggleGroup>();
 
-            if(i == 0){
-                toggle.Select();
-                number = 0;
-                DungeonData data = dungeonDataList[number];
-                string info = $"階層数：{data.FloorNumber}階";
-                for(int j = 0; j < data.EnemyDataList.Count; j++)
-                {
-                    if(j == 0) info = $"{info}\n敵　　：{data.EnemyDataList[j].Name}";
-                    else  info = $"{info}\n　　　：{data.EnemyDataList[j].Name}";
-                }
-                info = $"{info}\nボス敵：{data.BossEnemyData.Name}";
-                rightView.UpdateUI(new List<string>(){data.Name, info});
-            }
+            if(i == 0) firstToggle = toggle;
         }
 
-        // 表示
+        // 初期化
         rectScroll.SetActive(true);
         rightView.gameObject.SetActive(true);
+        firstToggle.Select();
 
         // コマンドボタンを初期化
         OnCommandView(new List<(string name, UnityAction method)>()
@@ -232,6 +284,7 @@ public class HomeUI : Singleton<HomeUI>
     {
         // 全てのウィンドウをオフ
         rectScroll.SetActive(false);
+        squareScroll.SetActive(false);
         equipWindowObj.SetActive(false);
         rightView.gameObject.SetActive(false);
 

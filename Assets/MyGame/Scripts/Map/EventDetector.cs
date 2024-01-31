@@ -5,16 +5,6 @@ using UnityEngine.Events;
 
 public class EventController : MonoBehaviour
 {
-    private enum Type // UIのタイプ
-    {
-        None,
-        Shop,
-        Box,
-        Dungeon,
-    }
-    [SerializeField]
-    private Type type = Type.None;
-
     // イベント
     public UnityEvent onDo = null;
 
@@ -22,22 +12,5 @@ public class EventController : MonoBehaviour
     public void Do()
     {
         onDo?.Invoke();
-
-        if(type == Type.None)
-        {
-
-        }
-        else if(type == Type.Shop)
-        {
-            
-        }
-        else if(type == Type.Box)
-        {
-            HomeUI.I.OnBoxView();
-        }
-        else if(type == Type.Dungeon)
-        {
-            HomeUI.I.OnDungeonView();
-        }
     }
 }
