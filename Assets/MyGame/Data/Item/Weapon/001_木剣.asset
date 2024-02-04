@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e80160f0d0ff0954f9f8389da6529102, type: 3}
   m_Name: "001_\u6728\u5263"
   m_EditorClassIdentifier: 
+  number: 1
   name: "\u6728\u5263"
   info: "\u6728\u3067\u3067\u304D\u305F\u5263\u3002"
   image: {fileID: 0}

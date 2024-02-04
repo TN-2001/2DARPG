@@ -5,14 +5,21 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class FadeUI : Singleton<FadeUI>
+public class FadeUI : MonoBehaviour
 {
-    protected override Type type => Type.Destroy;
+    public static FadeUI I = null;
 
     [SerializeField] // フェード画像
     private Image fadeImage = null;
-    [SerializeField] // EventSystem
+    // EventSystem
     private EventSystem eventSystem = null;
+    
+
+    private void Awake()
+    {
+        I = this;
+        eventSystem = EventSystem.current;
+    }
 
     public void Fade(UnityAction action)
     {
@@ -35,14 +42,14 @@ public class FadeUI : Singleton<FadeUI>
         fadeImage.enabled = true;
 
         float alpha = 0;
-        while(alpha < 1)
-        {
+        while(alpha < 1){
             fadeImage.color = new Color(0,0,0,alpha);
 
             yield return null;
 
             alpha += Time.deltaTime;
         }
+        fadeImage.color = new Color(0,0,0,1);
 
         // 関数実行
         if(action != null) action();

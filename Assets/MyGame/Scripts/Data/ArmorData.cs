@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/ArmorData")]
 public class ArmorData : ScriptableObject
 {
+    [SerializeField] // 番号
+    private int number = 0;
+    public int Number => number;
     [SerializeField] // 名前
     private new string name = null;
     public string Name => name;
@@ -28,11 +31,12 @@ public class ArmorData : ScriptableObject
 [System.Serializable]
 public class Armor
 {
+    [SerializeField]
     private ArmorData data = null;
     public ArmorData Data => data;
 
     [SerializeField] // 番号
-    private int number = -1;
+    private int number = 0;
     public int Number => number;
     [SerializeField] // レベル
     private int lev = 1;
@@ -46,10 +50,10 @@ public class Armor
     public int Hp => data.Hp * lev;
 
 
-    public Armor(ArmorData data, int number)
+    public Armor(ArmorData data)
     {
         this.data = data;
-        this.number = number;
+        if(data) this.number = data.Number;
     }
 
     public void Init(ArmorData data)

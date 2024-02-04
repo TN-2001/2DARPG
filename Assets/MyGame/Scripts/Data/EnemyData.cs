@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/EnemyData")]
 public class EnemyData : ScriptableObject
 {
+    [SerializeField] // 番号
+    private int number = 0;
+    public int Number => number;
     [SerializeField] // 名前
     private new string name = null;
     public string Name => name;

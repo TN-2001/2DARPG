@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DungeonUI : Singleton<DungeonUI>
+public class DungeonUI : MonoBehaviour
 {
-    // シングルトンのタイプ
-    protected override Type type => Type.Destroy;
+    public static DungeonUI I = null;
 
     [SerializeField] // ダメージテキスト
     private GameObject damageText = null;
@@ -19,16 +18,21 @@ public class DungeonUI : Singleton<DungeonUI>
     private TextMeshProUGUI dungeonText = null;
 
 
-    public void InitializeDamageText(int damage, Transform target)
+    private void Awake()
+    {
+        I = this;
+    }
+
+    public void InitDamageText(int damage, Transform target)
     {
         GameObject obj = Instantiate(
             damageText.gameObject, damageText.transform.position, Quaternion.identity, damageText.transform.parent);
         obj.GetComponent<TextMeshProUGUI>().text = damage.ToString();
-        obj.GetComponent<FollowTransform>().Initialize(target);
+        obj.GetComponent<FollowTransform>().Init(target);
         obj.SetActive(true);
     }
 
-    public void InitializeHpSlider(int hp)
+    public void InitHpSlider(int hp)
     {
         hpSlider.maxValue = hp;
         hpSlider.value = hp;

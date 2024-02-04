@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/ItemData")]
 public class ItemData : ScriptableObject
 {
+    [SerializeField] // 番号
+    private int number = 0;
+    public int Number => number;
     [SerializeField] // 名前
     private new string name = null;
     public string Name => name;
@@ -39,10 +42,10 @@ public class Item
     public int Count => count;
 
 
-    public Item(ItemData data, int number)
+    public Item(ItemData data)
     {
         this.data = data;
-        this.number = number;
+        this.number = data.Number;
     }
 
     public void Init(ItemData data)

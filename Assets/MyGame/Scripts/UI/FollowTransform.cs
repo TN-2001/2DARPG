@@ -17,34 +17,23 @@ public class FollowTransform : MonoBehaviour
     private Vector3 firstPosition = Vector3.zero;
 
 
-    public void Initialize(Transform target)
+    public void Init(Transform target)
     {
         this.target = target;
         firstPosition = target.position;
         transform.position = Camera.main.WorldToScreenPoint(target.position);
         gameObject.SetActive(true);
 
-        if(isDestroy)
-        {
-            Destroy(gameObject, survivalTime);
-        }
+        if(isDestroy) Destroy(gameObject, survivalTime);
     }
 
     private void LateUpdate()
     {
-        if(isFollow)
-        {
-            if(target)
-            {
-                transform.position = Camera.main.WorldToScreenPoint(target.position);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+        if(isFollow){
+            if(target) transform.position = Camera.main.WorldToScreenPoint(target.position);
+            else Destroy(gameObject);
         }
-        else
-        {
+        else{
             transform.position = Camera.main.WorldToScreenPoint(firstPosition);
         }
     }

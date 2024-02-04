@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
             attackControllers[i].Initialize(player.Atk);
         }
 
-        DungeonUI.I?.InitializeHpSlider(player.Hp);
+        DungeonUI.I?.InitHpSlider(player.Hp);
     }
 
     public void OnAttackEnd()
@@ -93,18 +93,22 @@ public class PlayerController : MonoBehaviour
     {
         if(state != State.Attack)
         {
-            if(input.actions["Attack"].IsPressed()){
-                attackNumber = 0;
-                nextState = State.Attack;
+            if(input.actions["Attack"] != null){
+                if(input.actions["Attack"].IsPressed()){
+                    attackNumber = 0;
+                    nextState = State.Attack;
+                }
             }
-            else if(input.actions["Skill"].IsPressed()){
-                attackNumber = 1;
-                nextState = State.Attack;
+            if(input.actions["Skill"] != null){
+                if(input.actions["Skill"].IsPressed()){
+                    attackNumber = 1;
+                    nextState = State.Attack;
+                }
             }
         }
 
         if(isIdle) nextState = State.Idle;
-        else if(input.actions["Do"].IsPressed()) eventController.Do();
+        else if(input.actions["Do"].IsPressed()) eventController?.Do();
 
 
         switch(state)
@@ -126,6 +130,8 @@ public class PlayerController : MonoBehaviour
             case State.Move:
                 if(!isEnter){
                     isEnter = true;
+
+                    anim.SetFloat("speed", 1f);
                 }
 
                 // 向き取得
@@ -134,11 +140,11 @@ public class PlayerController : MonoBehaviour
                 // 移動
                 if(input.actions["Dash"].IsPressed()){
                     rb.velocity = dir * dashSpeed;
-                    anim.SetFloat("speed", 1f);
+                    anim.speed = 2f;
                 }
                 else{
                     rb.velocity = dir * walkSpeed;
-                    anim.SetFloat("speed", 0.5f);
+                    anim.speed = 1f;
                 }
                 // 向き
                 anim.SetFloat("x", dir.x);
@@ -157,6 +163,7 @@ public class PlayerController : MonoBehaviour
 
                     rb.velocity = Vector2.zero;
                     anim.SetFloat("speed", 0f);
+                    anim.speed = 1f;
                 }
                 break;
 
@@ -164,14 +171,11 @@ public class PlayerController : MonoBehaviour
                 if(!isEnter){
                     isEnter = true;
 
-                    if(targets.Count > 0)
-                    {
+                    if(targets.Count > 0){
                         GameObject target = null;
                         float dis = 100;
-                        for(int i = 0; i < targets.Count; i++)
-                        {
-                            if(Vector3.Distance(targets[i].transform.position, transform.position) < dis)
-                            {
+                        for(int i = 0; i < targets.Count; i++){
+                            if(Vector3.Distance(targets[i].transform.position, transform.position) < dis){
                                 target = targets[i];
                                 dis = Vector3.Distance(targets[i].transform.position, transform.position);
                             }
@@ -185,8 +189,7 @@ public class PlayerController : MonoBehaviour
                         anim.SetFloat("y", dir.normalized.y);
                     }
 
-                    if(attackControllers[attackNumber].IsThrow)
-                    {
+                    if(attackControllers[attackNumber].IsThrow){
                         GameObject obj = Instantiate(attackControllers[attackNumber].gameObject, 
                             attackControllers[attackNumber].transform.position,
                             attackControllers[attackNumber].transform.rotation);

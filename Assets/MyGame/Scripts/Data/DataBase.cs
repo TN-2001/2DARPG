@@ -69,13 +69,13 @@ public class SaveData
     {
         player.Init(data);
         for(int i = 0; i < itemList.Count; i++){
-            itemList[i].Init(data.ItemDataList[itemList[i].Number]);
+            itemList[i].Init(data.ItemDataList.Find(x => x.Number == itemList[i].Number));
         }
         for(int i = 0; i < armorList.Count; i++){
-            armorList[i].Init(data.ArmorDataList[armorList[i].Number]);
+            armorList[i].Init(data.ArmorDataList.Find(x => x.Number == armorList[i].Number));
         }
         for(int i = 0; i < weaponList.Count; i++){
-            weaponList[i].Init(data.WeaponDataList[weaponList[i].Number]);
+            weaponList[i].Init(data.WeaponDataList.Find(x => x.Number == weaponList[i].Number));
         }
         while(isFindEnemyList.Count < data.EnemyDataList.Count){
             isFindEnemyList.Add(false);
@@ -87,38 +87,32 @@ public class SaveData
         this.money += money;
     }
 
-    public void AddWeapon(Weapon weapon)
+    public void UpdateWeapon(Weapon weapon, int playerNumber)
     {
-        Player.WeaponList.Add(weapon);
-        weaponList.Remove(weapon);
-    }
-    public void RemoveWeapon(int number)
-    {
-        weaponList.Add(Player.WeaponList[number]);
-        Player.WeaponList.Remove(Player.WeaponList[number]);
-    }
-    public void ChengeWeapon(Weapon weapon, int number)
-    {
-        weaponList.Add(Player.WeaponList[number]);
-        Player.WeaponList[number] = weapon;
-        weaponList.Remove(weapon);
+        if(Player.WeaponList[playerNumber].Data)
+            weaponList.Add(Player.WeaponList[playerNumber]);
+        
+        if(weapon != null){
+            Player.UpdateWeapon(weapon, playerNumber);
+            weaponList.Remove(weapon);
+        }
+        else{
+            Player.UpdateWeapon(new Weapon(null), playerNumber);
+        }
     }
 
-    public void AddArmor(Armor armor, int number)
+    public void UpdateArmor(Armor armor, int playerNumber)
     {
-        Player.ArmorList[number] = armor;
-        armorList.Remove(armor);
-    }
-    public void RemoveArmor(int number)
-    {
-        armorList.Add(player.ArmorList[number]);
-        Player.ArmorList[number] = null;
-    }
-    public void ChengeArmor(Armor armor, int number)
-    {
-        armorList.Add(Player.ArmorList[number]);
-        Player.ArmorList[number] = armor;
-        armorList.Remove(armor);
+        if(Player.ArmorList[playerNumber].Data)
+            armorList.Add(Player.ArmorList[playerNumber]);
+        
+        if(armor != null){
+            Player.UpdateArmor(armor, playerNumber);
+            armorList.Remove(armor);
+        }
+        else{
+            Player.UpdateArmor(new Armor(null), playerNumber);
+        }
     }
 
     public void UpdateFindEnemy(int number)

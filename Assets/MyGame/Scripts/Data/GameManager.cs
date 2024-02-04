@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
-    // シングルトンのタイプ
-    protected override Type type => Type.DontDestroy;
+    public static GameManager I = null;
 
     [SerializeField] // データベース
     private DataBase dataBase = null;
@@ -19,8 +18,17 @@ public class GameManager : Singleton<GameManager>
     public DungeonData CurrentDungeon => currentDungeon;
 
 
-    protected override void OnAwake()
+    private void Awake()
     {
+        if(!I){
+            I = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else{
+            Destroy(gameObject);
+            return;
+        }
+
         Load();
     }
 

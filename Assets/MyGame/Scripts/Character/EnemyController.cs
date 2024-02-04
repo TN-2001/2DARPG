@@ -84,7 +84,7 @@ public class EnemyController : MonoBehaviour
     public void OnDamage(int damage)
     {
         int dam = enemy.UpdateHp(-damage);
-        DungeonUI.I.InitializeDamageText(dam, transform);
+        DungeonUI.I.InitDamageText(dam, transform);
     }
 
     private void FixedUpdate()

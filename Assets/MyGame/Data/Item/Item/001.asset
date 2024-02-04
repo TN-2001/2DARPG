@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 217a0e1068768934da78278e9a0142a9, type: 3}
   m_Name: 001
   m_EditorClassIdentifier: 
+  number: 1
   name: 
   info: 
+  image: {fileID: 0}
+  price: 0
+  itemType: 0
+  value: 0

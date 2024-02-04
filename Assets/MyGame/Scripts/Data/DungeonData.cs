@@ -6,6 +6,9 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu(menuName = "ScriptableObject/DungeonData")]
 public class DungeonData : ScriptableObject
 {
+    [SerializeField] // 番号
+    private int number = 0;
+    public int Number => number;
     [SerializeField] // 名前
     private new string name = null;
     public string Name => name;
@@ -36,7 +39,4 @@ public class DungeonData : ScriptableObject
     [SerializeField] // 壁上タイル
     private RuleTile wallUpTile = null;
     public RuleTile WallUpTile => wallUpTile;
-    [SerializeField] // ボスマップ
-    private GameObject bossMap = null;
-    public GameObject BossMap => bossMap;
 }

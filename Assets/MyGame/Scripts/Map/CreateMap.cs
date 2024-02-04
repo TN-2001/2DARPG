@@ -30,18 +30,14 @@ public partial class CreateMap : MonoBehaviour
 
     [SerializeField, Button("InitRandomMap")]
     private bool initRandomMap;
+    [SerializeField, Button("InitBossMap")]
+    private bool initBossMap;
 
 
     private void Start()
     {
-        if(dungeonData.FloorNumber > 0)
-        {
-            InitRandomMap();
-        }
-        else
-        {
-            InitBossMap();
-        }
+        if(dungeonData.FloorNumber > 0) InitRandomMap();
+        else InitBossMap();
 
         stairController.GetComponent<SpriteRenderer>().sprite = dungeonData.StairSprite;
         stairController.onDo.AddListener(delegate{
@@ -53,60 +49,39 @@ public partial class CreateMap : MonoBehaviour
 
     public void InitRandomMap()
     {
-        if(GameManager.I)
-        {
-            dungeonData = GameManager.I.CurrentDungeon;
-        }
+        if(GameManager.I) dungeonData = GameManager.I.CurrentDungeon;
         CreateMapData();
 
         // タイルマップ
         groundMap.ClearAllTiles();
         wallMap.ClearAllTiles();
         objectMap.ClearAllTiles();
-        for(int y = 0; y < mapSize.y; y++)
-        {
-            for(int x = 0; x < mapSize.x; x++)
-            {
+        for(int y = 0; y < mapSize.y; y++){
+            for(int x = 0; x < mapSize.x; x++){
                 groundMap.SetTile(new Vector3Int(x, y, 0), dungeonData.GroundTile);
-                if(data[x,y] == 1)
-                {
+                if(data[x,y] == 1){
                     wallMap.SetTile(new Vector3Int(x, y, 0), dungeonData.WallTile);
 
-                    if(y > 2 & x > 2 & x < mapSize.x - 2)
-                    {
+                    if(y > 2 & x > 2 & x < mapSize.x - 2){
                         if(data[x,y-1] == 0 | data[x,y-2] == 0)
-                        {
                             wallMap.SetTile(new Vector3Int(x, y, 0), null);
-                        }
 
-                        if(dungeonData.WallUpTile.m_TilingRules.Count == 9)
-                        {
-                            if(data[x,y-1] == 0 | data[x,y-2] == 0 | data[x,y-3] == 0)
-                            {
+                        if(dungeonData.WallUpTile.m_TilingRules.Count == 9){
+                            if(data[x,y-1] == 0 | data[x,y-2] == 0 | data[x,y-3] == 0){
                                 objectMap.SetTile(new Vector3Int(x, y, 0), dungeonData.WallUpTile);
                                 if(data[x-1,y] == 1)
-                                {
                                     objectMap.SetTile(new Vector3Int(x-1, y, 0), dungeonData.WallUpTile);
-                                }
                                 if(data[x+1,y] == 1)
-                                {
                                     objectMap.SetTile(new Vector3Int(x+1, y, 0), dungeonData.WallUpTile);
-                                }
                             }
                         }
-                        else if(dungeonData.WallUpTile.m_TilingRules.Count == 6)
-                        {
-                            if(data[x,y-1] == 0 | data[x,y-2] == 0)
-                            {
+                        else if(dungeonData.WallUpTile.m_TilingRules.Count == 6){
+                            if(data[x,y-1] == 0 | data[x,y-2] == 0){
                                 objectMap.SetTile(new Vector3Int(x, y, 0), dungeonData.WallUpTile);
                                 if(data[x-1,y] == 1)
-                                {
                                     objectMap.SetTile(new Vector3Int(x-1, y, 0), dungeonData.WallUpTile);
-                                }
                                 if(data[x+1,y] == 1)
-                                {
                                     objectMap.SetTile(new Vector3Int(x+1, y, 0), dungeonData.WallUpTile);
-                                }
                             }
                         }
 
@@ -117,24 +92,18 @@ public partial class CreateMap : MonoBehaviour
 
         // キャラクター配置
         while(enemyParent.childCount > 0)
-        {
             GameObject.DestroyImmediate(enemyParent.GetChild(0).gameObject);
-        }
         int playerRoomNumber = Random.Range(0, rectList.Count);
-        for(int i = 0; i < rectList.Count; i++)
-        {
+        for(int i = 0; i < rectList.Count; i++){
             Rect.Room room = rectList[i]._Room;
-            if(i == playerRoomNumber)
-            {
+            if(i == playerRoomNumber){
                 int x = Random.Range(room.Left, room.Right + 1);
                 int y = Random.Range(room.Down, room.Up + 1);
                 playerTra.position = new Vector2(x + 0.5f, y + 0.5f);
             }
-            else
-            {
+            else{
                 int enemyNumber = Random.Range(1, 3);
-                for(int j = 0; j < enemyNumber; j++)
-                {
+                for(int j = 0; j < enemyNumber; j++){
                     EnemyData data = dungeonData.EnemyDataList[Random.Range(0, dungeonData.EnemyDataList.Count)];
                     GameObject obj = Instantiate(data.Prefab);
                     obj.transform.SetParent(enemyParent);
@@ -157,30 +126,71 @@ public partial class CreateMap : MonoBehaviour
         DungeonUI.I?.UpdateDungeonText($"{dungeonData.Name} {floorNumber}F");
     }
 
-    private void InitBossMap()
+    public void InitBossMap()
     {
+        Vector2Int mapSize = new Vector2Int(25, 18);
+        int[,] map = new int[mapSize.x,mapSize.y];
+        for(int y = 0; y < mapSize.y; y++){
+            for(int x = 0; x < mapSize.x; x++){
+                map[x,y] = 1;
+                if(5 <= x & x < mapSize.x - 5 & 5 <= y & y < mapSize.y - 5)
+                    map[x,y] = 0;
+            }
+        }
         // タイルマップ
-        groundMap.gameObject.SetActive(false);
-        wallMap.gameObject.SetActive(false);
-        objectMap.gameObject.SetActive(false);
-        Instantiate(dungeonData.BossMap, dungeonData.BossMap.transform.position, Quaternion.identity, bossGrid.transform);
+        groundMap.ClearAllTiles();
+        wallMap.ClearAllTiles();
+        objectMap.ClearAllTiles();
+        for(int y = 0; y < mapSize.y; y++){
+            for(int x = 0; x < mapSize.x; x++){
+                groundMap.SetTile(new Vector3Int(x, y, 0), dungeonData.GroundTile);
+                if(map[x,y] == 1)
+                    wallMap.SetTile(new Vector3Int(x, y, 0), dungeonData.WallTile);
+            }
+        }
+        for(int y = 0; y < mapSize.y; y++){
+            for(int x = 0; x < mapSize.x; x++){
+                if(map[x,y] == 0){
+                    if(map[x,y+1] == 1){
+                        wallMap.SetTile(new Vector3Int(x, y+1, 0), null);
+                        wallMap.SetTile(new Vector3Int(x, y+2, 0), null);
+                        objectMap.SetTile(new Vector3Int(x, y+1, 0), dungeonData.WallUpTile);
+                        objectMap.SetTile(new Vector3Int(x, y+2, 0), dungeonData.WallUpTile);
+                        if(dungeonData.WallUpTile.m_TilingRules.Count == 9)
+                            objectMap.SetTile(new Vector3Int(x, y+3, 0), dungeonData.WallUpTile);
+                        if(map[x+1,y] == 1){
+                            objectMap.SetTile(new Vector3Int(x+1, y+1, 0), dungeonData.WallUpTile);
+                            objectMap.SetTile(new Vector3Int(x+1, y+2, 0), dungeonData.WallUpTile);
+                            if(dungeonData.WallUpTile.m_TilingRules.Count == 9)
+                                objectMap.SetTile(new Vector3Int(x+1, y+3, 0), dungeonData.WallUpTile);
+                        }
+                        if(map[x-1,y] == 1){
+                            objectMap.SetTile(new Vector3Int(x-1, y+1, 0), dungeonData.WallUpTile);
+                            objectMap.SetTile(new Vector3Int(x-1, y+2, 0), dungeonData.WallUpTile);
+                            if(dungeonData.WallUpTile.m_TilingRules.Count == 9)
+                                objectMap.SetTile(new Vector3Int(x-1, y+3, 0), dungeonData.WallUpTile);
+                        }
+                    }
+                }
+            }
+        }
 
         // キャラクター配置
         while(enemyParent.childCount > 0)
-        {
             GameObject.DestroyImmediate(enemyParent.GetChild(0).gameObject);
-        }
-        GameObject obj = Instantiate(dungeonData.BossEnemyData.Prefab, new Vector2(0f, 3f), Quaternion.identity, enemyParent);
+        GameObject obj = Instantiate(dungeonData.BossEnemyData.Prefab, new Vector2(12.5f, 12.5f), Quaternion.identity, enemyParent);
         obj.GetComponent<EnemyController>().Init(new Enemy(dungeonData.BossEnemyData, 1));
-        playerTra.position = Vector2.zero;
+        playerTra.position = new Vector2(12.5f, 9.5f);
 
         // 階段配置
         stairController.gameObject.SetActive(false);
 
-        // UI
-        DungeonUI.I?.UpdateDungeonText($"{dungeonData.Name} 深層");
+        if(GameManager.I){
+            // UI
+            DungeonUI.I?.UpdateDungeonText($"{dungeonData.Name} 深層");
 
-        StartCoroutine(EBossEvent());
+            StartCoroutine(EBossEvent());
+        }
     }
     private IEnumerator EBossEvent()
     {
@@ -189,7 +199,7 @@ public partial class CreateMap : MonoBehaviour
         isClear = true;
 
         // 階段配置
-        stairController.transform.position = new Vector2(0.5f, 3.5f);
+        stairController.transform.position = new Vector2(12.5f, 12.5f);
         stairController.gameObject.SetActive(true);
 
         yield break;

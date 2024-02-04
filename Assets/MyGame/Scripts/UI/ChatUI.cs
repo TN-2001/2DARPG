@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-public class ChatUI : Singleton<ChatUI>
+public class ChatUI : MonoBehaviour
 {
-    // シングルトンのタイプ
-    protected override Type type => Type.Destroy;
+    public static ChatUI I = null;
 
     [SerializeField] // チャットウィンドウ
     private View chatView = null;
@@ -17,6 +16,11 @@ public class ChatUI : Singleton<ChatUI>
     // チャットリスト
     private bool isNext = false;
 
+
+    private void Awake()
+    {
+        I = this;
+    }
 
     private void Start()
     {

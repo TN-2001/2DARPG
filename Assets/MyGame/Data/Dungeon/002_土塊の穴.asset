@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d6ca0e07341b74aa11291d21d8f898, type: 3}
   m_Name: "002_\u571F\u584A\u306E\u7A74"
   m_EditorClassIdentifier: 
+  number: 2
   name: "\u571F\u584A\u306E\u7A74"
+  info: 
+  image: {fileID: 0}
   floorNumber: 2
   enemyDataList:
   - {fileID: 11400000, guid: 6a12418fc60f9854ebe45b569dc1e26f, type: 2}
@@ -21,4 +24,3 @@ MonoBehaviour:
   groundTile: {fileID: 11400000, guid: 256406f485d3cc2409123eba6ffae5eb, type: 2}
   wallTile: {fileID: 8290651865168205405, guid: 1f89c10bc16b05e408a0fc8a6521c426, type: 2}
   wallUpTile: {fileID: 11400000, guid: 1802f265a0617eb47bed7c9bb7e73f01, type: 2}
-  bossMap: {fileID: 601923240610146359, guid: b73f55c801e91ba4087dc1f026e7827f, type: 3}
