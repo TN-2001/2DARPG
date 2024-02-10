@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController I = null;
     // ステート
-    private enum State{Idle, Move, Attack, Die}
+    private enum State{Idle, Move, Attack, Hit, Die}
     [SerializeField, ReadOnly]
     private State state = State.Idle;
     private State nextState = State.Idle;
@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     private Animator anim = null;
     // PlayerInput
     private PlayerInput input = null;
+    [SerializeField] // スプライト
+    private SpriteRenderer sprite = null;
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // 敵エリア判定
@@ -36,12 +38,14 @@ public class PlayerController : MonoBehaviour
     private Player player => GameManager.I.Data.Player;
     // 向き
     private Vector2 dir = Vector2.zero;
-    [SerializeField, ReadOnly] // エリア内のターゲット
+    [SerializeField] // エリア内のターゲット
     private List<GameObject> targets = new List<GameObject>();
-    [SerializeField, ReadOnly] // イベントディテクター
+    [SerializeField] // イベントディテクター
     private EventController eventController = null;
-    [SerializeField, ReadOnly] // 攻撃番号
+    [SerializeField] // 攻撃番号
     private int attackNumber = 0;
+    [SerializeField] // 時間カウント
+    private float countTime = 0;
     // 強制アイドルフラグ
     public bool isIdle = false;
 
@@ -87,28 +91,33 @@ public class PlayerController : MonoBehaviour
     {
         player.UpdateHp(-damage);
         DungeonUI.I.UpdateHpSlider(player.CurrentHp);
+
+        if(player.CurrentHp > 0) nextState = State.Hit;
+        else nextState = State.Die;
     }
+
 
     private void FixedUpdate()
     {
-        if(state != State.Attack)
-        {
-            if(input.actions["Attack"] != null){
-                if(input.actions["Attack"].IsPressed()){
-                    attackNumber = 0;
-                    nextState = State.Attack;
+        if(isIdle) nextState = State.Idle;
+        else if(input.actions["Do"].WasPressedThisFrame()) eventController?.Do();
+
+        if(state == nextState){
+            if(state == State.Idle | state == State.Move){
+                if(input.actions["Attack"] != null){
+                    if(input.actions["Attack"].WasPressedThisFrame()){
+                        attackNumber = 0;
+                        nextState = State.Attack;
+                    }
                 }
-            }
-            if(input.actions["Skill"] != null){
-                if(input.actions["Skill"].IsPressed()){
-                    attackNumber = 1;
-                    nextState = State.Attack;
+                if(input.actions["Skill"] != null){
+                    if(input.actions["Skill"].WasPressedThisFrame()){
+                        attackNumber = 1;
+                        nextState = State.Attack;
+                    }
                 }
             }
         }
-
-        if(isIdle) nextState = State.Idle;
-        else if(input.actions["Do"].IsPressed()) eventController?.Do();
 
 
         switch(state)
@@ -171,6 +180,7 @@ public class PlayerController : MonoBehaviour
                 if(!isEnter){
                     isEnter = true;
 
+                    // 近くに敵がいたらその方を向く
                     if(targets.Count > 0){
                         GameObject target = null;
                         float dis = 100;
@@ -192,31 +202,52 @@ public class PlayerController : MonoBehaviour
                     if(attackControllers[attackNumber].IsThrow){
                         GameObject obj = Instantiate(attackControllers[attackNumber].gameObject, 
                             attackControllers[attackNumber].transform.position,
-                            attackControllers[attackNumber].transform.rotation);
-                        obj.transform.SetParent(transform.parent);
+                            attackControllers[attackNumber].transform.rotation, transform.parent);
                         obj.SetActive(true);
                     }
 
-                    anim.SetFloat("attackNumber", attackNumber + 1);
-                    anim.SetTrigger("isAttack");
+                    anim.SetFloat("atkNum", attackNumber);
+                    anim.SetTrigger("isAtk");
                 }
 
                 if(nextState != state){
                     state = nextState;
                     isEnter = false;
+                }
+                break;
+
+            case State.Hit:
+                if(!isEnter){
+                    isEnter = true;
+
+                    GetComponent<Collider2D>().enabled = false;
+                    sprite.color = new Color(1,0,0,1);
+                    countTime = 0;
+                }
+
+                if(countTime > 0.2f) nextState = State.Idle;
+
+                if(nextState != state){
+                    state = nextState;
+                    isEnter = false;
+
+                    GetComponent<Collider2D>().enabled = true;
+                    sprite.color = new Color(1,1,1,1);
                 }
                 break;
 
             case State.Die:
                 if(!isEnter){
                     isEnter = true;
+
+                    GetComponent<Collider2D>().enabled = false;
                 }
 
-                if(nextState != state){
-                    state = nextState;
-                    isEnter = false;
-                }
+                sprite.color = new Color(1,1,1, sprite.color.a - Time.fixedDeltaTime);
+
                 break;
         }
+
+        countTime += Time.fixedDeltaTime;
     }
 }

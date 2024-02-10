@@ -170,6 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tagName: Player
+  destroyTagNameList: []
   atkPercent: 100
   area: 5
   isThrow: 1
@@ -491,6 +492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  sprite: {fileID: 0}
   rotation: {fileID: 1611450274}
   areaDetector: {fileID: 602383769}
   attackControllers:
@@ -1513,6 +1515,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8525271540521791569, guid: 9fa9ebe436087dc468ea19cb7724bc07, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 835390869, guid: 77a9a0bee6ee21942b081a4db480cfb3, type: 3}
     - target: {fileID: 8827019765506254660, guid: 9fa9ebe436087dc468ea19cb7724bc07, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.5
@@ -1935,6 +1941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tagName: Player
+  destroyTagNameList: []
   atkPercent: 150
   area: 0.7
   isThrow: 0
@@ -8252,7 +8259,7 @@ GameObject:
   - component: {fileID: 4840952478137195508}
   m_Layer: 0
   m_Name: WallTilemap2
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8271,7 +8278,7 @@ GameObject:
   - component: {fileID: 435464867019511669}
   m_Layer: 0
   m_Name: WallTilemap1
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

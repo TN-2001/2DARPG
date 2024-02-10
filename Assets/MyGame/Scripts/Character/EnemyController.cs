@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     // ステート
-    private enum State{Idle, Walk, Ready, Chase, Attack, Die}
+    private enum State{Idle, Walk, Ready, Chase, Attack, Hit, Die}
     [SerializeField, ReadOnly]
     private State state = State.Idle;
     private State nextState = State.Idle;
@@ -15,6 +15,8 @@ public class EnemyController : MonoBehaviour
     private Rigidbody2D rb = null;
     // アニメーションコンポーネント
     private Animator anim = null;
+    [SerializeField] // スプライト
+    private SpriteRenderer sprite = null;
     [SerializeField] // 向きオブジェクト
     private Transform rotation = null;
     [SerializeField] // エリア判定
@@ -36,17 +38,17 @@ public class EnemyController : MonoBehaviour
     [SerializeField] // 接敵距離
     private float closeDistance = 0;
 
-    [SerializeField, ReadOnly] // キャラクター
+    [SerializeField] // キャラクター
     private Enemy enemy = null;
     // 向き
     private Vector2 dir = Vector2.zero;
-    [SerializeField, ReadOnly] // 攻撃番号
+    [SerializeField] // 攻撃番号
     private int attackNumber = 0;
-    [SerializeField, ReadOnly] // ターゲット
+    [SerializeField] // ターゲット
     private GameObject target = null;
     // ターゲットとの距離
     private float distance = 0;
-    [SerializeField, ReadOnly]// 時間カウント
+    [SerializeField] // 時間カウント
     private float countTime = 0;
     // 可能な攻撃番号
     private List<int> numbers = new List<int>();
@@ -84,41 +86,37 @@ public class EnemyController : MonoBehaviour
     public void OnDamage(int damage)
     {
         int dam = enemy.UpdateHp(-damage);
-        DungeonUI.I.InitDamageText(dam, transform);
+        DungeonUI.I.InitDamageText(-dam, transform);
+
+        if(enemy.CurrentHp > 0) nextState = State.Hit;
+        else nextState = State.Die;
     }
 
     private void FixedUpdate()
     {
-        if(enemy.CurrentHp == 0){
-            nextState = State.Die;
-        }
-        else if(target & (state == State.Idle | state == State.Walk)){
-            countTime = 0;
-            nextState = State.Ready;
-        }
-        else if(!target & (state == State.Ready | state == State.Chase)){
-            nextState = State.Idle;
+        if(state == nextState){
+            if(state == State.Idle | state == State.Walk){
+                if(target){
+                    countTime = 0;
+                    nextState = State.Ready;
+                }
+            }
+            else if(state == State.Ready | state == State.Chase){
+                if(!target) nextState = State.Idle;
+            }
         }
 
-        if(target)
-        {
+        if(target){
             // 敵の方向取得
             dir = (target.transform.position - transform.position).normalized;
             // 敵との距離取得
             distance = Vector3.Distance(target.transform.position, transform.position);
             // 攻撃の番号を決定
             numbers.Clear();
-            for(int i = 0; i < attackControllers.Length; i++)
-            {
-                if(distance <= attackControllers[i].Area)
-                {
-                    numbers.Add(i);
-                }
+            for(int i = 0; i < attackControllers.Length; i++){
+                if(distance <= attackControllers[i].Area) numbers.Add(i);
             }
-            if(numbers.Count > 0)
-            {
-                attackNumber = numbers[Random.Range(0, numbers.Count)];
-            }
+            if(numbers.Count > 0) attackNumber = numbers[Random.Range(0, numbers.Count)];
         }
 
 
@@ -232,15 +230,15 @@ public class EnemyController : MonoBehaviour
                     else{
                         attackControllers[attackNumber].gameObject.SetActive(true);
                     }
-                    anim.SetFloat("attackNumber", attackNumber + 1);
-                    anim.SetTrigger("isAttack");
+                    anim.SetFloat("atkNum", attackNumber);
+                    anim.SetTrigger("isAtk");
                 }
 
                 if(nextState != state){
                     state = nextState;
                     isEnter = false;
 
-                    anim.SetFloat("attackNumber", 0);
+                    anim.SetFloat("atkNum", 0);
                     if(!attackControllers[attackNumber].IsThrow){
                         attackControllers[attackNumber].gameObject.SetActive(false);
                     }
@@ -248,10 +246,41 @@ public class EnemyController : MonoBehaviour
                 }
                 break;
 
+            case State.Hit:
+                if(!isEnter){
+                    isEnter = true;
+
+                    GetComponent<Collider2D>().enabled = false;
+                    sprite.color = new Color(1,0,0,1);
+                    countTime = 0;
+
+                    // プレイヤーの方を向く
+                    dir = (PlayerController.I.transform.position - transform.position).normalized;
+                    rotation.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+                    anim.SetFloat("x", dir.normalized.x);
+                    anim.SetFloat("y", dir.normalized.y);
+                }
+
+                if(countTime > 0.2f) nextState = State.Idle;
+
+                if(nextState != state){
+                    state = nextState;
+                    isEnter = false;
+
+                    GetComponent<Collider2D>().enabled = true;
+                    sprite.color = new Color(1,1,1,1);
+                }
+                break;
+
             case State.Die:
                 if(!isEnter){
                     isEnter = true;
 
+                    GetComponent<Collider2D>().enabled = false;
+                }
+
+                sprite.color = new Color(1,1,1, sprite.color.a - Time.fixedDeltaTime);
+                if(sprite.color.a <= 0){
                     for(int i = 0; i < GameManager.I.DataBase.EnemyDataList.Count; i++){
                         if(GameManager.I.DataBase.EnemyDataList[i] == enemy.Data){
                             GameManager.I.Data.UpdateFindEnemy(i);
@@ -260,6 +289,7 @@ public class EnemyController : MonoBehaviour
                     }
                     Destroy(gameObject);
                 }
+
                 break;
         }
 
