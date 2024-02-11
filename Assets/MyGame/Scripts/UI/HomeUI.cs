@@ -102,7 +102,7 @@ public class HomeUI : MonoBehaviour
             ToggleUI toggle = equipToggleList[i];
             toggle.onSelect.RemoveAllListeners();
             List<Weapon> weaponList =  GameManager.I.Data.WeaponList;
-            if(player.WeaponList[i].Data){
+            if(i < player.WeaponList.Count){
                 Weapon weapon = player.WeaponList[i];
                 toggle.GetComponent<View>().UpdateUI(weapon.Data.Name);
                 toggle.onSelect.AddListener(delegate{
@@ -116,7 +116,7 @@ public class HomeUI : MonoBehaviour
                     else commandList[2].gameObject.SetActive(false);
                     // プレイヤー情報
                     player.UpdateCurrentWeapon(number);
-                    playerStatusText.text = $"レベル：{player.Lev}\n体力　：{player.Hp}\n攻撃力：{player.Atk}\n（武器{player.WeaponNumber+1}）";
+                    playerStatusText.text = $"体力　：{player.Hp}\n攻撃力：{player.Atk}\n（武器{player.WeaponNumber+1}）";
                 });
             }
             else{
@@ -130,7 +130,7 @@ public class HomeUI : MonoBehaviour
                     commandList[2].gameObject.SetActive(false);
                     // プレイヤー情報
                     player.UpdateCurrentWeapon(number);
-                    playerStatusText.text = $"レベル：{player.Lev}\n体力　：{player.Hp}\n攻撃力：{player.Atk}\n（武器{player.WeaponNumber+1}）";
+                    playerStatusText.text = $"体力　：{player.Hp}\n攻撃力：{player.Atk}\n（武器{player.WeaponNumber+1}）";
                 });
             }
         }
@@ -172,7 +172,7 @@ public class HomeUI : MonoBehaviour
             }
         }
         // プレイヤー情報
-        playerStatusText.text = $"レベル：{player.Lev}\n体力　：{player.Hp}\n攻撃力：{player.Atk}\n（武器{player.WeaponNumber+1}";
+        playerStatusText.text = $"体力　：{player.Hp}\n攻撃力：{player.Atk}\n（武器{player.WeaponNumber+1}";
 
         // コマンド初期化
         OnCommandView(new List<(string name, UnityAction method)>(){
@@ -296,8 +296,7 @@ public class HomeUI : MonoBehaviour
         List<DungeonData> dungeonDataList = 
             GameManager.I.DataBase.DungeonDataList.FindAll(x => x.Number <= GameManager.I.Data.CurrentDungeonNumber);
         ToggleUI firstToggle = null;
-        for(int i = 0; i < dungeonDataList.Count; i++)
-        {
+        for(int i = 0; i < dungeonDataList.Count; i++){
             GameObject obj = Instantiate(
                 rectToggle, rectToggle.transform.position, Quaternion.identity, rectContentTra);
             obj.name = i.ToString();
@@ -339,15 +338,13 @@ public class HomeUI : MonoBehaviour
     private void OnCommandView(List<(string name, UnityAction method)> nameList)
     {
         // 全てのコマンドボタンをoff
-        foreach(Button btn in commandList)
-        {
+        foreach(Button btn in commandList){
             btn.gameObject.SetActive(false);
             btn.onClick.RemoveAllListeners();
         }
 
         // コマンドボタンを編集
-        for(int i = 0;  i < nameList.Count; i++)
-        {
+        for(int i = 0;  i < nameList.Count; i++){
             Button btn = commandList[i];
             btn.onClick.AddListener(nameList[i].method);
             btn.GetComponent<View>().UpdateUI(nameList[i].name);
@@ -365,8 +362,7 @@ public class HomeUI : MonoBehaviour
         rightView.gameObject.SetActive(false);
 
         // 全てのコマンドボタンをoff
-        foreach(Button btn in commandList)
-        {
+        foreach(Button btn in commandList){
             btn.gameObject.SetActive(false);
         }
     }

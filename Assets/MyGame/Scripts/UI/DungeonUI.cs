@@ -12,10 +12,16 @@ public class DungeonUI : MonoBehaviour
     private GameObject damageText = null;
     [SerializeField] // hpスライダー
     private Slider hpSlider = null;
-    [SerializeField] // hpテキスト
-    private TextMeshProUGUI hpText = null;
-    [SerializeField] // ダンジョン情報テキスト
-    private TextMeshProUGUI dungeonText = null;
+    [Header("アイテム")]
+    [SerializeField] // アイテムコンテンツ
+    private RectTransform itemContentTra = null;
+    [SerializeField] // アイテムビュー
+    private GameObject itemObj = null;
+    [Header("武器")]
+    [SerializeField] // 武器コンテンツ
+    private RectTransform weaponContentTra = null;
+    [SerializeField] // 武器トグル
+    private List<ToggleUI> weaponToggleList = new List<ToggleUI>();
 
 
     private void Awake()
@@ -23,6 +29,15 @@ public class DungeonUI : MonoBehaviour
         I = this;
     }
 
+    private void Start()
+    {
+        // アイテムを消す
+        foreach(Transform tra in itemContentTra){
+            Destroy(tra.gameObject);
+        }
+    }
+
+    // 敵のダメージ
     public void InitDamageText(int damage, Transform target)
     {
         GameObject obj = Instantiate(
@@ -32,20 +47,44 @@ public class DungeonUI : MonoBehaviour
         obj.SetActive(true);
     }
 
+    // プレイヤーのHp
     public void InitHpSlider(int hp)
     {
         hpSlider.maxValue = hp;
         hpSlider.value = hp;
-        hpText.text = $"{hp}/{hp}";
     }
     public void UpdateHpSlider(int currentHp)
     {
         hpSlider.value = currentHp;
-        hpText.text = $"{currentHp}/{hpSlider.maxValue}";
     }
 
-    public void UpdateDungeonText(string text)
+    // 入手アイテム
+    public void UpdateItemContent(List<string> nameList)
     {
-        dungeonText.text = text;
+        foreach(string name in nameList){
+            GameObject obj = Instantiate(
+                itemObj, itemObj.transform.position, Quaternion.identity, itemContentTra);
+            obj.GetComponent<View>().UpdateUI(name);
+            Destroy(obj, 3f);
+        }
+    }
+
+    // 武器リスト
+    public void InitWeaponContent(List<Sprite> spriteList)
+    {
+        foreach(ToggleUI toggle in weaponToggleList){
+            toggle.gameObject.SetActive(false);
+        }
+
+        for(int i = 0; i < spriteList.Count; i++){
+            weaponToggleList[i].gameObject.SetActive(true);
+            weaponToggleList[i].GetComponent<View>().UpdateUI(spriteList[i]);
+            weaponToggleList[i].group = weaponContentTra.GetComponent<ToggleGroup>();
+        }
+        weaponToggleList[0].Select();
+    }
+    public void SelectWeapon(int number)
+    {
+        weaponToggleList[number].Select();
     }
 }

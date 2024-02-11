@@ -110,7 +110,7 @@ public partial class CreateMap : MonoBehaviour
                     int x = Random.Range(room.Left, room.Right + 1);
                     int y = Random.Range(room.Down, room.Up + 1);
                     obj.transform.position = new Vector2(x + 0.5f, y + 0.5f);
-                    obj.GetComponent<EnemyController>().Init(new Enemy(data, 1));
+                    obj.GetComponent<EnemyController>().Init(new Enemy(data));
                 }
             }
         }
@@ -123,7 +123,6 @@ public partial class CreateMap : MonoBehaviour
 
         // UI
         floorNumber ++;
-        DungeonUI.I?.UpdateDungeonText($"{dungeonData.Name} {floorNumber}F");
     }
 
     public void InitBossMap()
@@ -179,18 +178,13 @@ public partial class CreateMap : MonoBehaviour
         while(enemyParent.childCount > 0)
             GameObject.DestroyImmediate(enemyParent.GetChild(0).gameObject);
         GameObject obj = Instantiate(dungeonData.BossEnemyData.Prefab, new Vector2(12.5f, 12.5f), Quaternion.identity, enemyParent);
-        obj.GetComponent<EnemyController>().Init(new Enemy(dungeonData.BossEnemyData, 1));
+        obj.GetComponent<EnemyController>().Init(new Enemy(dungeonData.BossEnemyData));
         playerTra.position = new Vector2(12.5f, 9.5f);
 
         // 階段配置
         stairController.gameObject.SetActive(false);
 
-        if(GameManager.I){
-            // UI
-            DungeonUI.I?.UpdateDungeonText($"{dungeonData.Name} 深層");
-
-            StartCoroutine(EBossEvent());
-        }
+        if(GameManager.I) StartCoroutine(EBossEvent());
     }
     private IEnumerator EBossEvent()
     {

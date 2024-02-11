@@ -80,6 +80,11 @@ public class PlayerController : MonoBehaviour
         }
 
         DungeonUI.I?.InitHpSlider(player.Hp);
+        List<Sprite> spriteList = new List<Sprite>();
+        foreach(Weapon weapon in player.WeaponList){
+            spriteList.Add(weapon.Data.Image);
+        }
+        DungeonUI.I?.InitWeaponContent(spriteList);
     }
 
     public void OnAttackEnd()
@@ -115,6 +120,15 @@ public class PlayerController : MonoBehaviour
                         attackNumber = 1;
                         nextState = State.Attack;
                     }
+                }
+            }
+        }
+
+        for(int i = 0; i < player.WeaponList.Count; i++){
+            if(input.actions[$"{i+1}"] != null){
+                if(input.actions[$"{i+1}"].WasPressedThisFrame()){
+                    player.UpdateCurrentWeapon(i);
+                    DungeonUI.I?.SelectWeapon(i);
                 }
             }
         }

@@ -36,22 +36,18 @@ public class Enemy
     private EnemyData data = null;
     public EnemyData Data => data;
 
-    // レベル
-    private int lev = 1;
-    public int Lev => lev;
     // hp
-    public int Hp => data.Hp * lev;
+    public int Hp => data.Hp;
     // 攻撃力
-    public int Atk => data.Atk * lev;
+    public int Atk => data.Atk;
     // 現在のhp
     private int currentHp = 0;
     public int CurrentHp => currentHp;
 
 
-    public Enemy(EnemyData data, int lev)
+    public Enemy(EnemyData data)
     {
         this.data = data;
-        this.lev = lev;
         currentHp = Hp;
     }
 

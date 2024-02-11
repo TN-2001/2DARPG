@@ -20,17 +20,9 @@ public class Player
     private PlayerData data = null;
     public PlayerData Data => data;
 
-    [SerializeField] // レベル
-    private int lev = 1;
-    public int Lev => lev;
-    // 必要経験値
-    public int Exp => lev * 100;
-    [SerializeField] // 現在の経験値
-    private int currentExp = 0;
-    public int CurrentExp => currentExp;
     // hp
     public int Hp{get{
-        int hp = data.Hp * lev;;
+        int hp = data.Hp;
         foreach(Armor armor in armorList){
             if(armor.Data) hp += armor.Hp;
         }
@@ -41,14 +33,14 @@ public class Player
     public int CurrentHp => currentHp;
     // 攻撃力
     public int Atk{get{
-        int atk = data.Atk * lev;
+        int atk = data.Atk;
         if(weaponList[weaponNumber].Data)
             atk += weaponList[weaponNumber].Atk;
         return atk;
     }}
     [SerializeField] // 武器リスト
     private List<Weapon> weaponList = new List<Weapon>(){new Weapon(null), new Weapon(null), new Weapon(null), new Weapon(null)};
-    public List<Weapon> WeaponList => weaponList;
+    public List<Weapon> WeaponList => weaponList.FindAll(x => x.Data);
     // 現在の武器番号
     private int weaponNumber = 0;
     public int WeaponNumber => weaponNumber;
@@ -77,16 +69,6 @@ public class Player
         currentHp = Hp;
     }
 
-    public void UpdateExp(int exp)
-    {
-        currentExp += exp;
-
-        while(currentExp >= Exp){
-            currentExp = currentExp - Exp;
-            lev ++;
-        }
-    }
-
     public int UpdateHp(int para)
     {
         currentHp += para;
@@ -100,6 +82,10 @@ public class Player
     public void UpdateWeapon(Weapon weapon, int number)
     {
         weaponList[number] = weapon;
+        weaponList = WeaponList;
+        while(weaponList.Count < 4){
+            weaponList.Add(new Weapon(null));
+        }
     }
 
     public void UpdateCurrentWeapon(int number)
